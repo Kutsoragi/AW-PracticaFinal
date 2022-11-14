@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=Quattrocento:wght@400;700&display=swap');
+
+body{
+    font-family: 'Quattrocento', serif;
+}
+
+.titulo{
+    text-align: center;
+    margin: 0.5rem;
+    font-size:calc(12px + 2vw);
+    color: white;
+    font-weight: bold;
+   }
+  
+.cabecera{
+    height: 10rem;
+    background-color: #A00D17; 
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    box-shadow: 0px 0px 10px;
+    
+   }
+
+.logo{
+    min-width: 160px;
+    min-height: 60px;
+}
+
+.foto{
+    min-width: 60px;
+    min-height: 60px;
+   }
+
+.correo{
+    color: white;
+    font-size:calc(10px + 0.8vw);
+    font-weight: bold;
+  }
+
+.btnBlanco{
+    font-weight: bold;
+}
+
+.btnRojo{
+    background-color: #A00D17;
+    color: white;
+    font-weight: bold;
+    margin-left: 1rem;
+}
+
+.navMenu{
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.buscador{
+    margin-top: 1rem;
+    margin-left: 2rem;
+}
+
+.buscar{
+    font-size: 20px;
+    font-weight: bold;
+    margin-right: 1rem;
+}
+
+.tabla{
+    margin: auto;
+    margin-top: 2.5rem;
+}
+
+
+
+
+.btnRojo:hover{
+    background-color: #810b13;
+}
+
+.nav-item:hover{
+    background-color: lightgray;
+}
+

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <title>UCM - Centro de Atención al Usuario</title>
+        <meta charset="utf-8"/>
+        <link rel="icon" type="image/x-icon" href="logoucm.ico">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet"  media="screen" href="main.css"/>
+    </head>
+
+    <body>
+        <div class ="container-fluid">
+            <div class="row d-flex cabecera align-items-center justify-content-center">
+                <div class="col-2">
+                    <img src="ucm_logo2.png" class="img-fluid logo" width="330" height="330">
+                </div>
+                <div class="col-5 offset-1"><h1 class="titulo">Centro de Atención al Usuario</h1></div>
+                <div class="col-1 offset-xl-1 offset-lg-1">
+                    <img src="fernando-alonso-alpine-2.jpg" class="img-fluid foto" width="130" height="130"/>
+                </div>
+                <div class="col-1">
+                    <h4 class="correo">elplan@ucm.es</h4>
+                    <button type="submit" class="btn btn-light btnBlanco">Desconectar</button>
+                </div>
+            </div>
+
+            <div class="row">
+                <nav class="navbar navbar-expand-lg navbar-light  navMenu">
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                      <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                      <ul class="navbar-nav">
+                        <li class="nav-item active">
+                          <a class="nav-link" href="#">Mis avisos<span class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" href="#">Histórico de Avisos</a>
+                        </li>
+                      </ul>
+                    </div>
+                  </nav>
+            </div>
+
+            <div class="row buscador align-items-center">
+                <div class="buscar">Buscar</div>
+                <input type="text" class="col-3 form-control" id="formGroupExampleInput">
+                <button type="submit" class="btn btnRojo">Buscar</button>
+            </div>
+
+            <div class="col-10 tabla">
+                <table class="table" id="avisos">
+                    <thead class="thead-dark">
+                      <tr>
+                        <th scope="col"  style="width: 15%">Fecha</th>
+                        <th scope="col"  style="width: 40%">Texto</th>
+                        <th scope="col"  style="width: 15%">Tipo</th>
+                        <th scope="col"  style="width: 15%">Técnico</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr onclick='console.log("que")'>
+                        <th scope="row">12/10/2021</th>
+                        <td>No puedo conectar a la red corporativa. Parece que el fallo</td>
+                        <td>Incidencia</td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <th scope="row">10/10/2021</th>
+                        <td>Propongo cambiar el diseño de la web a un modelo responsible para que se pueda visualizar</td>
+                        <td>Sugerencia</td>
+                        <td>Aitor Tilla</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">05/01/2021</th>
+                        <td>Feliz año a todos vosotros por el buen trabajo realizado y las atenciones recibidas</td>
+                        <td>Felicitación</td>
+                        <td>Felipe Lotas</td>
+                      </tr>
+                    </tbody>
+                  </table>
+            </div>
+
+            <div class="row nuevoAviso justify-content-center">
+                <button type="submit" class="btn btnRojo">Nuevo aviso</button>
+            </div>
+     
+            <!-- Button trigger modal -->
+
+        <!-- Modal -->
+              <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      ...
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            
+
+        </div>
+    
+        
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous"></script>
+    </body>
+
+
+    
+
+
+</html>
+
+
+<!--
+<div class="row d-flex cabecera align-items-center">
+                <div class="col-2">
+                    <img src="ucm_logo2.png" class="img-fluid" width="330" height="330">
+                </div>
+                <div class="col-5"><h1 class="titulo">Centro de Atención al Usuario</h1></div>
+                <div class="col-1 offset-xl-2 offset-lg-2 offset-1">
+                    <img src="fernando-alonso-alpine-1.jpg" class="img-fluid foto" width="130" height="130"/>
+                </div>
+                <div class="col-1 offset-1 offset-md-0">
+                    <h4 class="correo">elplan@ucm.es</h4>
+                    <button type="submit" class="btn btn-light btblanco">Desconectar</button>
+                </div>
+            </div>
+
+-->
