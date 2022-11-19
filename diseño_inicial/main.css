@@ -70,8 +70,26 @@ body{
     margin-top: 2.5rem;
 }
 
+.tabla tr {
+    cursor: pointer;
+}
 
+.tabla th{
+    cursor: default;
+}
 
+.fechaT{
+    font-weight: bold;
+}
+
+.areaT{
+    width: 90%;
+    padding-left: 7px;
+}
+
+.zonaM{
+    
+}
 
 .btnRojo:hover{
     background-color: #810b13;
@@ -81,3 +99,6 @@ body{
     background-color: lightgray;
 }
 
+.modal-title{
+    font-weight: bold;
+}
