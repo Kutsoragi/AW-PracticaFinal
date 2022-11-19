@@ -87,8 +87,9 @@ body{
     padding-left: 7px;
 }
 
-.zonaM{
-    
+.tAviso{
+    margin-left: 150px;
+    text-align: end;
 }
 
 .btnRojo:hover{
