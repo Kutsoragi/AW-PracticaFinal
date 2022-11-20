@@ -8,10 +8,19 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static(__dirname + '/public'));
 
+app.get("/", (request, response) => {
+    response.redirect("/mis_avisos.html");
+});
 
 app.get("/mis_avisos.html", function(request, response) {
     response. sendFile (path.join(__dirname, "public", "mis_avisos.html"));
     });
+
+app.get("/historico_de_avisos.html", function(request, response) {
+    response. sendFile (path.join(__dirname, "public", "historico_de_avisos.html"));
+    });
+
+
 
 const usuarios = ["Javier Montoro", "Dolores Vega", "Beatriz Nito"];
 
