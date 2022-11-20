@@ -3,21 +3,33 @@
     <head>
         <title>UCM - Centro de Atención al Usuario</title>
         <meta charset="utf-8"/>
-        <link rel="icon" type="image/x-icon" href="/img/logoucm.ico">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+        <!-- PARA EJECUTAR CON NODE-->
         <link rel="stylesheet"  media="screen" href="/css/mis_avisos.css"/>
+        <link rel="icon" type="image/x-icon" href="/img/logoucm.ico"> 
+
+
+        <!-- PARA EJECUTAR SIN NODE
+        <link rel="stylesheet"  media="screen" href="/public/css/mis_avisos.css"/>
+        <link rel="icon" type="image/x-icon" href="/public/img/logoucm.ico">-->
+
+
+
     </head>
 
     <body>
         <div class ="container-fluid">
             <div class="row d-flex cabecera align-items-center justify-content-center">
                 <div class="col-2">
-                    <img src="/img/ucm_logo2.png" class="img-fluid logo" width="330" height="330">
+               <img src="/img/ucm_logo2.png" class="img-fluid logo" width="330" height="330"> <!--  PARA EJECUTAR CON NODE--->
+               <!--      <img src="/public/img/ucm_logo2.png" class="img-fluid logo" width="330" height="330"> PARA EJECUTAR SIN NODE-->
                 </div>
                 <div class="col-5 offset-1"><h1 class="titulo">Centro de Atención al Usuario</h1></div>
                 <div class="col-1 offset-xl-1 offset-lg-1">
-                    <img src="/img/fernando-alonso-alpine-2.jpg" class="img-fluid foto" width="130" height="130"/>
+                <img src="/img/fernando-alonso-alpine-2.jpg" class="img-fluid foto" width="130" height="130"/> <!--  PARA EJECUTAR CON NODE--->
+               <!--     <img src="/public/img/fernando-alonso-alpine-2.jpg" class="img-fluid foto" width="130" height="130"/>  PARA EJECUTAR SIN NODE-->
                 </div>
                 <div class="col-1">
                     <h4 class="correo">elplan@ucm.es</h4>
@@ -45,7 +57,7 @@
 
             <div class="row buscador align-items-center">
                 <div class="buscar">Buscar</div>
-                <input type="text" class="col-3 form-control" id="formGroupExampleInput">
+                <input type="text" class="col-3 form-control" onkeyup="buscador()" id="buscadorTabla">
                 <button type="submit" class="btn btnRojo">Buscar</button>
             </div>
 
@@ -53,30 +65,30 @@
                 <table class="table" id="avisos">
                     <thead class="thead-dark">
                       <tr>
-                        <th scope="col"  style="width: 15%">Fecha</th>
-                        <th scope="col"  style="width: 40%">Texto</th>
-                        <th scope="col"  style="width: 15%">Tipo</th>
-                        <th scope="col"  style="width: 15%">Técnico</th>
+                        <th scope="col"  style="width: 5%">Tipo</th>
+                        <th scope="col"  style="width: 10%">Fecha</th>
+                        <th scope="col"  style="width: 55%">Texto</th>
+                        <th scope="col"  style="width: 15%"></th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr onclick="prueba()">
+                        <td><img src="/img/exclamacion.png" width="40" height="40"/></td>
                         <td class="fechaT">12/10/2021</td>
                         <td>No puedo conectar a la red corporativa. Parece que el fallo</td>
-                        <td>INCIDENCIA</td>
-                        <td></td>
+                        <td><button type="button" class="btn btnRojo" data-toggle="modal" data-target="#infoAviso">Ver aviso</button></td>
                       </tr>
                       <tr onclick="prueba()">
+                        <td><img src="/img/pregunta.png" width="40" height="40"/></td>
                         <td class="fechaT">10/10/2021</td>
                         <td>Propongo cambiar el diseño de la web a un modelo responsible para que se pueda visualizar</td>
-                        <td><strong>SUGERENCIA</strong></td>
-                        <td>Aitor Tilla</td>
+                        <td><button type="button" class="btn btnRojo" data-toggle="modal" data-target="#infoAviso">Ver aviso</button></td>
                       </tr>
                       <tr onclick="prueba()">
+                        <td><img src="/img/me-gusta.png" width="40" height="40"/></td>
                         <td class="fechaT">05/01/2021</td>
                         <td>Feliz año a todos vosotros por el buen trabajo realizado y las atenciones recibidas</td>
-                        <td>FELICITACIÓN</td>
-                        <td>Felipe Lotas</td>
+                        <td><button type="button" class="btn btnRojo" data-toggle="modal" data-target="#infoAviso">Ver aviso</button></td>
                       </tr>
                     </tbody>
                   </table>
@@ -137,7 +149,32 @@
             
           }
         
-        </script>
+        
+
+        
+          function buscador() {
+            // Declare variables
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("buscadorTabla");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("avisos");
+            tr = table.getElementsByTagName("tr");
+          
+            // Loop through all table rows, and hide those who don't match the search query
+            for (i = 0; i < tr.length; i++) {
+              td = tr[i].getElementsByTagName("td")[2];
+              if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                  tr[i].style.display = "";
+                } else {
+                  tr[i].style.display = "none";
+                }
+              }
+            }
+          }
+
+          </script>
 
       </body>
     
