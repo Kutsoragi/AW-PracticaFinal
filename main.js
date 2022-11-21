@@ -9,7 +9,7 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.static(__dirname + '/public'));
 
 app.get("/", (request, response) => {
-    response.redirect("/mis_avisos.html");
+    response.redirect("/login.html");
 });
 
 app.get("/mis_avisos.html", function(request, response) {
@@ -18,6 +18,10 @@ app.get("/mis_avisos.html", function(request, response) {
 
 app.get("/historico_de_avisos.html", function(request, response) {
     response. sendFile (path.join(__dirname, "public", "historico_de_avisos.html"));
+    });
+
+app.get("/login.html", function(request, response) {
+    response. sendFile (path.join(__dirname, "public", "login.html"));
     });
 
 

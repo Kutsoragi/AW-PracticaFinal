@@ -62,7 +62,7 @@
             </div>
 
             <div class="col-10 tabla">
-                <table class="table" id="avisos">
+                <table class="table" id="t_historico">
                     <thead class="thead-dark">
                       <tr>
                         <th scope="col"  style="width: 5%">Tipo</th>
@@ -157,7 +157,7 @@
             var input, filter, table, tr, td, i, txtValue;
             input = document.getElementById("buscadorTabla");
             filter = input.value.toUpperCase();
-            table = document.getElementById("avisos");
+            table = document.getElementById("t_historico");
             tr = table.getElementsByTagName("tr");
           
             // Loop through all table rows, and hide those who don't match the search query

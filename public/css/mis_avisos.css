@@ -15,7 +15,7 @@ body{
 .cabecera{
     height: 10rem;
     background-color: #A00D17; 
-    position: sticky;
+    
     top: 0;
     z-index: 1;
     box-shadow: 0px 0px 10px;
@@ -46,12 +46,13 @@ body{
     background-color: #A00D17;
     color: white;
     font-weight: bold;
-    margin-left: 1rem;
+    
 }
 
 .navMenu{
     font-weight: bold;
     font-size: 20px;
+    
 }
 
 .navActivo {
@@ -101,6 +102,10 @@ body{
     text-align: end;
 }
 
+.nuevoAviso{
+    margin-bottom: 50px;
+}
+
 .btnRojo:hover{
     background-color: #810b13;
 }
@@ -110,5 +115,13 @@ body{
 }
 
 .modal-title{
+    font-weight: bold;
+}
+
+.cuadroLogin{
+    margin-top: 2.5rem;
+}
+
+.labelBold{
     font-weight: bold;
 }

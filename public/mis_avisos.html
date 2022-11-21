@@ -21,12 +21,12 @@
                 </div>
                 <div class="col-1">
                     <h4 class="correo">elplan@ucm.es</h4>
-                    <button type="submit" class="btn btn-light btnBlanco">Cerrar sesión</button>
+                    <a class="btn btn-light btnBlanco" href="/login.html" role="button">Cerrar sesión</a>
                 </div>
             </div>
 
             
-                <nav class="navbar navbar-expand-sm navbar-light  navMenu">
+                <nav class="navbar navbar-expand-sm navbar-light navMenu">
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                       <span class="navbar-toggler-icon"></span>
                     </button>
@@ -45,12 +45,12 @@
 
             <div class="row buscador align-items-center">
                 <div class="buscar">Buscar</div>
-                <input type="text" class="col-3 form-control" id="formGroupExampleInput">
+                <input type="text" class="col-3 form-control" onkeyup="buscador()" id="buscadorTabla">
                 <button type="submit" class="btn btnRojo">Buscar</button>
             </div>
 
             <div class="col-10 tabla">
-                <table class="table" id="avisos">
+                <table class="table" id="t_avisos">
                     <thead class="thead-dark">
                       <tr>
                         <th scope="col"  style="width: 15%">Fecha</th>
@@ -137,6 +137,30 @@
           function prueba(){
             console.log("hola");
             $('#infoAviso').modal('toggle');
+            
+          }
+
+          function buscador() {
+            // Declare variables
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("buscadorTabla");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("t_avisos");
+            tr = table.getElementsByTagName("tr");
+            var z=1;
+            // Loop through all table rows, and hide those who don't match the search query
+            for (i = 0; i < tr.length; i++) {
+              td = tr[i].getElementsByTagName("td")[1];
+              if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                  tr[i].style.display = "";
+                } else {
+                  tr[i].style.display = "none";
+                  z++;
+                }
+              }
+            }
             
           }
         
