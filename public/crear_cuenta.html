@@ -22,32 +22,47 @@
             </div>
 
             <div class="row cuadroLogin justify-content-center">
-                <form class="needs-validation" action="mis_avisos.html" method="get" novalidate>
-                    <!-- Email input -->
-                    <div class="form-outline mb-4">
-                      <label class="form-label labelBold" for="correo">Correo electrónico:</label>
-                      <input type="email" id="correo" class="form-control" required/>
-                      <div class="invalid-feedback">
-                        Por favor introduce un correo electrónico
-                      </div>
-                    </div>
-                  
-                    <!-- Password input -->
-                    <div class="form-outline mb-4">
-                        <label class="form-label labelBold" for="pass">Contraseña:</label>
-                        <input type="password" id="pass" class="form-control" required/>
-                        <div class="invalid-feedback">
-                          Por favor introduce una contraseña
+                <form action="mis_avisos.html" method="get">
+                    <div class="row">
+                        <!-- Email input -->
+                        <div class="form-outline mb-4 mr-4">
+                        <label class="form-label labelBold" for="correo">Correo electrónico:</label>
+                        <input type="email" id="correo" class="form-control" />
+                          
                         </div>
+    
+                        <!-- Nombre input -->
+                        <div class="form-outline mb-4">
+                            <label class="form-label labelBold" for="correo">Nombre para mostrar:</label>
+                            <input type="text" id="nombre" class="form-control" />
+                              
+                        </div>
+
                     </div>
+                    
+                    <div class="row">
+
+                        <div class="form-outline mb-4 mr-4">
+                            <label class="form-label labelBold" for="pass">Contraseña:</label>
+                          <input type="password" id="pass" class="form-control" />
+                        </div>
+
+                        <div class="form-outline mb-4">
+                            <label class="form-label labelBold" for="pass2">Confirmar contraseña:</label>
+                          <input type="password" id="pass2" class="form-control" />
+                        </div>
+
+                    </div>
+                    <!-- Password input -->
+                    
                   
                     <!-- 2 column grid layout for inline styling -->
                     <div class="row mb-4">
                       <div class="col d-flex justify-content-center">
                         <!-- Checkbox -->
-                        <div class="">
-                          <input class="" type="checkbox" value="" id="mPass" onclick="mostrarPass()" />
-                          <label class="" for="mPass">Mostrar contraseña</label>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" value="" id="mPass" onclick="mostrarPass()" />
+                          <label class="form-check-label" for="mPass">Mostrar contraseña</label>
                         </div>
                       </div>
                   
@@ -56,12 +71,14 @@
                   
                     <!-- Submit button -->
                     <button type="submit" class="btn btnRojo btn-block mb-4">Iniciar sesión</button>
-                  
+
                     <!-- Register buttons -->
                     <div class="text-center">
-                      <p>¿No tienes una cuenta? <a href="#!">Crear cuenta</a></p>
-                      
-                    </div>
+                        <p>¿Ya tienes una cuenta? <a href="#!">Iniciar sesión</a></p>
+                        
+                      </div>
+                  
+                    
                   </form>
 
             </div>
@@ -86,26 +103,7 @@
                 x.type = "password";
             }
             }
-            
-                    (function () {
-          'use strict'
-
-          // Fetch all the forms we want to apply custom Bootstrap validation styles to
-          var forms = document.querySelectorAll('.needs-validation')
-
-          // Loop over them and prevent submission
-          Array.prototype.slice.call(forms)
-            .forEach(function (form) {
-              form.addEventListener('submit', function (event) {
-                if (!form.checkValidity()) {
-                  event.preventDefault()
-                  event.stopPropagation()
-                }
-
-                form.classList.add('was-validated')
-              }, false)
-            })
-        })()
+         
 
           
         

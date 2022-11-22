@@ -11,7 +11,7 @@ app.use(express.static(__dirname + '/public'));
 app.get("/", (request, response) => {
     response.redirect("/login.html");
 });
-
+    
 app.get("/mis_avisos.html", function(request, response) {
     response. sendFile (path.join(__dirname, "public", "mis_avisos.html"));
     });
@@ -23,6 +23,10 @@ app.get("/historico_de_avisos.html", function(request, response) {
 app.get("/login.html", function(request, response) {
     response. sendFile (path.join(__dirname, "public", "login.html"));
     });
+
+app.get("/crear_cuenta.html", function(request, response) {
+    response. sendFile (path.join(__dirname, "public", "crear_cuenta.html"));
+   });
 
 
 
