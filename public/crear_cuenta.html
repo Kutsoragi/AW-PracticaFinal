@@ -23,8 +23,10 @@
 
             <div class="row cuadroLogin justify-content-center">
                 <form action="mis_avisos.html" method="get">
+                    <h4 class="text-center mb-4">Crear cuenta</h4>
                     <div class="row">
                         <!-- Email input -->
+                        
                         <div class="form-outline mb-4 mr-4">
                         <label class="form-label labelBold" for="correo">Correo electrónico:</label>
                         <input type="email" id="correo" class="form-control" />
@@ -33,13 +35,14 @@
     
                         <!-- Nombre input -->
                         <div class="form-outline mb-4">
-                            <label class="form-label labelBold" for="correo">Nombre para mostrar:</label>
+                            <label class="form-label labelBold" for="nombre">Nombre para mostrar:</label>
                             <input type="text" id="nombre" class="form-control" />
                               
                         </div>
 
                     </div>
-                    
+
+                    <!-- Password input -->
                     <div class="row">
 
                         <div class="form-outline mb-4 mr-4">
@@ -53,28 +56,57 @@
                         </div>
 
                     </div>
-                    <!-- Password input -->
+
+                    <div class="row">
+
+                        <div class="form-outline mb-4 mr-4">
+                            <label class="form-label labelBold" for="pass">Perfil Universitario:</label>
+                            <select class="form-control" id="exampleFormControlSelect1">
+                                <option>Alumno</option>
+                                <option>Personal de Administración y Servicios (PAS)</option>
+                                <option>Personal Docente e Investigador (PDI)</option>
+                                <option>Antiguo Alumno</option>
+                              </select>
+                        </div>
+
+                                                
+
+                    </div>
+
+                    <div class="row regTecnico justify-content-center">
+                        <div class="form-check mt-4 mb-4 mr-4">
+                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                            <label class="form-check-label" for="flexCheckDefault">
+                              Técnico
+                            </label>
+                        </div>
+
+                        <div class="form-outline mb-4 nEmpleado">
+                            <label class="form-label labelBold" for="nombre">Nº de empleado:</label>
+                            <input type="text" id="nombre" class="form-control" />
+                              
+                        </div>
+
+                    </div>
+                    
                     
                   
                     <!-- 2 column grid layout for inline styling -->
-                    <div class="row mb-4">
-                      <div class="col d-flex justify-content-center">
-                        <!-- Checkbox -->
-                        <div class="form-check">
-                          <input class="form-check-input" type="checkbox" value="" id="mPass" onclick="mostrarPass()" />
-                          <label class="form-check-label" for="mPass">Mostrar contraseña</label>
-                        </div>
-                      </div>
+                    <div class="row mt-2 mb-4">
+                        <button type="submit" class="col btn btnRojo mb-4 mr-4">Crear cuenta</button>
+                        <button type="submit" class="col btn btn-secondary btnLimpiar mb-4">Limpiar formulario</button>
+                        
                   
                       
                     </div>
-                  
+                    
+                    
                     <!-- Submit button -->
-                    <button type="submit" class="btn btnRojo btn-block mb-4">Iniciar sesión</button>
+                    
 
                     <!-- Register buttons -->
                     <div class="text-center">
-                        <p>¿Ya tienes una cuenta? <a href="#!">Iniciar sesión</a></p>
+                        <p>¿Ya tienes una cuenta? <a href="/login.html">Iniciar sesión</a></p>
                         
                       </div>
                   
