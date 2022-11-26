@@ -134,3 +134,19 @@ h4{
     font-weight: bold;
 }
 
+#divTecnico{
+    display: none;
+}
+
+#nEmpleado{
+    display: none;
+}
+
+#inputFoto{
+    width: 29rem;
+    
+}
+
+.inputWidth{
+    width: 15rem;
+}
