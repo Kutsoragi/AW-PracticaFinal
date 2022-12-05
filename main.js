@@ -49,29 +49,31 @@ app.get("/", middleNoLogueado, (request, response) => {
     response.redirect("/login.html");
 });
     
-app.get("/mis_avisos.html", middleLogueado, function(request, response) {
+app.get("/mis_avisos", middleLogueado, function(request, response) {
     response.sendFile (path.join(__dirname, "public", "mis_avisos.html"));
+    console.log("EAVISO")
 });
 
-app.get("/historico_de_avisos.html", middleLogueado, function(request, response) {
+app.get("/historico_de_avisos", middleLogueado, function(request, response) {
     response.sendFile (path.join(__dirname, "public", "historico_de_avisos.html"));
 });
 
-app.get("/login.html", middleNoLogueado,function(request, response) {
+app.get("/login", middleNoLogueado,function(request, response) {
     response.sendFile (path.join(__dirname, "public", "login.html"));
 });
 
 app.post("/login", function(request, response){
-    request.session.user = Jhony;
+    request.session.user = "Jhony";
     response.redirect("/mis_avisos.html")
 })
 
 app.get("/cerrarSesion", function(req,res){
     req.session.user = null
+    console.log("Has cerrado sesion")
     res.redirect("/login.html")
 });
 
-app.get("/crear_cuenta.html", middleNoLogueado, function(request, response) {
+app.get("/crear_cuenta", middleNoLogueado, function(request, response) {
     response.sendFile (path.join(__dirname, "public", "crear_cuenta.html"));
 });
 
