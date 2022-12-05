@@ -15,13 +15,23 @@ app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const session = require("express-session");
+const mysqlSession = require("express-mysql-session");
+const MySQLStore = require("express-mysql-session");
+const mysqlStore = mysqlSession(session);
+const sessionStore = new MySQLStore({
+    host: "localhost",
+    user: "root",
+    password:"",
+    database: "mystore"
+})
 
 const pool = mysql.createPool(config.mysqlConfig);
 
 const middlewareSession = session({
     saveUninitialized: false,
     secret: "foobar34",
-    resave: false
+    resave: false,
+    store: sessionStore
 });
 
 app.use(middlewareSession);
