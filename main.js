@@ -73,7 +73,12 @@ app.get("/login", middleNoLogueado,function(request, response) {
 });
 
 app.post("/login", function(request, response){
-    request.session.user = "Jhony";
+    request.session.user = {
+        nombre: request.body.nombre,
+        correo: request.body.correo,
+        perfil: request.body.perfil,
+        tecnico: request.body.tecnico
+    };
     response.redirect("/mis_avisos.html")
 })
 
@@ -86,6 +91,10 @@ app.get("/cerrarSesion", function(req,res){
 app.get("/crear_cuenta", middleNoLogueado, function(request, response) {
     response.sendFile (path.join(__dirname, "public", "crear_cuenta.html"));
 });
+
+app.post("crearCuenta", multerFactory.none(),function(request, response){
+    
+})
 
 app.listen(3000, (err) => {
     if (err) {
