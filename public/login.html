@@ -11,19 +11,19 @@
 
     <body>
         <div class ="container-fluid">
-            <div class="row d-flex cabecera align-items-center justify-content-between">
-                <div class="col-2">
-                    <img src="/img/ucm_logo2.png" class="img-fluid logo" width="330" height="330">
-                </div>
-                <div class="col-5"><h1 class="titulo">Centro de Atención al Usuario</h1></div>
-                <div class="col-2">
-                    <h4 class="correo">Es necesario iniciar sesión</h4>
-                </div>
+          <div class="row d-flex cabecera align-items-center">
+              <div class="col-xl-2 col-md-3 col-sm-3 col-3">
+                  <img src="/img/ucm_logo2.png" id="logo">
+              </div>
+              <div class="col-xl-8 col-md-6 col-sm-5 col-5"><h1 class="titulo">Centro de Atención al Usuario</h1></div>
+              <div class="col-xl-1 col-md-2 col-sm-4 col-4">
+                  <a class="btn btn-light btnBlanco" href="/crear_cuenta" role="button">Crear cuenta</a>
+              </div>
             </div>
 
             <div class="row cuadroLogin justify-content-center">
               
-                <form class="needs-validation" action="/login" method="post" novalidate>
+                <form class="formCuenta needs-validation" action="/login" method="post" novalidate>
                   <h4 class="text-center mb-4">Iniciar sesión</h4>
                     <!-- Email input -->
                     <div class="form-outline mb-4">
@@ -60,7 +60,7 @@
                     <button type="submit" class="btn btnRojo btn-block mb-4">Iniciar sesión</button>
                   
                     <!-- Register buttons -->
-                    <div class="text-center">
+                    <div class="text-center mb-4">
                       <p>¿No tienes una cuenta? <a href="/crear_cuenta.html">Crear cuenta</a></p>
                       
                     </div>

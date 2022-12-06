@@ -7,7 +7,7 @@ body{
 .titulo{
     text-align: center;
     margin: 0.5rem;
-    font-size:calc(12px + 2vw);
+    font-size:calc(8px + 1.7vw);
     color: white;
     font-weight: bold;
    }
@@ -22,9 +22,17 @@ body{
     
    }
 
-.logo{
-    min-width: 160px;
-    min-height: 60px;
+#logo{
+    width: 281.25px;
+    height: 123.75px;
+    
+}
+
+@media screen and (max-width: 992px){   
+    #logo{      
+        content:url("/img/ucm_logo_min.png");
+        
+    } 
 }
 
 .foto{
@@ -128,7 +136,9 @@ h4{
 
 .cuadroLogin{
     margin-top: 2.5rem;
+    
 }
+
 
 .labelBold{
     font-weight: bold;
@@ -140,13 +150,19 @@ h4{
 
 #nEmpleado{
     display: none;
+    
+}
+
+#numEmpl{
+    width: 11rem;
 }
 
 #inputFoto{
-    width: 29rem;
+    width: calc(17rem + 12vw);
     
 }
 
 .inputWidth{
-    width: 15rem;
+    width: calc(6rem + 12vw);
+    min-width: 11rem;
 }

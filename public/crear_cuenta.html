@@ -11,18 +11,18 @@
 
     <body>
         <div class ="container-fluid">
-            <div class="row d-flex cabecera align-items-center justify-content-between">
-                <div class="col-2">
-                    <img src="/img/ucm_logo2.png" class="img-fluid logo" width="330" height="330">
+            <div class="row d-flex cabecera align-items-center">
+                <div class="col-xl-2 col-md-3 col-sm-3 col-3">
+                    <img src="/img/ucm_logo2.png" id="logo">
                 </div>
-                <div class="col-5"><h1 class="titulo">Centro de Atención al Usuario</h1></div>
-                <div class="col-2">
-                    <h4 class="correo">Es necesario iniciar sesión</h4>
+                <div class="col-xl-8 col-md-6 col-sm-5 col-5"><h1 class="titulo">Centro de Atención al Usuario</h1></div>
+                <div class="col-xl-1 col-md-2 col-sm-4 col-4">
+                    <a class="btn btn-light btnBlanco" href="/login" role="button">Iniciar sesión</a>
                 </div>
             </div>
 
             <div class="row cuadroLogin justify-content-center">
-                <form class="needs-validation" id="crearCuentaForm" action="mis_avisos.html" method="get" novalidate>
+                <form class="needs-validation" id="crearCuentaForm" method="post" novalidate>
                     <h4 class="text-center mb-4">Crear cuenta</h4>
                     <div class="row">
                         <!-- Email input -->
@@ -85,7 +85,7 @@
 
                         <div class="form-outline mb-4 mr-4">
                             <label for="inputFoto" class="form-label labelBold">Imagen de perfil:</label>
-                            <input class="form-control" type="file" id="inputFoto">
+                            <input class="form-control" type="file" name="foto" id="inputFoto">
                           </div>
                      
 
@@ -100,8 +100,8 @@
                         </div>
 
                         <div class="form-outline mb-4" id="nEmpleado">
-                            <label class="form-label labelBold" for="nombre">Nº de empleado:</label>
-                            <input type="text" id="nombre" class="form-control inputWidth" />
+                            <label class="form-label labelBold" for="numEmpl">Nº de empleado:</label>
+                            <input type="text" id="numEmpl" class="form-control inputWidth" />
                               
                         </div>
 
@@ -111,7 +111,7 @@
                     
                     
                   
-                    <!-- 2 column grid layout for inline styling -->
+                    <!-- Submit button -->
                     <div class="row mt-4 mb-4">
                         <button type="submit" class="col btn btnRojo mb-4 mr-4">Crear cuenta</button>
                         <button type="reset" class="col btn btn-secondary btnLimpiar mb-4" onclick="ocultarPAS()">Limpiar formulario</button>
@@ -121,11 +121,11 @@
                     </div>
                     
                     
-                    <!-- Submit button -->
+                    
                     
 
-                    <!-- Register buttons -->
-                    <div class="text-center">
+                    <!-- Iniciar sesion -->
+                    <div class="text-center mb-4">
                         <p>¿Ya tienes una cuenta? <a href="/login.html">Iniciar sesión</a></p>
                         
                       </div>
