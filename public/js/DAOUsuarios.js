@@ -56,7 +56,7 @@ class DAOUsuarios {
                                 })
                             }
                             else{
-                                connection.query("INSERT INTO usuario (correo, nombre, contraseña, fecha, perfil, tecnico, foto) VALUES (?, ?, ?, ?, ?, ?, ?)",  [ usuario.correo, usuario.nombre, usuario.contraseña, new Date().toISOString().slice(0, 19).replace('T', ' '), usuario.perfil, usuario.tecnico, usuario.foto], 
+                                connection.query("INSERT INTO ucm_aw_cau_usu_usuarios (correo, nombre, contraseña, fecha, perfil, tecnico, foto) VALUES (?, ?, ?, ?, ?, ?, ?)",  [ usuario.correo, usuario.nombre, usuario.contraseña, new Date().toISOString().slice(0, 19).replace('T', ' '), usuario.perfil, usuario.tecnico, usuario.foto], 
                                 function(err, result) {
                                     if (err) {
                                         console.log(err)
@@ -99,7 +99,6 @@ class DAOUsuarios {
                                     Fecha: rows[0].fecha,
                                     Perfil: rows[0].perfil,
                                     Tecnico: rows[0].tecnico,
-                                    Foto: rows[0].foto
                                 };
                                 callback(null,usuario);
                             }
@@ -112,5 +111,34 @@ class DAOUsuarios {
             }
         });
     }
+
+    obtenerImagen(idUsuario, callback){
+        this._pool.getConnection(function(err, connection) {
+            if (err) {
+                callback(new Error("Error de conexion a la base de datos"));
+            }
+            else {
+                connection.query("SELECT foto FROM ucm_aw_cau_usu_usuarios WHERE idUsuario = ?" , [idUsuario] ,//Aquí va la query a la BD
+                    function(err, rows) {
+                        connection.release();
+                        if (err) {
+                            callback(new Error("Error de acceso a la base de datos"));
+                        }
+                        else {
+                            //Aquí se tratan los datos y llama al callback (Habría que devolver el ID generado por el insert)
+                            if(rows.length > 0){
+                                callback(null,rows[0].foto);
+                            }
+                            else{
+                                callback(new Error("No existe el usuario"))
+                            }
+                        }
+                    }
+                );
+            }
+        });
+    }
+
 }
+
 module.exports = DAOUsuarios;

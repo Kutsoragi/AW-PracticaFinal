@@ -97,7 +97,18 @@ app.get("/crear_cuenta", middleNoLogueado, function(request, response) {
     response.render("crear_cuenta", {errMsg:null});
 });
 
-app.post("/crear_cuenta", multerFactory.single('foto'),function(request, response){
+app.get("/obtener_imagen", middleLogueado, function(request, response){
+    daoU.obtenerImagen(request.session.user.ID, function(err,res){
+        if (res){
+            response.end(new Buffer.from(res))
+        }
+        else{
+            response.sendFile(__dirname + "/public/img/avatar.jpg")
+        }
+    })
+})
+
+app.post("/crear_cuenta", multerFactory.single("foto"),function(request, response){
     //VALIDACION
     
     let usuario = {
@@ -110,6 +121,7 @@ app.post("/crear_cuenta", multerFactory.single('foto'),function(request, respons
         numEmpleado: null
     }
     if (request.file){
+        console.log(request.file)
         usuario.foto = request.file.buffer
     }
     if (usuario.tecnico){
