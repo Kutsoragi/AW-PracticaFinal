@@ -12,7 +12,7 @@ const app = express();
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static(__dirname + '/public'));
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
 
 const session = require("express-session");
 const mysqlSession = require("express-mysql-session");
@@ -42,7 +42,7 @@ function middleLogueado(req, res, next){
 	if(req.session.user){
 		next()
 	}
-	else res.redirect("/login.html")
+	else res.redirect("/login")
 }
 
 function middleNoLogueado(req, res, next){
@@ -51,21 +51,21 @@ function middleNoLogueado(req, res, next){
 	if(!req.session.user){
 		next()
 	}
-	else res.redirect("/mis_avisos.html")
+	else res.redirect("/mis_avisos")
 }
 
 
 app.get("/", middleNoLogueado, (request, response) => {
-    response.redirect("/login.html");
+    response.redirect("/login");
 });
     
 app.get("/mis_avisos", middleLogueado, function(request, response) {
-    response.sendFile (path.join(__dirname, "public", "mis_avisos.html"));
+    response.render("mis_avisos", {});
     console.log("EAVISO")
 });
 
 app.get("/historico_de_avisos", middleLogueado, function(request, response) {
-    response.sendFile (path.join(__dirname, "public", "historico_de_avisos.html"));
+    response.render("historico_de_avisos", {});
 });
 
 app.get("/login", middleNoLogueado,function(request, response) {
@@ -79,13 +79,13 @@ app.post("/login", function(request, response){
         perfil: request.body.perfil,
         tecnico: request.body.tecnico
     };
-    response.redirect("/mis_avisos.html")
+    response.redirect("/mis_avisos")
 })
 
 app.get("/cerrarSesion", function(req,res){
     req.session.user = null
     console.log("Has cerrado sesion")
-    res.redirect("/login.html")
+    res.redirect("/login")
 });
 
 

@@ -13,7 +13,7 @@
         <div class ="container-fluid">
             <div class="row d-flex cabecera align-items-center">
                 <div class="col-xl-2 col-md-3 col-sm-3 col-3">
-                    <img src="/img/ucm_logo2.png" id="logo">
+                    <a href="/"><img src="img/ucm_logo2.png" id="logo"></a>
                 </div>
                 <div class="col-xl-8 col-md-6 col-sm-5 col-5"><h1 class="titulo">Centro de Atención al Usuario</h1></div>
                 <div class="col-xl-1 col-md-2 col-sm-4 col-4">
@@ -29,7 +29,7 @@
                         
                         <div class="form-outline mb-4 mr-4">
                         <label class="form-label labelBold" for="correo">Correo electrónico:</label>
-                        <input type="email" id="correo" class="form-control inputWidth" required/>
+                        <input type="email" name="correo" class="form-control inputWidth" required/>
                         <div class="invalid-feedback">
                             Por favor introduce un correo electrónico
                           </div>
@@ -39,7 +39,7 @@
                         <!-- Nombre input -->
                         <div class="form-outline mb-4">
                             <label class="form-label labelBold" for="nombre">Nombre para mostrar:</label>
-                            <input type="text" id="nombre" class="form-control inputWidth" required/>
+                            <input type="text" name="nombre" class="form-control inputWidth" required/>
                             <div class="invalid-feedback">
                                 Por favor introduce un nombre
                               </div>
@@ -52,8 +52,8 @@
                     <div class="row">
 
                         <div class="form-outline mb-4 mr-4">
-                            <label class="form-label labelBold" for="pass">Contraseña:</label>
-                          <input type="password" id="pass" class="form-control inputWidth" />
+                            <label class="form-label labelBold" for="password">Contraseña:</label>
+                          <input type="password" name="password" class="form-control inputWidth" />
                         </div>
 
                         <div class="form-outline mb-4">
@@ -67,12 +67,12 @@
 
                         <div class="form-outline mb-4 mr-4">
                             <label class="form-label labelBold" for="selectorPerfil">Perfil Universitario:</label>
-                            <select class="form-control" id="selectorPerfil" onchange="mostrarCTecnico()">
+                            <select class="form-control" id="selectorPerfil" name="perfil" onchange="mostrarCTecnico()">
                                 <option value="none" selected disabled hidden>Seleccione su perfil universitario</option>
                                 <option value="alumno">Alumno</option>
                                 <option value="pas">Personal de Administración y Servicios (PAS)</option>
                                 <option value="pdi">Personal Docente e Investigador (PDI)</option>
-                                <option value="antAlumno">Antiguo Alumno</option>
+                                <option value="aa">Antiguo Alumno</option>
                               </select>
                         </div>
 
@@ -93,7 +93,7 @@
 
                     <div class="row regTecnico justify-content-center">
                         <div class="form-check mt-4 mb-4 mr-4" id="divTecnico">
-                            <input class="form-check-input" type="checkbox" value="" id="cTecnico" onchange="mostrarNEmpleado()">
+                            <input class="form-check-input" type="checkbox" id="cTecnico" name="tecnico" value="si" onchange="mostrarNEmpleado()">
                             <label class="form-check-label" for="flexCheckDefault">
                               Técnico
                             </label>
@@ -101,13 +101,17 @@
 
                         <div class="form-outline mb-4" id="nEmpleado">
                             <label class="form-label labelBold" for="numEmpl">Nº de empleado:</label>
-                            <input type="text" id="numEmpl" class="form-control inputWidth" />
+                            <input type="text" name="numEmpl" class="form-control inputWidth" />
                               
                         </div>
 
                     </div>
 
-                    
+                    <% if (errMsg) { %>
+                        <div class="text-center mb-4 rojoError labelBold">
+                          <%= errMsg %>
+                        </div>
+                      <% } %>
                     
                     
                   

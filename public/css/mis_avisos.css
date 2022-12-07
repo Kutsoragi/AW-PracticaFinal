@@ -74,6 +74,10 @@ body{
     
 }
 
+.rojoError{
+    color: #dc3545;
+}
+
 .navActivo {
     border: solid black 2px;
 }

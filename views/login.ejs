@@ -13,7 +13,7 @@
         <div class ="container-fluid">
           <div class="row d-flex cabecera align-items-center">
               <div class="col-xl-2 col-md-3 col-sm-3 col-3">
-                  <img src="img/ucm_logo2.png" id="logo">
+                  <a href="/"><img src="img/ucm_logo2.png" id="logo"></a>
               </div>
               <div class="col-xl-8 col-md-6 col-sm-5 col-5"><h1 class="titulo">Centro de Atención al Usuario</h1></div>
               <div class="col-xl-1 col-md-2 col-sm-4 col-4">
@@ -28,7 +28,7 @@
                     <!-- Email input -->
                     <div class="form-outline mb-4">
                       <label class="form-label labelBold" for="correo">Correo electrónico:</label>
-                      <input type="email" id="correo" class="form-control" required/>
+                      <input type="email" name="correo" class="form-control" required/>
                       <div class="invalid-feedback">
                         Por favor introduce un correo electrónico
                       </div>
@@ -37,7 +37,7 @@
                     <!-- Password input -->
                     <div class="form-outline mb-4">
                         <label class="form-label labelBold" for="pass">Contraseña:</label>
-                        <input type="password" id="pass" class="form-control" required/>
+                        <input type="password" name="password" class="form-control" required/>
                         <div class="invalid-feedback">
                           Por favor introduce una contraseña
                         </div>
@@ -55,9 +55,18 @@
                   
                       
                     </div>
+
+
+                    <% if (errMsg) { %>
+                      <div class="text-center mb-4 rojoError labelBold">
+                        <%= errMsg %>
+                      </div>
+                    <% } %>
                   
                     <!-- Submit button -->
                     <button type="submit" class="btn btnRojo btn-block mb-4">Iniciar sesión</button>
+
+                   
                   
                     <!-- Register buttons -->
                     <div class="text-center mb-4">
