@@ -69,11 +69,7 @@ app.get("/historico_de_avisos", middleLogueado, function(request, response) {
 });
 
 app.get("/login", middleNoLogueado,function(request, response) {
-    response.sendFile (path.join(__dirname, "public", "login.html"));
-});
-
-app.get("/login2", middleNoLogueado,function(request, response) {
-    response.render("login", {tareas : true});
+    response.render("login", {});
 });
 
 app.post("/login", function(request, response){
@@ -92,12 +88,9 @@ app.get("/cerrarSesion", function(req,res){
     res.redirect("/login.html")
 });
 
-app.get("/crear_cuenta", middleNoLogueado, function(request, response) {
-    response.sendFile (path.join(__dirname, "public", "crear_cuenta.html"));
-});
 
-app.get("/crear_cuenta2", middleNoLogueado, function(request, response) {
-    response.render("crear_cuenta", {tareas : true});
+app.get("/crear_cuenta", middleNoLogueado, function(request, response) {
+    response.render("crear_cuenta", {});
 });
 
 app.post("crearCuenta", multerFactory.none(),function(request, response){
