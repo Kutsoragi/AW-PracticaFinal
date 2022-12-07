@@ -74,13 +74,13 @@ class DAOUsuarios {
 		});
     }
 
-    leerUsuarioPorCorreo(correo, callback){
+    leerUsuarioPorCorreo(correo, password,callback){
         this._pool.getConnection(function(err, connection) {
             if (err) {
                 callback(new Error("Error de conexion a la base de datos"));
             }
             else {
-                connection.query("SELECT * FROM ucm_aw_cau_usu_usuarios WHERE correo = ?" , [correo] ,//Aquí va la query a la BD
+                connection.query("SELECT * FROM ucm_aw_cau_usu_usuarios WHERE correo = ? and contraseña = ?" , [correo,password] ,//Aquí va la query a la BD
                     function(err, rows) {
                         connection.release();
                         if (err) {
@@ -88,7 +88,6 @@ class DAOUsuarios {
                         }
                         else {
                             //Aquí se tratan los datos y llama al callback (Habría que devolver el ID generado por el insert)
-                            let usuario;
                             if(rows.length > 0){
                                 usuario = {
                                     ID: rows[0].idUsuario, 
@@ -100,8 +99,11 @@ class DAOUsuarios {
                                     Tecnico: rows[0].tecnico,
                                     Foto: rows[0].foto
                                 };
+                                callback(null,usuario);
                             }
-                            callback(null,usuario);
+                            else{
+                                callback(new Error("Email y/o contraseña incorrectos"))
+                            }
                         }
                     }
                 );
