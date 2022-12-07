@@ -35,6 +35,7 @@ class DAOUsuarios {
                                             connection.query("INSERT INTO ucm_aw_cau_usu_usuarios (correo, nombre, contraseña, fecha, perfil, tecnico, foto) VALUES (?, ?, ?, ?, ?, ?, ?)",  [ usuario.correo, usuario.nombre, usuario.contraseña, new Date().toISOString().slice(0, 19).replace('T', ' '), usuario.perfil, usuario.tecnico, usuario.foto], 
                                             function(err, result) {
                                                 if (err) {
+                                                    console.log(err)
                                                     callback("Ha ocurrido un error en la base de datos, por favor intentelo de nuevo más tarde");
                                                 }
                                                 else {
@@ -58,6 +59,7 @@ class DAOUsuarios {
                                 connection.query("INSERT INTO usuario (correo, nombre, contraseña, fecha, perfil, tecnico, foto) VALUES (?, ?, ?, ?, ?, ?, ?)",  [ usuario.correo, usuario.nombre, usuario.contraseña, new Date().toISOString().slice(0, 19).replace('T', ' '), usuario.perfil, usuario.tecnico, usuario.foto], 
                                 function(err, result) {
                                     if (err) {
+                                        console.log(err)
                                         callback("Ha ocurrido un error en la base de datos, por favor intentelo de nuevo más tarde");
                                     }
                                     else {
@@ -89,7 +91,7 @@ class DAOUsuarios {
                         else {
                             //Aquí se tratan los datos y llama al callback (Habría que devolver el ID generado por el insert)
                             if(rows.length > 0){
-                                usuario = {
+                                let usuario = {
                                     ID: rows[0].idUsuario, 
                                     Correo: rows[0].correo,
                                     Nombre: rows[0].nombre,

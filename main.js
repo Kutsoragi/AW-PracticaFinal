@@ -71,13 +71,13 @@ app.get("/historico_de_avisos", middleLogueado, function(request, response) {
 });
 
 app.get("/login", middleNoLogueado,function(request, response) {
-    response.render("login", {});
+    response.render("login", {errMsg: null});
 });
 
 app.post("/login", function(request, response){
     daoU.leerUsuarioPorCorreo(request.body.correo, request.body.password,function(err,res){
         if (err){
-            response.render("/login", {errMsg : err.message})
+            response.render("login", {errMsg : err.message})
         }
         else{
             request.session.user = res
@@ -94,17 +94,17 @@ app.get("/cerrarSesion", middleLogueado, function(req,res){
 
 
 app.get("/crear_cuenta", middleNoLogueado, function(request, response) {
-    response.render("crear_cuenta");
+    response.render("crear_cuenta", {errMsg:null});
 });
 
-app.post("crearCuenta", multerFactory.single('foto'),function(request, response){
+app.post("/crear_cuenta", multerFactory.single('foto'),function(request, response){
     //VALIDACION
     
     let usuario = {
         correo:request.body.correo,
         nombre:request.body.nombre,
         contraseña: request.body.password,
-        perfil: request.body.perfil.value,
+        perfil: request.body.perfil,
         tecnico: request.body.tecnico === "si" ? true : false,
         foto: null,
         numEmpleado: null
@@ -117,7 +117,8 @@ app.post("crearCuenta", multerFactory.single('foto'),function(request, response)
     }
     daoU.agregarUsuario(usuario, function(err,res){
         if (err){
-            response.render("/crear_cuenta",{errMsg:err.message})
+            console.log(err)
+            response.render("crear_cuenta",{errMsg:err.message})
         }
         else{
             response.redirect("/login")
