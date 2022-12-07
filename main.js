@@ -72,6 +72,10 @@ app.get("/login", middleNoLogueado,function(request, response) {
     response.sendFile (path.join(__dirname, "public", "login.html"));
 });
 
+app.get("/login2", middleNoLogueado,function(request, response) {
+    response.render("login", {tareas : true});
+});
+
 app.post("/login", function(request, response){
     request.session.user = {
         nombre: request.body.nombre,
@@ -90,6 +94,10 @@ app.get("/cerrarSesion", function(req,res){
 
 app.get("/crear_cuenta", middleNoLogueado, function(request, response) {
     response.sendFile (path.join(__dirname, "public", "crear_cuenta.html"));
+});
+
+app.get("/crear_cuenta2", middleNoLogueado, function(request, response) {
+    response.render("crear_cuenta", {tareas : true});
 });
 
 app.post("crearCuenta", multerFactory.none(),function(request, response){
