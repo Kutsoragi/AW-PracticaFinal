@@ -22,7 +22,7 @@ const sessionStore = new MySQLStore({
     host: "localhost",
     user: "root",
     password:"",
-    database: "mystore"
+    database: "ucm_cau"
 })
 
 const pool = mysql.createPool(config.mysqlConfig);
