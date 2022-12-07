@@ -4,15 +4,15 @@ const path = require("path");
 const mysql = require("mysql");
 const config = require("./config")
 const express = require("express");
+const DAOUsuarios = require("./public/js/DAOUsuarios")
 const multer = require("multer");
 const multerFactory = multer({ storage: multer.memoryStorage() });
-const bodyParser = require("body-parser");
 
 const app = express();
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static(__dirname + '/public'));
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
 
 const session = require("express-session");
 const mysqlSession = require("express-mysql-session");
@@ -35,6 +35,8 @@ const middlewareSession = session({
 });
 
 app.use(middlewareSession);
+
+const daoU = new DAOUsuarios(pool)
 
 function middleLogueado(req, res, next){
 	//if usuario loggueado, next
@@ -73,28 +75,54 @@ app.get("/login", middleNoLogueado,function(request, response) {
 });
 
 app.post("/login", function(request, response){
-    request.session.user = {
-        nombre: request.body.nombre,
-        correo: request.body.correo,
-        perfil: request.body.perfil,
-        tecnico: request.body.tecnico
-    };
-    response.redirect("/mis_avisos.html")
+    daoU.leerUsuarioPorCorreo(request.body.correo, request.body.password,function(err,res){
+        if (err){
+            response.render("/login", {errMsg : err.message})
+        }
+        else{
+            request.session.user = res
+            response.redirect("/mis_avisos")
+        }
+    })
 })
 
-app.get("/cerrarSesion", function(req,res){
+app.get("/cerrarSesion", middleLogueado, function(req,res){
     req.session.user = null
     console.log("Has cerrado sesion")
-    res.redirect("/login.html")
+    res.redirect("/login")
 });
 
 
 app.get("/crear_cuenta", middleNoLogueado, function(request, response) {
-    response.render("crear_cuenta", {});
+    response.render("crear_cuenta");
 });
 
-app.post("crearCuenta", multerFactory.none(),function(request, response){
+app.post("crearCuenta", multerFactory.single('foto'),function(request, response){
+    //VALIDACION
     
+    let usuario = {
+        correo:request.body.correo,
+        nombre:request.body.nombre,
+        contraseña: request.body.password,
+        perfil: request.body.perfil.value,
+        tecnico: request.body.tecnico === "si" ? true : false,
+        foto: null,
+        numEmpleado: null
+    }
+    if (request.file){
+        usuario.foto = request.file.buffer
+    }
+    if (usuario.tecnico){
+        usuario.numEmpleado = request.body.numEmpl
+    }
+    daoU.agregarUsuario(usuario, function(err,res){
+        if (err){
+            response.render("/crear_cuenta",{errMsg:err.message})
+        }
+        else{
+            response.redirect("/login")
+        }
+    })
 })
 
 app.listen(3000, (err) => {
