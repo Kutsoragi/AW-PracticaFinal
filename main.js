@@ -138,6 +138,18 @@ app.post("/crear_cuenta", multerFactory.single("foto"),function(request, respons
     })
 })
 
+function cb_leerAvisos(err, res){
+    listaAvisos = []
+    if(err){
+        console.log(err.message);
+    }
+    else {
+        for(let aviso of res){
+            listaAvisos.push({idAviso:aviso.idAviso,texto:aviso.texto,fecha:aviso.fecha, tecnico:aviso.tecnico, perfil:aviso.perfil,tipo:aviso.tipo,categoria:aviso.categoria,comentario:aviso.comentario_tecnico})
+        }
+    }
+}
+
 app.listen(3000, (err) => {
     if (err) {
         console.error(`No se pudo inicializar el servidor: ${err.message}`);
