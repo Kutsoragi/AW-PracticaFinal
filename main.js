@@ -169,6 +169,18 @@ function(request, response){
         
 })
 
+function cb_leerAvisos(err, res){
+    listaAvisos = []
+    if(err){
+        console.log(err.message);
+    }
+    else {
+        for(let aviso of res){
+            listaAvisos.push({idAviso:aviso.idAviso,texto:aviso.texto,fecha:aviso.fecha, tecnico:aviso.tecnico, perfil:aviso.perfil,tipo:aviso.tipo,categoria:aviso.categoria,comentario:aviso.comentario_tecnico})
+        }
+    }
+}
+
 app.post("/procesar_formulario",
     
     // El campo login solo puede contener caracteres alfanuméricos.
