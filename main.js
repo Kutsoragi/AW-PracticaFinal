@@ -180,10 +180,8 @@ app.post("/crear_cuenta", multerFactory.single("foto"),
             else return false;
         }
     }),
-    // El campo empleado ha de ser no vacío.
-    check("numEmpl", "Por favor introduce un número de empleado").notEmpty(),
     // El campo empleado debe tener 4 dígitos y 3 letras
-    check("numEmpl", "El formato de nº de empleado no es válido").matches(/^[0-9]{4}-[a-z]{3}$/),
+    //check("numEmpl", "El formato de nº de empleado no es válido").matches(/^[0-9]{4}-[a-z]{3}$/),
     
 
 function(request, response){
