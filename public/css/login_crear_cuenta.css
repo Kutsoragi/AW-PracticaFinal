@@ -37,3 +37,7 @@
 .letraError{
     font-size: calc(7px + 0.4vw);
 }
+
+.letraErrorLogin {
+    font-size: 12px;
+}

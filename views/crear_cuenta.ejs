@@ -29,11 +29,11 @@
                         <!-- Email input -->
                         
                         <div class="form-outline mb-4 mr-4">
-                        <label class="form-label labelBold" for="correo">Correo electrónico:</label>
-                        <input type="email" name="correo" class="form-control inputWidth"/>
+                        <label class="form-label labelBold" for="correo">Correo electrónico:</label><span class="rojoError labelBold" title="Es obligatorio rellenar este campo"> *</span>
+                        <input type="email" name="correo" class="form-control inputWidth" value="<%= camposC.correo %>" />
                         <% if (errores) { %>
                             <% if (errores.correo) { %>
-                                <div class="rojoError labelBold letraError">
+                                <div class="rojoError labelBold letraError" title="<%= errores.correo.msg %>"">
                                     <%= errores.correo.msg %>
                                 </div>
                             <% }} %>
@@ -42,11 +42,11 @@
     
                         <!-- Nombre input -->
                         <div class="form-outline mb-4">
-                            <label class="form-label labelBold" for="nombre">Nombre para mostrar:</label>
-                            <input type="text" name="nombre" class="form-control inputWidth"/>
+                            <label class="form-label labelBold" for="nombre">Nombre para mostrar:</label><span class="rojoError labelBold" title="Es obligatorio rellenar este campo"> *</span>
+                            <input type="text" name="nombre" class="form-control inputWidth" value="<%= camposC.nombre %>"/>
                             <% if (errores) { %>
                                 <% if (errores.nombre) { %>
-                                    <div class="rojoError labelBold letraError">
+                                    <div class="rojoError labelBold letraError" title="<%= errores.nombre.msg %>"">
                                         <%= errores.nombre.msg %>
                                     </div>
                                 <% }} %>
@@ -59,23 +59,24 @@
                     <div class="row">
 
                         <div class="form-outline mb-4 mr-4">
-                            <label class="form-label labelBold" for="password">Contraseña:</label>
-                          <input type="password" name="password" class="form-control inputWidth" />
+                            <label class="form-label labelBold" for="password">Contraseña:</label><span class="rojoError labelBold" title="Es obligatorio rellenar este campo"> *</span>
+                          <input type="password" name="password" class="form-control inputWidth" value="<%= camposC.password %>" />
                           <% if (errores) { %>
                             <% if (errores.password) { %>
-                                <div class="rojoError labelBold letraError">
-                                    <%= errores.password.msg %>
+                                <div class="rojoError labelBold letraError" title="La contraseña debe tener entre 8 y 16 caracteres, al menos un dígito, al menos una minúscula, al menos una mayúscula y al menos un carácter no alfanumérico">
+                                    <%= errores.password.msg %> <span><img src="img/informacionP.png" width="16" height="16" 
+                                        title="La contraseña debe tener entre 8 y 16 caracteres, al menos un dígito, al menos una minúscula, al menos una mayúscula y al menos un carácter no alfanumérico"></span>
                                 </div>
                             <% }} %>
                         </div>
                         
 
                         <div class="form-outline mb-4">
-                            <label class="form-label labelBold" for="pass2">Confirmar contraseña:</label>
-                          <input type="password" id="pass2" name="password2" class="form-control inputWidth" />
+                            <label class="form-label labelBold" for="pass2">Confirmar contraseña:</label><span class="rojoError labelBold" title="Es obligatorio rellenar este campo"> *</span>
+                          <input type="password" id="pass2" name="password2" class="form-control inputWidth" value="<%= camposC.password2 %>" />
                           <% if (errores) { %>
                             <% if (errores.password2) { %>
-                                <div class="rojoError labelBold letraError">
+                                <div class="rojoError labelBold letraError" title="<%= errores.password2.msg %>"">
                                     <%= errores.password2.msg %>
                                 </div>
                             <% }} %>
@@ -86,17 +87,19 @@
                     <div class="row">
 
                         <div class="form-outline mb-4 mr-4">
-                            <label class="form-label labelBold" for="selectorPerfil">Perfil Universitario:</label>
+                            <label class="form-label labelBold" for="selectorPerfil">Perfil Universitario:</label><span class="rojoError labelBold" title="Es obligatorio rellenar este campo"> *</span>
                             <select class="form-control" id="selectorPerfil" name="perfil" onchange="mostrarCTecnico()">
                                 <option value="none" selected disabled hidden>Seleccione su perfil universitario</option>
                                 <option value="alumno">Alumno</option>
                                 <option value="pas">Personal de Administración y Servicios (PAS)</option>
                                 <option value="pdi">Personal Docente e Investigador (PDI)</option>
                                 <option value="aa">Antiguo Alumno</option>
-                              </select>
+                            </select>
+                                
+
                               <% if (errores) { %>
                                 <% if (errores.perfil) { %>
-                                    <div class="rojoError labelBold letraError">
+                                    <div class="rojoError labelBold letraError" title="<%= errores.perfil.msg %>"">
                                         <%= errores.perfil.msg %>
                                     </div>
                                 <% }} %>
@@ -111,7 +114,13 @@
 
                         <div class="form-outline mb-4 mr-4">
                             <label for="inputFoto" class="form-label labelBold">Imagen de perfil:</label>
-                            <input class="form-control" type="file" name="foto" id="inputFoto">
+                            <input class="form-control" type="file" name="foto" id="inputFoto" accept="image/png, image/jpeg">
+                            <% if (errores) { %>
+                                <% if (errores.foto) { %>
+                                    <div class="rojoError labelBold letraError" title="<%= errores.foto.msg %>"">
+                                        <%= errores.foto.msg %>
+                                    </div>
+                                <% }} %>
                           </div>
                      
 
@@ -119,6 +128,7 @@
 
                     <div class="row regTecnico justify-content-center">
                         <div class="form-check mt-4 mb-4 mr-4" id="divTecnico">
+                            <% let checkedT = camposC.tecnico === "si" ? "checked" : "" %>
                             <input class="form-check-input" type="checkbox" id="cTecnico" name="tecnico" value="si" onchange="mostrarNEmpleado()">
                             <label class="form-check-label" for="flexCheckDefault">
                               Técnico
@@ -126,8 +136,14 @@
                         </div>
 
                         <div class="form-outline mb-4" id="nEmpleado">
-                            <label class="form-label labelBold" for="numEmpl">Nº de empleado:</label>
-                            <input type="text" name="numEmpl" class="form-control inputWidth" />
+                            <label class="form-label labelBold" for="numEmpl">Nº de empleado:</label><span class="rojoError labelBold" title="Es obligatorio rellenar este campo"> *</span>
+                            <input type="text" name="numEmpl" class="form-control inputWidth" value="<%= camposC.numEmpl %>"/>
+                            <% if (errores) { %>
+                                <% if (errores.numEmpl) { %>
+                                    <div class="rojoError labelBold letraError" title="<%= errores.numEmpl.msg %>"">
+                                        <%= errores.numEmpl.msg %>
+                                    </div>
+                                <% }} %>
                               
                         </div>
 
@@ -144,7 +160,8 @@
                     <!-- Submit button -->
                     <div class="row mt-4 mb-4">
                         <button type="submit" class="col btn btnRojo mb-4 mr-4">Crear cuenta</button>
-                        <button type="reset" class="col btn btn-secondary btnLimpiar mb-4" onclick="ocultarPAS()">Limpiar formulario</button>
+                        <!--<button type="reset" class="col btn btn-secondary btnLimpiar mb-4" onclick="ocultarPAS()">Limpiar formulario</button>-->
+                        <a class="col btn btn-secondary btnLimpiar mb-4" href="/crear_cuenta" role="button">Limpiar formulario</a>
                         
                   
                       

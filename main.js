@@ -33,6 +33,17 @@ const valorPerfil = (param) => {
 
 };
 
+let camposVacios = {
+    correo:'',
+        nombre:'',
+        password:'',
+        password2:'',
+        perfil: 'none',
+        tecnico : '',
+        foto : undefined,
+        numEmpl : ''
+}
+
 const pool = mysql.createPool(config.mysqlConfig);
 
 const middlewareSession = session({
@@ -79,19 +90,37 @@ app.get("/historico_de_avisos", middleLogueado, function(request, response) {
 });
 
 app.get("/login", middleNoLogueado,function(request, response) {
-    response.render("login", {errMsg: null});
+    response.render("login", {errMsg: null, errores : null, campoEmail : null});
 });
 
-app.post("/login", function(request, response){
-    daoU.leerUsuarioPorCorreo(request.body.correo, request.body.password,function(err,res){
-        if (err){
-            response.render("login", {errMsg : err.message})
-        }
-        else{
-            request.session.user = res
-            response.redirect("/mis_avisos")
-        }
-    })
+app.post("/login", 
+    // El campo correo ha de ser no vacío.
+    check("correo", "Por favor, introduce un correo electrónico").notEmpty(),
+    // El campo correo ha de ser una dirección de correo válida.
+    check("correo","Por favor, introduce un correo electrónico").isEmail(),
+    // El campo nombre ha de ser no vacío.
+    check("password", "Por favor, introduce una contraseña").notEmpty(),
+
+function(request, response){
+
+    const errors = validationResult(request);
+    if(!errors.isEmpty()) {
+        response.render("login", {errMsg : null, errores: errors.mapped(), campoEmail : request.body.correo });
+    }
+    else {
+        daoU.leerUsuarioPorCorreo(request.body.correo, request.body.password,function(err,res){
+            if (err){
+                response.render("login", {errMsg : err.message, errores : null, campoEmail : request.body.correo })
+            }
+            else{
+                request.session.user = res
+                response.redirect("/mis_avisos")
+            }
+        })
+
+    }
+
+    
 })
 
 app.get("/cerrarSesion", middleLogueado, function(req,res){
@@ -102,7 +131,7 @@ app.get("/cerrarSesion", middleLogueado, function(req,res){
 
 
 app.get("/crear_cuenta", middleNoLogueado, function(request, response) {
-    response.render("crear_cuenta", {errMsg : null, errores : null});
+    response.render("crear_cuenta", {errMsg : null, errores : null, camposC : camposVacios});
 });
 
 app.get("/obtener_imagen", middleLogueado, function(request, response){
@@ -118,26 +147,64 @@ app.get("/obtener_imagen", middleLogueado, function(request, response){
 
 app.post("/crear_cuenta", multerFactory.single("foto"),
     // El campo correo ha de ser no vacío.
-    check("correo", "Por favor introduce un correo electrónico").notEmpty(),
+    check("correo", "Por favor, introduce un correo electrónico").notEmpty(),
     // El campo correo ha de ser una dirección de correo válida.
-    check("correo","Por favor introduce un correo electrónico").isEmail(),
+    check("correo","Por favor, introduce un correo electrónico").isEmail(),
     // El campo nombre ha de ser no vacío.
-    check("nombre", "Por favor introduce un nombre").notEmpty(),
+    check("nombre", "Por favor, introduce un nombre").notEmpty(),
     // El campo password ha de ser no vacío.
-    check("password", "Por favor introduce la contraseña").notEmpty(),
+    check("password", "Por favor, introduce la contraseña").notEmpty(),
     // El campo pass ha de tener entre 6 y 10 caracteres.
-    check("password","La contraseña debe tener entre 6 y 10 caracteres").isLength({ min: 6, max: 10 }),
-    // El campo password ha de ser no vacío.
-    check("password2", "Las contraseñas deben coincidir").equals("a"),
+    check("password","Contraseña no válida").matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$/),
+    // El campo password2 ha de ser no vacío.
+    check("password2", "Por favor, confirma la contraseña").notEmpty(),
+    // El campo password2  tiene que coincidir.
+    check("password2", "Las contraseñas deben coincidir").custom((value, {req}) => (value === req.body.password)),
     // El campo perfil hay que seleccionarlo.
-    check("perfil", "Por favor selecciona un perfil universitario").custom(valorPerfil),
+    check("perfil", "Por favor, selecciona un perfil universitario").custom(valorPerfil),
+    // El campo foto tiene que ser una foto.
+    check("foto", "Sólo se admiten archivos .jpeg o .png").custom((value, {req}) => {
+        if(req.file === undefined) return true
+        else {
+            switch(req.file.mimetype){
+                case "image/jpeg" : return ".jpeg"
+                case "image/png" : return ".png"
+                default : return false;
+            }
+        }
+    }),
+    check("foto", "La imagen debe ocupar menos de 10MB").custom((value, {req}) => {
+        if(req.file === undefined) return true
+        else {
+            if(req.file.size < 10485760) return true;
+            else return false;
+        }
+    }),
+    // El campo empleado ha de ser no vacío.
+    check("numEmpl", "Por favor introduce un número de empleado").notEmpty(),
+    // El campo empleado debe tener 4 dígitos y 3 letras
+    check("numEmpl", "El formato de nº de empleado no es válido").matches(/^[0-9]{4}-[a-z]{3}$/),
+    
 
 function(request, response){
 
+    let campos = {
+    
+        correo:request.body.correo,
+        nombre:request.body.nombre,
+        password: request.body.password,
+        password2: request.body.password2,
+        perfil: request.body.perfil,
+        tecnico : request.body.tecnico,
+        foto : request.body.file,
+        numEmpl : request.body.numEmpl
+
+    }
+        
     const errors = validationResult(request);
-    console.log(errors);
-    if(!errors.isEmpty()) {
-        response.render("crear_cuenta", {errMsg : "Error en la validación", errores: errors.mapped()});
+    //console.log(errors);
+    if(!errors.isEmpty()) {          
+        response.render("crear_cuenta", {errMsg : "Por favor, completa todos los campos correctamente" , errores: errors.mapped(), camposC : campos});
     }
     else {
         let usuario = {
@@ -159,7 +226,7 @@ function(request, response){
         daoU.agregarUsuario(usuario, function(err,res){
             if (err){
                 console.log(err)
-                response.render("crear_cuenta",{errMsg : err.message, errores : null})
+                response.render("crear_cuenta",{errMsg : err.message, errores : null, camposC : campos})
             }
             else{
                 response.redirect("/login")
@@ -180,24 +247,6 @@ function cb_leerAvisos(err, res){
         }
     }
 }
-
-app.post("/procesar_formulario",
-    
-    // El campo login solo puede contener caracteres alfanuméricos.
-    //checkBody("login", "Nombre de usuario no válido").matches(/^[A-Z0-9]+$/i),
-    
-    
-    // El campo fechaNacimiento ha de contener una fecha en formato mm/dd/aaaa
-    (request, response) => {
-    
-    if (errors.isEmpty()) {
-        response.redirect("/login");
-    }
-    else {
-        response.redirect("crear_cuenta", {errMsg : null, errores: errors.mapped()});
-        
-    }
-    })
 
 app.listen(3000, (err) => {
     if (err) {

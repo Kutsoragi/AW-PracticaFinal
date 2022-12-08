@@ -24,24 +24,30 @@
 
             <div class="row cuadroLogin justify-content-center">
               
-                <form class="formCuenta needs-validation" action="/login" method="post" novalidate>
+                <form class="formCuenta" action="/login" method="post" novalidate>
                   <h4 class="text-center mb-4">Iniciar sesión</h4>
                     <!-- Email input -->
                     <div class="form-outline mb-4">
                       <label class="form-label labelBold" for="correo">Correo electrónico:</label>
-                      <input type="email" name="correo" class="form-control" required/>
-                      <div class="invalid-feedback labelBold">
-                        Por favor introduce un correo electrónico
-                      </div>
+                      <input type="email" name="correo" class="form-control" value="<%= campoEmail %>"/>
+                      <% if (errores) { %>
+                        <% if (errores.correo) { %>
+                            <div class="rojoError labelBold letraErrorLogin" title="<%= errores.correo.msg %>"">
+                                <%= errores.correo.msg %>
+                            </div>
+                        <% }} %>
                     </div>
                   
                     <!-- Password input -->
                     <div class="form-outline mb-4">
                         <label class="form-label labelBold" for="pass">Contraseña:</label>
-                        <input type="password" name="password" class="form-control" required/>
-                        <div class="invalid-feedback labelBold">
-                          Por favor introduce una contraseña
-                        </div>
+                        <input type="password" name="password" id="pass" class="form-control"/>
+                        <% if (errores) { %>
+                          <% if (errores.password) { %>
+                              <div class="rojoError labelBold letraErrorLogin" title="<%= errores.password.msg %>"">
+                                  <%= errores.password.msg %>
+                              </div>
+                          <% }} %>
                     </div>
                   
                     <!-- 2 column grid layout for inline styling -->
