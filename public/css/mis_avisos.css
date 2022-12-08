@@ -64,6 +64,10 @@
     text-align: end;
 }
 
+.centrar{
+    margin: auto;
+}
+
 .nuevoAviso{
     margin-bottom: 50px;
 }
@@ -71,3 +75,4 @@
 .nav-item:hover{
     background-color: lightgray;
 }
+
