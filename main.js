@@ -4,6 +4,8 @@ const path = require("path");
 const mysql = require("mysql");
 const config = require("./config")
 const express = require("express");
+const { check, validationResult } = require("express-validator");
+
 const DAOUsuarios = require("./public/js/DAOUsuarios")
 const multer = require("multer");
 const multerFactory = multer({ storage: multer.memoryStorage() });
@@ -24,6 +26,12 @@ const sessionStore = new MySQLStore({
     password:"",
     database: "ucm_cau"
 })
+
+const valorPerfil = (param) => {
+    const perfiles = ["alumno", "pas", "pdi", "aa"];
+    return perfiles.includes(param);
+
+};
 
 const pool = mysql.createPool(config.mysqlConfig);
 
@@ -94,7 +102,7 @@ app.get("/cerrarSesion", middleLogueado, function(req,res){
 
 
 app.get("/crear_cuenta", middleNoLogueado, function(request, response) {
-    response.render("crear_cuenta", {errMsg:null});
+    response.render("crear_cuenta", {errMsg : null, errores : null});
 });
 
 app.get("/obtener_imagen", middleLogueado, function(request, response){
@@ -108,35 +116,76 @@ app.get("/obtener_imagen", middleLogueado, function(request, response){
     })
 })
 
-app.post("/crear_cuenta", multerFactory.single("foto"),function(request, response){
-    //VALIDACION
-    
-    let usuario = {
-        correo:request.body.correo,
-        nombre:request.body.nombre,
-        contraseña: request.body.password,
-        perfil: request.body.perfil,
-        tecnico: request.body.tecnico === "si" ? true : false,
-        foto: null,
-        numEmpleado: null
+app.post("/crear_cuenta", multerFactory.single("foto"),
+    // El campo correo ha de ser no vacío.
+    check("correo", "Por favor introduce un correo electrónico").notEmpty(),
+    // El campo correo ha de ser una dirección de correo válida.
+    check("correo","Por favor introduce un correo electrónico").isEmail(),
+    // El campo nombre ha de ser no vacío.
+    check("nombre", "Por favor introduce un nombre").notEmpty(),
+    // El campo password ha de ser no vacío.
+    check("password", "Por favor introduce la contraseña").notEmpty(),
+    // El campo pass ha de tener entre 6 y 10 caracteres.
+    check("password","La contraseña debe tener entre 6 y 10 caracteres").isLength({ min: 6, max: 10 }),
+    // El campo password ha de ser no vacío.
+    check("password2", "Las contraseñas deben coincidir").equals("a"),
+    // El campo perfil hay que seleccionarlo.
+    check("perfil", "Por favor selecciona un perfil universitario").custom(valorPerfil),
+
+function(request, response){
+
+    const errors = validationResult(request);
+    console.log(errors);
+    if(!errors.isEmpty()) {
+        response.render("crear_cuenta", {errMsg : "Error en la validación", errores: errors.mapped()});
     }
-    if (request.file){
-        console.log(request.file)
-        usuario.foto = request.file.buffer
-    }
-    if (usuario.tecnico){
-        usuario.numEmpleado = request.body.numEmpl
-    }
-    daoU.agregarUsuario(usuario, function(err,res){
-        if (err){
-            console.log(err)
-            response.render("crear_cuenta",{errMsg:err.message})
+    else {
+        let usuario = {
+            correo:request.body.correo,
+            nombre:request.body.nombre,
+            contraseña: request.body.password,
+            perfil: request.body.perfil,
+            tecnico: request.body.tecnico === "si" ? true : false,
+            foto: null,
+            numEmpleado: null
         }
-        else{
-            response.redirect("/login")
+        if (request.file){
+            console.log(request.file)
+            usuario.foto = request.file.buffer
         }
-    })
+        if (usuario.tecnico){
+            usuario.numEmpleado = request.body.numEmpl
+        }
+        daoU.agregarUsuario(usuario, function(err,res){
+            if (err){
+                console.log(err)
+                response.render("crear_cuenta",{errMsg : err.message, errores : null})
+            }
+            else{
+                response.redirect("/login")
+            }
+        })
+    }
+        
 })
+
+app.post("/procesar_formulario",
+    
+    // El campo login solo puede contener caracteres alfanuméricos.
+    //checkBody("login", "Nombre de usuario no válido").matches(/^[A-Z0-9]+$/i),
+    
+    
+    // El campo fechaNacimiento ha de contener una fecha en formato mm/dd/aaaa
+    (request, response) => {
+    
+    if (errors.isEmpty()) {
+        response.redirect("/login");
+    }
+    else {
+        response.redirect("crear_cuenta", {errMsg : null, errores: errors.mapped()});
+        
+    }
+    })
 
 app.listen(3000, (err) => {
     if (err) {

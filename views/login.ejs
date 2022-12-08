@@ -6,14 +6,15 @@
         <link rel="icon" type="image/x-icon" href="img/logoucm.ico">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-        <link rel="stylesheet"  media="screen" href="css/mis_avisos.css"/>
+        <link rel="stylesheet"  media="screen" href="/css/main.css"/>
+        <link rel="stylesheet"  media="screen" href="/css/login_crear_cuenta.css"/>
     </head>
 
     <body>
         <div class ="container-fluid">
           <div class="row d-flex cabecera align-items-center">
               <div class="col-xl-2 col-md-3 col-sm-3 col-3">
-                  <a href="/"><img src="img/ucm_logo2.png" id="logo"></a>
+                  <a href="/"><img src="/img/ucm_logo2.png" id="logo"></a>
               </div>
               <div class="col-xl-8 col-md-6 col-sm-5 col-5"><h1 class="titulo">Centro de Atención al Usuario</h1></div>
               <div class="col-xl-1 col-md-2 col-sm-4 col-4">
@@ -29,7 +30,7 @@
                     <div class="form-outline mb-4">
                       <label class="form-label labelBold" for="correo">Correo electrónico:</label>
                       <input type="email" name="correo" class="form-control" required/>
-                      <div class="invalid-feedback">
+                      <div class="invalid-feedback labelBold">
                         Por favor introduce un correo electrónico
                       </div>
                     </div>
@@ -38,7 +39,7 @@
                     <div class="form-outline mb-4">
                         <label class="form-label labelBold" for="pass">Contraseña:</label>
                         <input type="password" name="password" class="form-control" required/>
-                        <div class="invalid-feedback">
+                        <div class="invalid-feedback labelBold">
                           Por favor introduce una contraseña
                         </div>
                     </div>
@@ -70,7 +71,7 @@
                   
                     <!-- Register buttons -->
                     <div class="text-center mb-4">
-                      <p>¿No tienes una cuenta? <a href="/crear_cuenta.html">Crear cuenta</a></p>
+                      <p>¿No tienes una cuenta? <a href="/crear_cuenta">Crear cuenta</a></p>
                       
                     </div>
                   </form>

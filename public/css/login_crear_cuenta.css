@@ -1,0 +1,39 @@
+
+@media screen and (max-width: 992px){   
+    #logo{      
+        content:url("/img/ucm_logo_min.png");
+        
+    } 
+}
+
+.cuadroLogin{
+    margin-top: 2.5rem;
+    
+}
+
+#divTecnico{
+    display: none;
+}
+
+#nEmpleado{
+    display: none;
+    
+}
+
+#numEmpl{
+    width: 11rem;
+}
+
+#inputFoto{
+    width: calc(17rem + 12vw);
+    
+}
+
+.inputWidth{
+    width: calc(6rem + 12vw);
+    min-width: 11rem;
+}
+
+.letraError{
+    font-size: calc(7px + 0.4vw);
+}
