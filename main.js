@@ -158,7 +158,7 @@ app.post("/crear_cuenta", multerFactory.single("foto"),
     // El campo password ha de ser no vacío.
     check("password", "Por favor, introduce la contraseña").notEmpty(),
     // El campo pass ha de tener entre 6 y 10 caracteres.
-    check("password","Contraseña no válida").matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$/),
+    check("password","Contraseña no válida").matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.-¿=])[A-Za-z\d@$!%*?&.-¿=]{8,16}$/),
     // El campo password2 ha de ser no vacío.
     check("password2", "Por favor, confirma la contraseña").notEmpty(),
     // El campo password2  tiene que coincidir.
