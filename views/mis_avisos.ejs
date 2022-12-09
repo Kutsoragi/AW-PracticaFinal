@@ -176,12 +176,21 @@
 
                         <div class="form-outline mb-4 mr-4 mt-3" id="adigital">
                           <label class="form-label labelBold" for="selectorCategoria">Sugerencia/incidencia:</label><span class="rojoError labelBold" title="Es obligatorio rellenar este campo"> *</span>
-                          <select class="form-control" id="selectorCategoria" name="categoria" onchange="">
+                          <select class="form-control" id="selectorInc" name="categoria" onchange="">
                               <option value="cfisica" selected>Certificado digital de persona física</option>
                               <option value="cpublico">Certificado electrónico de empleado público</option>
                               <option value="registroElec">Registro electrónico</option>
                               <option value="sede">Sede electrónica</option>
                               <option value="portafirmas">Portafirmas</option>
+
+                              <option value='sara' selected>Cuenta as la Red SARA</option>
+                              <option value='conex'>Conexión por cable en despachos</option>
+                              <option value='cortafuegos'>Cortafuegos corporativo</option>
+                              <option value='dns'>Resolución de nombres de dominio (DNS)</option>
+                              <option value='vpn'>VPN Acceso remoto</option>
+                              <option value='eduroam'>Wifi Eduroam (ssid: eduroam)</option>
+                              <option value='wifivis'>Wifi para visitantes (ssid: UCM-Visitantes)</option>
+
                           </select>
                         </div>
 
@@ -239,6 +248,31 @@
             }
             
           }
+
+          $(document).ready(function () {
+          $("#selectorCategoria").change(function () {
+            switch($(this).val()) {
+                case 'adigital':
+                    $("#selectorInc").html("<option value='cfisica' selected>Certificado digital de persona física</option><option value='cpublico'>Certificado electrónico de empleado público</option><option value='registroElec'>Registro electrónico</option><option value='sede'>Sede electrónica</option><option value='portafirmas'>Portafirmas</option>");
+                    break;
+                case 'comu':
+                    $("#selectorInc").html("<option value='correo' selected>Correo electrónico</option><option value='meet'>Google Meet</option><option value='calumno'>Cuenta de alumno</option><option value='cpersonal'>Cuenta de personal</option><option value='cgenerica'>Cuenta genérica</option>");
+                    break;
+                case 'conect':
+                    $("#selectorInc").html("<option value='sara' selected>Cuenta as la Red SARA</option><option value='conex'>Conexión por cable en despachos</option><option value='cortafuegos'>Cortafuegos corporativo</option><option value='dns'>Resolución de nombres de dominio (DNS)</option><option value='vpn'>VPN Acceso remoto</option><option value='eduroam'>Wifi Eduroam (ssid: eduroam)</option><option value='wifivis'>Wifi para visitantes (ssid: UCM-Visitantes)</option>");
+                    break;
+                case 'docencia':
+                    $("#selectorInc").html("<option value='test'>item3: test 1</option><option value='test2'>item3: test 2</option>");
+                    break;
+                case 'web':
+                    $("#selectorInc").html("<option value='test'>item3: test 1</option><option value='test2'>item3: test 2</option>");
+                    break;
+                default:
+                    $("#selectorInc").html("<option value='cfisica' selected>Certificado digital de persona física</option><option value='cpublico'>Certificado electrónico de empleado público</option><option value='registroElec'>Registro electrónico</option><option value='sede'>Sede electrónica</option><option value='portafirmas'>Portafirmas</option>");
+                    
+            }
+          });
+        });
 
         /*
           
