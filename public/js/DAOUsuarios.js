@@ -76,6 +76,10 @@ class DAOUsuarios {
 		});
     }
 
+    leerNombrePorId(idUsuario,callback){
+        
+    }
+
     leerUsuarioPorCorreo(correo, password,callback){
         this._pool.getConnection(function(err, connection) {
             if (err) {
