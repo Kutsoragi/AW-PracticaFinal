@@ -15,6 +15,7 @@ class DAOAvisos {
                     function(err, rows) {
                         connection.release();
                         if (err) {
+                            console.log(err)
                             callback(new Error(err));
                         }
                         else {

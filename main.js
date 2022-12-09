@@ -138,7 +138,7 @@ app.get("/crear_cuenta", middleNoLogueado, function(request, response) {
 });
 
 app.get("/obtener_imagen", middleLogueado, function(request, response){
-    daoU.obtenerImagen(request.session.user.ID, function(err,res){
+    daoU.obtenerImagen(request.session.user.idUsuario, function(err,res){
         if (res){
             response.end(new Buffer.from(res))
         }
@@ -239,7 +239,7 @@ function(request, response){
         
 })
 
-app.post("/mis_avisos", 
+app.post("/mis_avisos",
     // El campo correo ha de ser no vacío.
     
 
@@ -254,9 +254,9 @@ function(request, response){
  //   }
  //   else {
         let aviso = {
-            idUsuario: request.session.idUsuario,
-            texto: request.body.obs,
-            perfil : 'pdi',
+            idUsuario: request.session.user.idUsuario,
+            texto: request.body.observacion,
+            perfil : request.session.user.perfil,
             tipo: request.body.tipo,
             categoria: request.body.categoria,
             subcategoria : request.body.subcategoria
