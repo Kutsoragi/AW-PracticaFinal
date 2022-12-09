@@ -119,13 +119,13 @@ class DAOUsuarios {
                             //Aquí se tratan los datos y llama al callback (Habría que devolver el ID generado por el insert)
                             if(rows.length > 0){
                                 let usuario = {
-                                    ID: rows[0].idUsuario, 
-                                    Correo: rows[0].correo,
-                                    Nombre: rows[0].nombre,
-                                    Contraseña: rows[0].contraseña,
-                                    Fecha: rows[0].fecha,
-                                    Perfil: rows[0].perfil,
-                                    Tecnico: rows[0].tecnico,
+                                    idUsuario: rows[0].idUsuario, 
+                                    correo: rows[0].correo,
+                                    nombre: rows[0].nombre,
+                                    contraseña: rows[0].contraseña,
+                                    fecha: rows[0].fecha,
+                                    perfil: rows[0].perfil,
+                                    tecnico: rows[0].tecnico,
                                 };
                                 callback(null,usuario);
                             }

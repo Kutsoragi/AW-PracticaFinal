@@ -145,7 +145,7 @@
 
                     <div class="modal-body">
                       <div class="container-fluid">
-                        <form id="nuevoAvisoForm" enctype="multipart/form-data" action="/mis_avisos" method="post" novalidate>
+                        <form id="nuevoAvisoForm" enctype="application/json" action="/mis_avisos" method="post" novalidate>
                           <div class="mb-3 labelBold">
                             Seleccione el tipo de aviso que desea realizar: <span class="rojoError labelBold" title="Es obligatorio rellenar este campo"> *</span>
                           </div>
@@ -199,7 +199,7 @@
   
                           <div class="form-outline mt-3 mb-3">
                             <label class="labelBold" for="obs">Observaciones:</label><span class="rojoError labelBold" title="Es obligatorio rellenar este campo"> *</span>
-                            <textarea class="form-control" id="obs" rows="3"></textarea>
+                            <textarea class="form-control" id="obs" name="observacion" rows="3"></textarea>
                           </div>
 
 
