@@ -279,6 +279,9 @@ function cb_leerAvisos(err, res){
     }
     else {
         for(let aviso of res){
+            if(aviso.tecnico){
+                aviso.tecnico = daoU.leerNombrePorId(aviso.tecnico)
+            }
             listaAvisos.push({idAviso:aviso.idAviso,texto:aviso.texto,fecha:aviso.fecha, tecnico:aviso.tecnico, perfil:aviso.perfil,tipo:aviso.tipo,categoria:aviso.categoria,comentario:aviso.comentario_tecnico})
         }
     }

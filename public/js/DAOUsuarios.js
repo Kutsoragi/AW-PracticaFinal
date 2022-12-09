@@ -77,7 +77,30 @@ class DAOUsuarios {
     }
 
     leerNombrePorId(idUsuario,callback){
-        
+        this._pool.getConnection(function(err, connection) {
+            if (err) {
+                callback(new Error("Error de conexion a la base de datos"));
+            }
+            else {
+                connection.query("SELECT nombre FROM ucm_aw_cau_usu_usuarios WHERE idUsuario = ?" , [idUsuario] ,//Aquí va la query a la BD
+                    function(err, rows) {
+                        connection.release();
+                        if (err) {
+                            callback(new Error("Error de acceso a la base de datos"));
+                        }
+                        else {
+                            //Aquí se tratan los datos y llama al callback (Habría que devolver el ID generado por el insert)
+                            if(rows.length > 0){
+                                callback(null,rows[0]);
+                            }
+                            else{
+                                callback(new Error("No existe el usuario"))
+                            }
+                        }
+                    }
+                );
+            }
+        });
     }
 
     leerUsuarioPorCorreo(correo, password,callback){
