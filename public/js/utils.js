@@ -9,17 +9,28 @@ module.exports = {
         switch(perfil){
             case 'alumno': 
                     switch(cat){
+                        //administracion digital
                         case 'cfisica': return true;
                         case 'cpublico': return false;
                         case 'registroElec': return true;
                         case 'sede': return true;
                         case 'portafirmas': return false;
 
+                        //comunicaciones
                         case 'correo': return true;
                         case 'meet': return true;
                         case 'calumno': return true;
                         case 'cpersonal': return false;
                         case 'cgenerica': return false;
+
+                        //conectividad
+                        case 'sara': return false;
+                        case 'conex': return false;
+                        case 'cortafuegos': return true;
+                        case 'dns': return false;
+                        case 'vpn': return true;
+                        case 'eduroam': return true;
+                        case 'wifivis': return false;
                     }
                 break;
             

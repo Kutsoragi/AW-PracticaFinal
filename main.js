@@ -189,6 +189,8 @@ app.post("/crear_cuenta", multerFactory.single("foto"),
 
 function(request, response){
 
+    console.log(request.body)
+
     let campos = {
     
         correo:request.body.correo,
@@ -244,7 +246,7 @@ app.post("/mis_avisos",
 function(request, response){
 
     
-        console.log(request.body)
+        console.log(request.body);
    // const errors = validationResult(request);
     //console.log(errors);
  //   if(!errors.isEmpty()) {          
@@ -259,6 +261,7 @@ function(request, response){
             categoria: request.body.categoria,
             subcategoria : request.body.subcategoria
         }
+        console.log(aviso);
         daoA.crearAviso(aviso, function(err,res){
             if (err){
                 console.log(err)
