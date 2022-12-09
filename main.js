@@ -3,10 +3,12 @@
 const path = require("path");
 const mysql = require("mysql");
 const config = require("./config")
+const utils = require("./public/js/utils")
 const express = require("express");
 const { check, validationResult } = require("express-validator");
 
 const DAOUsuarios = require("./public/js/DAOUsuarios")
+const DAOAvisos = require("./public/js/DAOAvisos")
 const multer = require("multer");
 const multerFactory = multer({ storage: multer.memoryStorage() });
 
@@ -56,6 +58,7 @@ const middlewareSession = session({
 app.use(middlewareSession);
 
 const daoU = new DAOUsuarios(pool)
+const daoA = new DAOAvisos(pool)
 
 function middleLogueado(req, res, next){
 	//if usuario loggueado, next
@@ -231,6 +234,41 @@ function(request, response){
             }
         })
     }
+        
+})
+
+app.post("/mis_avisos", 
+    // El campo correo ha de ser no vacío.
+    
+
+function(request, response){
+
+    
+        console.log(request.body)
+   // const errors = validationResult(request);
+    //console.log(errors);
+ //   if(!errors.isEmpty()) {          
+ //       response.render("crear_cuenta", {errMsg : "Por favor, completa todos los campos correctamente" , errores: errors.mapped(), camposC : campos});
+ //   }
+ //   else {
+        let aviso = {
+            idUsuario: request.session.user,
+            texto: request.body.obs,
+            perfil : 'pdi',
+            tipo: request.body.tipo,
+            categoria: request.body.categoria,
+            subcategoria : request.body.subcategoria
+        }
+        daoA.crearAviso(aviso, function(err,res){
+            if (err){
+                console.log(err)
+                response.render("mis_avisos",{})
+            }
+            else{
+                response.render("mis_avisos",{})
+            }
+        })
+//    }
         
 })
 

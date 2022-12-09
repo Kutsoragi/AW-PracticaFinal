@@ -1,6 +1,6 @@
 "use strict"
 
-class DAOUsuarios {
+class DAOAvisos {
 	constructor(pool){
 		this._pool = pool;
 	}
@@ -11,11 +11,11 @@ class DAOUsuarios {
                 callback(new Error("Error de conexion a la base de datos"));
             }
             else {
-                connection.query("INSERT INTO ucm_aw_cau_avi_avisos (idUsuario,texto,fecha,perfil,categoria,tipo) VALUES (?,?,?,?,?,?)" , [aviso.idUsuario,aviso.texto,new Date().toISOString().slice(0, 19).replace('T', ' '),aviso.perfil,aviso.categoria,aviso.tipo] ,
+                connection.query("INSERT INTO ucm_aw_cau_avi_avisos (idUsuario, texto, fecha, perfil, tipo, categoria, subcategoria) VALUES (?, ?, ?, ?, ?, ?, ?)" , [aviso.idUsuario, aviso.texto, new Date().toISOString().slice(0, 19).replace('T', ' '), aviso.perfil, aviso.tipo, aviso.categoria, aviso.subcategoria] ,
                     function(err, rows) {
                         connection.release();
                         if (err) {
-                            callback(new Error("Error de acceso a la base de datos"));
+                            callback(new Error(err));
                         }
                         else {
                             callback(null,rows.insertID)

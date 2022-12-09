@@ -133,7 +133,7 @@
                   <div class="modal-content">
                     <div class="modal-header">
                         
-                        <h5 class="modal-title">Nuevo Aviso</h5>
+                        <h5 class="modal-title ml-3">Nuevo Aviso</h5>
                           
                           
                           <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
@@ -145,62 +145,69 @@
 
                     <div class="modal-body">
                       <div class="container-fluid">
-                        <form id="nuevoAvisoForm" enctype="multipart/form-data" method="post" novalidate>
+                        <form id="nuevoAvisoForm" enctype="multipart/form-data" action="/mis_avisos" method="post" novalidate>
                           <div class="mb-3 labelBold">
                             Seleccione el tipo de aviso que desea realizar: <span class="rojoError labelBold" title="Es obligatorio rellenar este campo"> *</span>
                           </div>
                         <div class="row">
-                          <div class="form-check ml-3">
-                            <input class="form-check-input" type="radio" name="tipo" value="sugerencia" id="sug">
+                          <div class="form-check ml-3 mb-3">
+                            <input class="form-check-input" type="radio" name="tipo" value="sugerencia" id="sug" autocomplete="off">
                             <label class="form-check-label" for="sug">Sugerencia</label>
                           </div>
                           <div class="form-check ml-2">
-                            <input class="form-check-input" type="radio" name="tipo" value="incidencia" id="inc">
+                            <input class="form-check-input" type="radio" name="tipo" value="incidencia" id="inc" autocomplete="off">
                             <label class="form-check-label" for="inc">Incidencia</label>
                           </div>
                           <div class="form-check ml-2">
-                            <input class="form-check-input" type="radio" name="tipo" value="felicitacion" id="fel">
+                            <input class="form-check-input" type="radio" name="tipo" value="felicitacion" id="fel" autocomplete="off">
                             <label class="form-check-label" for="fel">Felicitación</label>
                           </div>
                         </div>
-                        <div class="form-outline mb-4 mr-4 mt-3">
-                          <label class="form-label labelBold" for="selectorCategoria">Categoría:</label><span class="rojoError labelBold" title="Es obligatorio rellenar este campo"> *</span>
-                          <select class="form-control" id="selectorCategoria" name="categoria" onchange="">
-                              <option value="adigital" selected>Administración digital</option>
-                              <option value="comu">Comunicaciones</option>
-                              <option value="conect">Conectividad</option>
-                              <option value="docencia">Docencia</option>
-                              <option value="web">Web</option>
-                          </select>
-                        </div>
 
-                        <div class="form-outline mb-4 mr-4 mt-3" id="adigital">
-                          <label class="form-label labelBold" for="selectorCategoria">Sugerencia/incidencia:</label><span class="rojoError labelBold" title="Es obligatorio rellenar este campo"> *</span>
-                          <select class="form-control" id="selectorInc" name="categoria" onchange="">
+                        <div id="opciones">
+
+                          <div class="form-outline mb-4 mr-4">
+                            <label class="form-label labelBold" for="selectorCategoria">Categoría:</label><span class="rojoError labelBold" title="Es obligatorio rellenar este campo"> *</span>
+                            <select class="form-control" id="selectorCategoria" name="categoria" onchange="">
+                                <option value="adigital" selected>Administración digital</option>
+                                <option value="comu">Comunicaciones</option>
+                                <option value="conect">Conectividad</option>
+                                <option value="docencia">Docencia</option>
+                                <option value="web">Web</option>
+
+                                
+                                
+
+
+
+                            </select>
+                          </div>
+
+                          
+  
+                          <div class="form-outline mb-4 mr-4 mt-3" id="divSelectorSub">
+                            <label class="form-label labelBold" for="selectorSub">Subcategoría:</label><span class="rojoError labelBold" title="Es obligatorio rellenar este campo"> *</span>
+                            <select class="form-control" id="selectorSub" name="subcategoria" onchange="">
                               <option value="cfisica" selected>Certificado digital de persona física</option>
                               <option value="cpublico">Certificado electrónico de empleado público</option>
                               <option value="registroElec">Registro electrónico</option>
                               <option value="sede">Sede electrónica</option>
                               <option value="portafirmas">Portafirmas</option>
+  
+                            </select>
+                          </div>
+  
+                          <div class="form-outline mt-3 mb-3">
+                            <label class="labelBold" for="obs">Observaciones:</label><span class="rojoError labelBold" title="Es obligatorio rellenar este campo"> *</span>
+                            <textarea class="form-control" id="obs" rows="3"></textarea>
+                          </div>
 
-                              <option value='sara' selected>Cuenta as la Red SARA</option>
-                              <option value='conex'>Conexión por cable en despachos</option>
-                              <option value='cortafuegos'>Cortafuegos corporativo</option>
-                              <option value='dns'>Resolución de nombres de dominio (DNS)</option>
-                              <option value='vpn'>VPN Acceso remoto</option>
-                              <option value='eduroam'>Wifi Eduroam (ssid: eduroam)</option>
-                              <option value='wifivis'>Wifi para visitantes (ssid: UCM-Visitantes)</option>
 
-                          </select>
                         </div>
-
-                        <div class="form-outline mt-3 mb-3">
-                          <label class="labelBold" for="obs">Observaciones:</label><span class="rojoError labelBold" title="Es obligatorio rellenar este campo"> *</span>
-                          <textarea class="form-control" id="obs" rows="3"></textarea>
-                        </div>
+                        
                       
                     </div>
-                    <div class="modal-footer">
+                    <div class="modal-footer mt-3">
                       <button type="button" class="btn btn-secondary" data-bs- data-bs-dismiss="modal">Cerrar</button>
                       <button type="submit" class="btn btnRojo">Enviar</button>
                     </div>
@@ -253,25 +260,44 @@
           $("#selectorCategoria").change(function () {
             switch($(this).val()) {
                 case 'adigital':
-                    $("#selectorInc").html("<option value='cfisica' selected>Certificado digital de persona física</option><option value='cpublico'>Certificado electrónico de empleado público</option><option value='registroElec'>Registro electrónico</option><option value='sede'>Sede electrónica</option><option value='portafirmas'>Portafirmas</option>");
+                    $("#selectorSub").html("<option value='cfisica' selected>Certificado digital de persona física</option><option value='cpublico'>Certificado electrónico de empleado público</option><option value='registroElec'>Registro electrónico</option><option value='sede'>Sede electrónica</option><option value='portafirmas'>Portafirmas</option>");
                     break;
                 case 'comu':
-                    $("#selectorInc").html("<option value='correo' selected>Correo electrónico</option><option value='meet'>Google Meet</option><option value='calumno'>Cuenta de alumno</option><option value='cpersonal'>Cuenta de personal</option><option value='cgenerica'>Cuenta genérica</option>");
+                    $("#selectorSub").html("<option value='correo' selected>Correo electrónico</option><option value='meet'>Google Meet</option><option value='calumno'>Cuenta de alumno</option><option value='cpersonal'>Cuenta de personal</option><option value='cgenerica'>Cuenta genérica</option>");
                     break;
                 case 'conect':
-                    $("#selectorInc").html("<option value='sara' selected>Cuenta as la Red SARA</option><option value='conex'>Conexión por cable en despachos</option><option value='cortafuegos'>Cortafuegos corporativo</option><option value='dns'>Resolución de nombres de dominio (DNS)</option><option value='vpn'>VPN Acceso remoto</option><option value='eduroam'>Wifi Eduroam (ssid: eduroam)</option><option value='wifivis'>Wifi para visitantes (ssid: UCM-Visitantes)</option>");
+                    $("#selectorSub").html("<option value='sara' selected>Cuenta as la Red SARA</option><option value='conex'>Conexión por cable en despachos</option><option value='cortafuegos'>Cortafuegos corporativo</option><option value='dns'>Resolución de nombres de dominio (DNS)</option><option value='vpn'>VPN Acceso remoto</option><option value='eduroam'>Wifi Eduroam (ssid: eduroam)</option><option value='wifivis'>Wifi para visitantes (ssid: UCM-Visitantes)</option>");
                     break;
                 case 'docencia':
-                    $("#selectorInc").html("<option value='test'>item3: test 1</option><option value='test2'>item3: test 2</option>");
+                    $("#selectorSub").html("<option value='aula' selected>Aula Virtual</option><option value='blackboard'>Blackboard Collaborate</option><option value='listados'>Listados de clase</option><option value='moodle'>Moodle: Aula Global</option><option value='cursosprivados'>Plataforma de cursos online privados</option>");
                     break;
                 case 'web':
-                    $("#selectorInc").html("<option value='test'>item3: test 1</option><option value='test2'>item3: test 2</option>");
+                    $("#selectorSub").html("<option value='analitica' selected>Analitica Web</option><option value='ssl'>Emisión de certificados SSL</option><option value='hosting'>Hosting: alojamiento de páginas web</option><option value='portal'>Portal de eventos</option><option value='redirecciones'>Redirecciones web</option>");
                     break;
                 default:
-                    $("#selectorInc").html("<option value='cfisica' selected>Certificado digital de persona física</option><option value='cpublico'>Certificado electrónico de empleado público</option><option value='registroElec'>Registro electrónico</option><option value='sede'>Sede electrónica</option><option value='portafirmas'>Portafirmas</option>");
+                    $("#selectorSub").html("<option value='cfisica' selected>Certificado digital de persona física</option><option value='cpublico'>Certificado electrónico de empleado público</option><option value='registroElec'>Registro electrónico</option><option value='sede'>Sede electrónica</option><option value='portafirmas'>Portafirmas</option>");
                     
             }
           });
+          $('input[type=radio][name=tipo]').change(function() {
+            switch(this.value) {
+              case 'sugerencia':
+                $("#selectorCategoria").html("<option value='adigital' selected>Administración digital</option><option value='comu'>Comunicaciones</option><option value='conect'>Conectividad</option><option value='docencia'>Docencia</option><option value='web'>Web</option>");
+                $("#opciones").show();
+                $("#divSelectorSub").show();
+                break;
+              case 'incidencia':
+                $("#selectorCategoria").html("<option value='adigital' selected>Administración digital</option><option value='comu'>Comunicaciones</option><option value='conect'>Conectividad</option><option value='docencia'>Docencia</option><option value='web'>Web</option>");
+                $("#opciones").show();
+                $("#divSelectorSub").show();
+                break;
+              case 'felicitacion':
+                $("#selectorCategoria").html("<option value='archivo' selected>Archivo Universitario</option><option value='asesoria'>Asesoría Jurídica</option><option value='biblioteca'>Biblioteca</option><option value='cInfo'>Centro de Información</option><option value='dDocentes'>Departamentos docentes</option><option value='iServicios'>Inspección de Servicios</option><option value='ofGest'>Oficina de Gestión de Infraestructuras y Mantenimiento</option><option value='sAdmin'>Servicio de Administracion</option><option value='sInfor'>Servicios Informáticos</option><option value='sDocu'>Servicio de Documentación</option><option value='sImp'>Servicio de Imprenta</option><option value='sCafe'>Servicio de Cafetería</option><option value='todauni'>Toda la universidad</option>");
+                $("#opciones").show();
+                $("#divSelectorSub").hide();
+                break;
+            }
+           });
         });
 
         /*
