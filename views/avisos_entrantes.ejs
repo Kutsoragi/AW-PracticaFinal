@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <title>UCM - Centro de Atención al Usuario</title>
+        <meta charset="utf-8"/>
+        <link rel="icon" type="image/x-icon" href="/img/logoucm.ico">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <link rel="stylesheet"  media="screen" href="/css/main.css"/>
+        <link rel="stylesheet"  media="screen" href="/css/mis_avisos.css"/>
+    </head>
+
+    <body>
+        <div class ="container-fluid">
+            
+            <%- include("cabecera") %>
+
+            <nav class="navbar navbar-expand-sm navbar-light navMenu">
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                  <% if(sesion.tecnico) { %>
+                    <li class="nav-item active navActivo">
+                      <a class="nav-link" href="/avisos_entrantes">Avisos entrantes</a>
+                    </li>
+                  <% } %>
+                    <li class="nav-item">
+                      <a class="nav-link" href="/mis_avisos">Mis avisos</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="/historico_de_avisos">Histórico de Avisos</a>
+                    </li>
+                  <% if(sesion.tecnico) { %>
+                    <li class="nav-item">
+                      <a class="nav-link" href="">Gestión de usuarios</a>
+                    </li>
+                  <% } %>
+                </ul>
+              </div>
+            </nav>
+
+            <div class="row buscador align-items-center">
+                <div class="buscar">Buscar</div>
+                <input type="text" class="col-3 form-control" onkeyup="buscador()" id="buscadorTabla">
+                <button type="submit" class="btn btnRojo">Buscar</button>
+            </div>
+
+
+        </div>

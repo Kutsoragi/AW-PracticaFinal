@@ -90,7 +90,13 @@ app.get("/mis_avisos", middleLogueado, function(request, response) {
 });
 
 app.get("/historico_de_avisos", middleLogueado, function(request, response) {
-    response.render("historico_de_avisos", {});
+    
+    response.render("historico_de_avisos", {sesion: request.session.user, msgPantalla: null});
+});
+
+app.get("/avisos_entrantes", middleLogueado, function(request, response) {
+    console.log("Aqui")
+    response.render("avisos_entrantes", {sesion: request.session.user, msgPantalla: null});
 });
 
 app.get("/login", middleNoLogueado,function(request, response) {
