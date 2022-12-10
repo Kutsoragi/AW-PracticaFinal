@@ -84,8 +84,9 @@ app.get("/", middleNoLogueado, (request, response) => {
 });
     
 app.get("/mis_avisos", middleLogueado, function(request, response) {
-    response.render("mis_avisos", {});
-    console.log("EAVISO")
+    console.log(request.session.user);
+    response.render("mis_avisos", {sesion: request.session.user, msgPantalla: null});
+    
 });
 
 app.get("/historico_de_avisos", middleLogueado, function(request, response) {
@@ -232,7 +233,15 @@ function(request, response){
                 response.render("crear_cuenta",{errMsg : err.message, errores : null, camposC : campos})
             }
             else{
-                response.redirect("/login")
+                daoU.leerUsuarioPorCorreo(usuario.correo, usuario.contraseña,function(err,res){
+                    if (err){
+                        response.render("login", {errMsg : err.message, errores : null, campoEmail : request.body.correo })
+                    }
+                    else{
+                        request.session.user = res
+                        response.redirect("/mis_avisos")
+                    }
+                })
             }
         })
     }
@@ -246,7 +255,7 @@ app.post("/mis_avisos",
 function(request, response){
 
     
-        console.log(request.body);
+        console.log(request.session);
    // const errors = validationResult(request);
     //console.log(errors);
  //   if(!errors.isEmpty()) {          
@@ -261,14 +270,19 @@ function(request, response){
             categoria: request.body.categoria,
             subcategoria : request.body.subcategoria
         }
+        if(aviso.tipo = "felicitacion"){
+            aviso.subcategoria = '';
+        }
+
         console.log(aviso);
         daoA.crearAviso(aviso, function(err,res){
             if (err){
-                console.log(err)
-                response.render("mis_avisos",{})
+                
+                console.log(request.session.user);
+                response.render("mis_avisos",{sesion: request.session.user, msgPantalla: null})
             }
             else{
-                response.render("mis_avisos",{})
+                response.render("mis_avisos",{sesion: request.session.user , msgPantalla : "El aviso ha sido creado correctamente"})
             }
         })
 //    }

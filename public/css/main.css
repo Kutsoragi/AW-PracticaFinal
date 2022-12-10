@@ -43,7 +43,7 @@ body{
 
 .correo{
     color: white;
-    font-size:calc(10px + 0.8vw);
+    font-size:calc(9px + 0.8vw);
     font-weight: bold;
   }
 
@@ -64,6 +64,10 @@ body{
 
 .rojoError{
     color: #dc3545;
+}
+
+.verdeExito{
+    color:green;
 }
 
 h4{
