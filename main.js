@@ -97,7 +97,7 @@ app.get("/mis_avisos", middleLogueado, function(request, response) {
                     }
                     listaAvisos.push({idAviso:aviso.idAviso,texto:aviso.texto,fecha:aviso.fecha, tecnico:aviso.tecnico, perfil:aviso.perfil,tipo:aviso.tipo,categoria:aviso.categoria, subcategoria:aviso.subcategoria,comentario:aviso.comentario_tecnico})
                 }
-                response.render("mis_avisos", {sesion: request.session.user, msgPantalla: null, avisos:listaAvisos});
+                response.render("mis_avisos", {sesion: request.session.user, myUtils: utils, msgPantalla: null, avisos:listaAvisos});
             }
         })
     }
@@ -116,7 +116,7 @@ app.get("/mis_avisos", middleLogueado, function(request, response) {
                 }
                 console.log(listaAvisos)
                 console.log(listaAvisos[0].fecha.toLocaleDateString())
-                response.render("mis_avisos", {sesion: request.session.user, msgPantalla: null, avisos:listaAvisos});
+                response.render("mis_avisos", {sesion: request.session.user, myUtils: utils, msgPantalla: null, avisos:listaAvisos});
             }
         })
     }    

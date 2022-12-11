@@ -108,8 +108,6 @@
                   <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                   </button>
-                    
-                    
                 </div>
 
                 <div class="modal-body">
@@ -144,13 +142,9 @@
                           <% }); %>
                         </select>
                       </div>
-                      <input class="avisoInv" id="idAvisoModal"name="idAviso" value="<%=avisos[0].idAviso%>"></input>
-                    
-
-                    
-                    
-                  
+                      <input class="avisoInv" id="idAvisoModal"name="idAviso" value="<%=avisos[0].idAviso%>"></input>  
                 </div>
+                
                 <div class="modal-footer mt-3">
                   <button type="button" class="btn btn-secondary labelBold" data-bs- data-bs-dismiss="modal">Cerrar</button>
                   <button type="submit" class="btn btnRojo" id="botonAsignar" <% if (avisos[0].idTecnico) { %> disabled <% } %>>Asignar técnico</button>
@@ -202,7 +196,6 @@
             let idAviso = ($(this).attr('value'));
             
 
-            $("#obs").val("<%= avisos[0].texto %>");
             $.get('/obtener_aviso/'+idAviso, function(nAviso, status){
               console.log(nAviso);
               $("#nombreModal").html(nAviso.nombre);
