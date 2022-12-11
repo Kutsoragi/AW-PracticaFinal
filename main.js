@@ -78,6 +78,15 @@ function middleNoLogueado(req, res, next){
 	else res.redirect("/mis_avisos")
 }
 
+function middleTecnico(req,res,next){
+    if (req.session.user.tecnico){
+        next()
+    }
+    else{
+        res.redirect("back");
+    }
+}
+
 
 app.get("/", middleNoLogueado, (request, response) => {
     response.redirect("/login");
@@ -92,12 +101,37 @@ app.get("/mis_avisos", middleLogueado, function(request, response) {
             else{
                 let listaAvisos = []
                 for(let aviso of res){
+                    daoU.leerNombrePorId(aviso.idUsuario,function (err, res){   
+                        if(err){
+                           console.log(err);
+                        }
+                        else {
+                            aviso.nombreUsuario = res.nombre;
+                        }
+                    });
+
                     if(aviso.tecnico){
-                        aviso.tecnico = daoU.leerNombrePorId(aviso.tecnico)
+                        daoU.leerNombrePorId(aviso.tecnico,function (err, res){   
+                        if(err){
+                           console.log(err);
+                        }
+                        else {
+                            aviso.ntecnico = res.nombre;
+                        }
+                    });
+
                     }
-                    listaAvisos.push({idAviso:aviso.idAviso,texto:aviso.texto,fecha:aviso.fecha, tecnico:aviso.tecnico, perfil:aviso.perfil,tipo:aviso.tipo,categoria:aviso.categoria, subcategoria:aviso.subcategoria,comentario:aviso.comentario_tecnico})
+                    setTimeout(function(){
+                        listaAvisos.push({idAviso:aviso.idAviso,texto:aviso.texto,fecha:aviso.fecha,nombreUsu:aviso.nombreUsuario, tecnico:aviso.ntecnico, perfil:aviso.perfil,tipo:aviso.tipo,categoria:aviso.categoria, subcategoria:aviso.subcategoria,comentario:aviso.comentario_tecnico})
+                    }, 500);
                 }
-                response.render("mis_avisos", {sesion: request.session.user, myUtils: utils, msgPantalla: null, avisos:listaAvisos});
+                console.log(listaAvisos)
+                setTimeout(function(){
+                    listaAvisos = listaAvisos.sort(function(a,b){
+                        return new Date(b.fecha) - new Date(a.fecha);
+                    });
+                    response.render("mis_avisos", {sesion: request.session.user, myUtils: utils, msgPantalla: null, avisos:listaAvisos});
+                }, 50);
             }
         })
     }
@@ -109,40 +143,47 @@ app.get("/mis_avisos", middleLogueado, function(request, response) {
             else{
                 let listaAvisos = []
                 for(let aviso of res){
+                    daoU.leerNombrePorId(aviso.idUsuario,function (err, res){   
+                        if(err){
+                           console.log(err);
+                        }
+                        else {
+                            aviso.nombreUsuario = res.nombre;
+                        }
+                    });
+
                     if(aviso.tecnico){
-                        aviso.tecnico = daoU.leerNombrePorId(aviso.tecnico)
+                        daoU.leerNombrePorId(aviso.tecnico,function (err, res){   
+                        if(err){
+                           console.log(err);
+                        }
+                        else {
+                            aviso.tecnico = res.nombre;
+                        }
+                    });
+
                     }
-                    listaAvisos.push({idAviso:aviso.idAviso,texto:aviso.texto,fecha:aviso.fecha, tecnico:aviso.tecnico, perfil:aviso.perfil,tipo:aviso.tipo,categoria:aviso.categoria, subcategoria:aviso.subcategoria,comentario:aviso.comentario_tecnico})
+                    setTimeout(function(){
+                        listaAvisos.push({idAviso:aviso.idAviso,texto:aviso.texto,fecha:aviso.fecha,nombreUsu:aviso.nombreUsuario, tecnico:aviso.tecnico, perfil:aviso.perfil,tipo:aviso.tipo,categoria:aviso.categoria, subcategoria:aviso.subcategoria,comentario:aviso.comentario_tecnico})
+                    }, 50);  
                 }
-                console.log(listaAvisos)
-                console.log(listaAvisos[0].fecha.toLocaleDateString())
-                response.render("mis_avisos", {sesion: request.session.user, myUtils: utils, msgPantalla: null, avisos:listaAvisos});
+                setTimeout(function(){
+                    listaAvisos = listaAvisos.sort(function(a,b){
+                        return new Date(b.fecha) - new Date(a.fecha);
+                    });
+                    response.render("mis_avisos", {sesion: request.session.user, myUtils: utils, msgPantalla: null, avisos:listaAvisos});
+                }, 50);
             }
         })
     }    
 });
-
-function cb_leerAvisos(err, res){
-    listaAvisos = []
-    if(err){
-        console.log(err.message);
-    }
-    else {
-        for(let aviso of res){
-            if(aviso.tecnico){
-                aviso.tecnico = daoU.leerNombrePorId(aviso.tecnico)
-            }
-            listaAvisos.push({idAviso:aviso.idAviso,texto:aviso.texto,fecha:aviso.fecha, tecnico:aviso.tecnico, perfil:aviso.perfil,tipo:aviso.tipo,categoria:aviso.categoria,comentario:aviso.comentario_tecnico})
-        }
-    }
-}
 
 app.get("/historico_de_avisos", middleLogueado, function(request, response) {
     
     response.render("historico_de_avisos", {sesion: request.session.user, msgPantalla: null});
 });
 
-app.get("/avisos_entrantes", middleLogueado, function(request, response) {
+app.get("/avisos_entrantes", middleLogueado, middleTecnico, function(request, response) {
     daoA.leerAvisosActivos(function (err, res){
         let listaAvisos = [];
         
