@@ -185,6 +185,27 @@ class DAOAvisos {
         })
     }
 
+    terminarAviso(idAviso, comentario,callback){
+        this._pool.getConnection(function(err, connection) {
+            if (err) {
+                callback(new Error("Error de conexion a la base de datos"));
+            }
+            else {
+                connection.query("UPDATE ucm_aw_cau_avi_avisos SET comentario_tecnico = '?' WHERE idAviso = ?;" , [comentario,idAviso] ,//Aquí va la query a la BD
+                    function(err, rows) {
+                        connection.release();
+                        if (err) {
+                            callback(err);
+                        }
+                        else {
+                            callback(null,"Aviso terminado");                              
+                        }
+                    }
+                );
+            }
+        });
+    }
+
 
 }
 
