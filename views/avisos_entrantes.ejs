@@ -69,7 +69,13 @@
                       <tr value="<%=aviso.idAviso%>">
                         <td><img src="/img/<%=aviso.tipo%>.png" width="40" height="40" title="<%=aviso.tipo%>"/></td>
                         <td class="fechaT"><%= myUtils.parseFecha(aviso.fecha) %></td>
-                        <td><%= aviso.texto %></td>
+                        <td>
+                          <% if(aviso.texto.length> 200) { %>
+                            <%= aviso.texto.substring(0,200) + "..." %>
+                              <% } else { %>
+                                <%= aviso.texto %>
+                                  <% } %>
+                        </td>
                         <td>
                           <div class="row justify-content-around">
                             <a data-bs-target="#asignarTecnico" data-bs-toggle="modal">
@@ -144,7 +150,7 @@
                       </div>
                       <input class="avisoInv" id="idAvisoModal"name="idAviso" value="<%=avisos[0].idAviso%>"></input>  
                 </div>
-                
+
                 <div class="modal-footer mt-3">
                   <button type="button" class="btn btn-secondary labelBold" data-bs- data-bs-dismiss="modal">Cerrar</button>
                   <button type="submit" class="btn btnRojo" id="botonAsignar" <% if (avisos[0].idTecnico) { %> disabled <% } %>>Asignar técnico</button>
