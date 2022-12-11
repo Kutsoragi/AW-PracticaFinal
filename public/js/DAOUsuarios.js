@@ -166,6 +166,36 @@ class DAOUsuarios {
         });
     }
 
+    leerTecnicos(callback){
+        this._pool.getConnection(function(err, connection) {
+            if (err) {
+                callback(new Error("Error de conexion a la base de datos"));
+            }
+            else {
+                connection.query("SELECT idUsuario, nombre FROM ucm_aw_cau_usu_usuarios WHERE tecnico = true" ,//Aquí va la query a la BD
+                    function(err, rows) {
+                        connection.release();
+                        if (err) {
+                            callback(new Error("Error de acceso a la base de datos"));
+                        }
+                        else {
+                            //Aquí se tratan los datos y llama al callback (Habría que devolver el ID generado por el insert)
+                            if(rows.length > 0){
+                               
+                                callback(null,rows);
+                            }
+                            else{
+                                callback(new Error("No existe ningún técnico"))
+                            }
+                        }
+                    }
+                );
+            }
+        });
+    }
+
+    
+
 }
 
 module.exports = DAOUsuarios;

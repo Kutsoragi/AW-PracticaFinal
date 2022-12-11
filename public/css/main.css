@@ -74,8 +74,16 @@ h4{
     font-weight: bold;
 }
 
-.btnRojo:hover{
+.btnRojo:hover
+{
     background-color: #810b13;
+}
+
+
+.btnRojo:disabled,
+.btnRojo[disabled]
+{
+    background-color: #A00D17;
 }
 
 .labelBold{
@@ -84,4 +92,8 @@ h4{
 
 .modal-title{
     font-weight: bold;
+}
+
+.avisoInv{
+    display: none;
 }

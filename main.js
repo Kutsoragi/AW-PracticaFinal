@@ -95,8 +95,53 @@ app.get("/historico_de_avisos", middleLogueado, function(request, response) {
 });
 
 app.get("/avisos_entrantes", middleLogueado, function(request, response) {
-    console.log("Aqui")
-    response.render("avisos_entrantes", {sesion: request.session.user, msgPantalla: null});
+    daoA.leerAvisosActivos(function (err, res){
+        let listaAvisos = [];
+        
+        if(err){
+            console.log(err.message);
+            response.render("avisos_entrantes", {sesion: request.session.user, msgPantalla: err.message, avisos: null, myUtils: utils, tecnicos: null});
+        }
+        else {
+            for(let aviso of res){
+                daoU.leerNombrePorId(aviso.idUsuario,function (err, res2){   
+                    if(err){
+                       console.log(err);
+                    }
+                    else {
+                        aviso.nombreUsuario = res2.nombre;
+                    }
+                });
+                setTimeout(function(){
+                    listaAvisos.push({idAviso:aviso.idAviso,idUsuario:aviso.idUsuario,nombreUsu:aviso.nombreUsuario,texto:aviso.texto,fecha:aviso.fecha, idTecnico:aviso.idTecnico, perfil:aviso.perfil,tipo:aviso.tipo,categoria:aviso.categoria,subcategoria:aviso.subcategoria,comentario:aviso.comentario_tecnico,activo:aviso.activo})
+                }, 50);
+                
+            }
+            
+           
+            daoU.leerTecnicos(function (err, res){
+                let listaTecnicos = [];
+                if(err){
+                    console.log(err.message);
+                    response.render("avisos_entrantes", {sesion: request.session.user, msgPantalla: err.message, avisos: null, myUtils: utils, tecnicos: null});
+                }
+                else {
+                    for(let tecnico of res){
+                        listaTecnicos.push({idUsuario:tecnico.idUsuario, nombre: tecnico.nombre})
+                    }
+                    setTimeout(function(){
+                    listaAvisos = listaAvisos.sort(function(a,b){
+                        return new Date(b.fecha) - new Date(a.fecha);
+                    });
+                    response.render("avisos_entrantes", {sesion: request.session.user, msgPantalla: null, avisos: listaAvisos, myUtils: utils, tecnicos: listaTecnicos});
+                    }, 50);
+                }
+            });
+            
+        }
+    });
+    
+    
 });
 
 app.get("/login", middleNoLogueado,function(request, response) {
@@ -155,6 +200,21 @@ app.get("/obtener_imagen", middleLogueado, function(request, response){
     })
 })
 
+app.get("/obtener_aviso", function(request, response){
+    let idAviso = '25';
+    console.log("idAviso");
+    console.log(request);
+    daoU.leerAvisoPorId(idAviso, function(err,res){
+        if (err){
+            console.log(err,message);
+        }
+        else {
+            console.log(res);
+            response.send(res);
+        }
+    })
+})
+
 app.post("/crear_cuenta", multerFactory.single("foto"),
     // El campo correo ha de ser no vacío.
     check("correo", "Por favor, introduce un correo electrónico").notEmpty(),
@@ -196,7 +256,7 @@ app.post("/crear_cuenta", multerFactory.single("foto"),
 
 function(request, response){
 
-    console.log(request.body)
+    
 
     let campos = {
     
@@ -227,7 +287,6 @@ function(request, response){
             numEmpleado: null
         }
         if (request.file){
-            console.log(request.file)
             usuario.foto = request.file.buffer
         }
         if (usuario.tecnico){
@@ -254,14 +313,8 @@ function(request, response){
         
 })
 
-app.post("/mis_avisos",
-    // El campo correo ha de ser no vacío.
+app.post("/mis_avisos", function(request, response){
     
-
-function(request, response){
-
-    
-        console.log(request.session);
    // const errors = validationResult(request);
     //console.log(errors);
  //   if(!errors.isEmpty()) {          
@@ -276,11 +329,11 @@ function(request, response){
             categoria: request.body.categoria,
             subcategoria : request.body.subcategoria
         }
-        if(aviso.tipo = "felicitacion"){
+        if(aviso.tipo == "felicitacion"){
             aviso.subcategoria = '';
         }
 
-        console.log(aviso);
+       
         daoA.crearAviso(aviso, function(err,res){
             if (err){
                 
@@ -294,6 +347,20 @@ function(request, response){
 //    }
         
 })
+
+app.post("/asignarTecnico", function(request, response){
+    daoA.asignarTecnico(request.body.asigTec,request.body.idAviso, function(err,res){
+        if (err){
+            console.log(err.message);
+            response.redirect("/avisos_entrantes")
+        }
+        else{
+            response.redirect("/avisos_entrantes")
+        }
+    })
+
+})
+
 
 function cb_leerAvisos(err, res){
     listaAvisos = []
@@ -309,6 +376,8 @@ function cb_leerAvisos(err, res){
         }
     }
 }
+
+
 
 app.listen(3000, (err) => {
     if (err) {

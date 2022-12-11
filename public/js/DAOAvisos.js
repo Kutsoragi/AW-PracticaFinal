@@ -134,6 +134,81 @@ class DAOAvisos {
         })
     }
 
+    leerAvisosActivos(callback){
+        this._pool.getConnection(function(err, connection) {
+            if (err) {
+                callback(new Error("Error de conexion a la base de datos"));
+            }
+            else {
+                connection.query("SELECT * FROM ucm_aw_cau_avi_avisos where activo = true;" ,
+                    function(err, rows) {
+                        connection.release();
+                        if (err) {
+                            callback(new Error("Error de acceso a la base de datos"));
+                        }
+                        else {
+                            if(rows.length == 0){
+                                callback(new Error("No hay avisos activos"))
+                            }
+                            else{
+                                callback(null,rows)
+                            }
+                            
+                        }
+                    }
+                );
+            }
+        })
+    }
+
+    asignarTecnico(idTecnico,idAviso,callback){
+        this._pool.getConnection(function(err, connection) {
+            if (err) {
+                callback(new Error("Error de conexion a la base de datos"));
+            }
+            else {
+                connection.query("UPDATE ucm_aw_cau_avi_avisos SET idTecnico = ? WHERE idAviso = ?" , [idTecnico,idAviso] ,//Aquí va la query a la BD
+                    function(err, rows) {
+                        connection.release();
+                        if (err) {
+                            callback(err);
+                        }
+                        else {
+                                callback(null,"Técnico asignado");                              
+                        }
+                    }
+                );
+            }
+        });
+    }
+
+    leerAvisoPorId(idAviso,callback){
+        this._pool.getConnection(function(err, connection) {
+            if (err) {
+                callback(new Error("Error de conexion a la base de datos"));
+            }
+            else {
+                connection.query("SELECT * FROM ucm_aw_cau_avi_avisos where idAviso = ?" , [idAviso] ,
+                    function(err, rows) {
+                        connection.release();
+                        if (err) {
+                            callback(new Error("Error de acceso a la base de datos"));
+                        }
+                        else {
+                            if(rows.length == 0){
+                                callback(new Error("No hay ningún aviso con este id"))
+                            }
+                            else{
+                                callback(null,rows[0])
+                            }
+                            
+                        }
+                    }
+                );
+            }
+        })
+    }
+
 
 }
 
