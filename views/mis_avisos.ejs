@@ -64,24 +64,24 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr onclick="abrirInfoAviso()">
-                        <td class="fechaT">12/10/2021</td>
-                        <td>No puedo conectar a la red corporativa. Parece que el fallo</td>
-                        <td><img src="/img/exclamacion.png" width="40" height="40"/></td>
-                        <td></td>
-                      </tr>
-                      <tr onclick="abrirInfoAviso()">
-                        <td class="fechaT">10/10/2021</td>
-                        <td>Propongo cambiar el diseño de la web a un modelo responsible para que se pueda visualizar</td>
-                        <td><img src="/img/pregunta.png" width="40" height="40"/></td>
-                        <td>Aitor Tilla</td>
-                      </tr>
-                      <tr onclick="abrirInfoAviso()">
-                        <td class="fechaT">05/01/2021</td>
-                        <td>Feliz año a todos vosotros por el buen trabajo realizado y las atenciones recibidas</td>
-                        <td><img src="/img/me-gusta.png" width="40" height="40"/></td>
-                        <td>Felipe Lotas</td>
-                      </tr>
+                      <% avisos.forEach((aviso) => {  %>
+                        <tr onclick="abrirInfoAviso()">
+                          <td class="fechaT"><%=aviso.fecha.toLocaleDateString()%></td>
+                          <td>
+                            <% if(aviso.texto.length > 200) { %>
+                              <%= aviso.texto.substring(0,200) + "..." %> 
+                            <% } else { %>
+                              <%= aviso.texto %>
+                            <% } %> 
+                          </td>
+                          <td><img src="/img/<%=aviso.tipo%>.png" width="40" height="40" title="<%=aviso.tipo%>"/></td>
+                          <td>
+                            <% if(aviso.tecnico) { %>
+                              <%= aviso.tecnico %> 
+                            <% } %>
+                          </td>
+                        </tr>
+                      <% }); %>
                     </tbody>
                   </table>
             </div>

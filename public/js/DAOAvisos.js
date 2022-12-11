@@ -66,13 +66,7 @@ class DAOAvisos {
                             callback(new Error("Error de acceso a la base de datos"));
                         }
                         else {
-                            if(rows.length == 0){
-                                callback(new Error("No hay avisos asociados al usuario"))
-                            }
-                            else{
-                                callback(null,rows)
-                            }
-                            
+                            callback(null,rows)   
                         }
                     }
                 );
@@ -93,13 +87,7 @@ class DAOAvisos {
                             callback(new Error("Error de acceso a la base de datos"));
                         }
                         else {
-                            if(rows.length == 0){
-                                callback(new Error("No hay avisos asociados al usuario"))
-                            }
-                            else{
-                                callback(null,rows)
-                            }
-                            
+                            callback(null,rows)   
                         }
                     }
                 );
@@ -120,13 +108,7 @@ class DAOAvisos {
                             callback(new Error("Error de acceso a la base de datos"));
                         }
                         else {
-                            if(rows.length == 0){
-                                callback(new Error("No hay avisos asociados al usuario"))
-                            }
-                            else{
-                                callback(null,rows)
-                            }
-                            
+                            callback(null,rows)   
                         }
                     }
                 );
@@ -147,13 +129,7 @@ class DAOAvisos {
                             callback(new Error("Error de acceso a la base de datos"));
                         }
                         else {
-                            if(rows.length == 0){
-                                callback(new Error("No hay avisos activos"))
-                            }
-                            else{
-                                callback(null,rows)
-                            }
-                            
+                            callback(null,rows)   
                         }
                     }
                 );
@@ -174,7 +150,7 @@ class DAOAvisos {
                             callback(err);
                         }
                         else {
-                                callback(null,"Técnico asignado");                              
+                            callback(null,"Técnico asignado");                              
                         }
                     }
                 );
