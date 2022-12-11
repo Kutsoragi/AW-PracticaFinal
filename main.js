@@ -90,13 +90,14 @@ function middleTecnico(req,res,next){
 
 
 app.get("/mis_avisos", middleLogueado, function(request, response) {
+    let listaAvisos = []
     if(request.session.user.tecnico){
         daoA.leerAvisosPorTecnico(request.session.user.idUsuario,function(err,res){
             if(err){
                 console.log(err)
             }
             else{
-                let listaAvisos = []
+                
                 for(let aviso of res){
                     daoU.leerNombrePorId(aviso.idUsuario,function (err, res2){   
                         if(err){
@@ -134,7 +135,7 @@ app.get("/mis_avisos", middleLogueado, function(request, response) {
     else{
         daoA.leerAvisosPorUsuario(request.session.user.idUsuario, function(err,res){
             if(err){
-                console.log(err)
+                response.status(200).render("mis_avisos", {sesion: request.session.user, myUtils: utils, msgPantalla: null, avisos: listaAvisos});
             }
             else{
                 let listaAvisos = []
@@ -290,7 +291,7 @@ app.get("/obtener_aviso/:idAviso", function(request, response){
     let id = request.params.idAviso;
     daoA.leerAvisoPorId(id, function(err,res){
         if (err){
-            console.log(err,message);
+            console.log(err.message);
         }
         else {
             daoU.leerNombrePorId(res.idUsuario,function (err, res2){
@@ -304,6 +305,7 @@ app.get("/obtener_aviso/:idAviso", function(request, response){
                     res.categoria = utils.parseCategorias(res.categoria);
                     res.subcategoria = utils.parseCategorias(res.subcategoria);
                     res.perfil = utils.parsePerfil(res.perfil);
+                    res.sesionTecnico = request.session.user.tecnico;
                     setTimeout(function(){ response.send(res);}, 50);
                 }
             })
@@ -453,6 +455,19 @@ app.post("/asignarTecnico", function(request, response){
         }
         else{
             response.redirect("/avisos_entrantes")
+        }
+    })
+
+})
+
+app.post("/terminarAviso", function(request, response){
+    daoA.terminarAviso(request.body.idAviso,request.body.comentario, function(err,res){
+        if (err){
+            console.log(err.message);
+            response.redirect("/mis_avisos")
+        }
+        else{
+            response.redirect("/mis_avisos")
         }
     })
 

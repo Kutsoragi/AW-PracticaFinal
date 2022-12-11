@@ -56,17 +56,60 @@
         </div>
         <% } %>
 
+      
           <div class="col-10 tabla">
-            <table class="table" id="t_avisos">
+            <table class="table" id="t_avisos" value="<%=sesion.tecnico%>">
               <thead class="thead-dark">
                 <tr>
+                <% if (sesion.tecnico) { %>
+                  <th scope="col"  style="width: 5%">Tipo</th>
+                  <th scope="col"  style="width: 10%">Fecha</th>
+                  <th scope="col"  style="width: 40%">Texto</th>
+                  <th scope="col"  style="width: 10%">Acciones</th>
+                <% } else { %>
                   <th scope="col" style="width: 15%">Fecha</th>
                   <th scope="col" style="width: 40%">Texto</th>
                   <th scope="col" style="width: 15%">Tipo</th>
                   <th scope="col" style="width: 15%">Técnico</th>
+                <% } %> 
                 </tr>
               </thead>
+              
+            <% if (sesion.tecnico) { %>
+
               <tbody>
+                <% avisos.forEach((aviso) => {  %>
+                  <tr value="<%=aviso.idAviso%>">
+                    <td><img src="/img/<%=aviso.tipo%>.png" width="40" height="40" title="<%=aviso.tipo%>"/></td>
+                    <td class="fechaT"><%= aviso.fecha.toLocaleDateString() %></td>
+                    <td>
+                      <% if(aviso.texto.length> 200) { %>
+                        <%= aviso.texto.substring(0,200) + "..." %>
+                          <% } else { %>
+                            <%= aviso.texto %>
+                              <% } %>
+                    </td>
+                    <td>
+                      <div class="row justify-content-around">
+                        <a data-bs-target="#asignarTecnico" data-bs-toggle="modal">              
+                            <img src="/img/visualizar.png" width="40" height="40" title="Ver aviso"/>        
+                        </a>
+                        <a data-bs-target="#eliminarAviso" data-bs-toggle="modal" data-bs-dismiss="modal">
+                          <img src="/img/eliminar2.png" class="botonElim" width="40" height="40" />
+                        </a>
+                      </div>                         
+                    </td>
+                  </tr>
+
+                <% }); %>
+                
+              </tbody>
+
+
+            <% } else { %>
+            
+              <tbody>
+              
                 <% avisos.forEach((aviso)=> { %>
                   <tr value="<%=aviso.idAviso%>">
                     <td class="fechaT">
@@ -88,17 +131,29 @@
                   </tr>
                   <% }); %>
               </tbody>
+              <% } %> 
             </table>
           </div>
 
+        
+
+          <div class="text-center mb-4" id="noAviso">
+          <% if(avisos.length == 0) { %>
+            No se ha encontrado ningún aviso
+          <% } %>
+          </div>
+
+        <% if (!sesion.tecnico) { %>
           <div class="row nuevoAviso justify-content-center">
             <button type="button" class="btn btnRojo" data-bs-toggle="modal" data-bs-target="#nuevoAviso">Nuevo
               aviso</button>
           </div>
 
+        <% } %>
+
           <!-- Button trigger modal -->
 
-          <!-- Modal INFO AVISO -->
+          <!-- Modal INFO/TERMINAR AVISO -->
           <% if(avisos.length > 0){ %> 
           <div class="modal fade" id="infoAviso" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
             aria-hidden="true">
@@ -124,7 +179,7 @@
                 <div class="modal-body">
 
                   <div class="container-fluid">
-                    <form id="asignarTecnicoForm" enctype="application/json" action="/asignarTecnico" method="post">
+                    <form id="asignarTecnicoForm" enctype="application/json" action="/terminarAviso" method="post">
                       <div class="mb-3" id="fechaModal">
                         <strong>Fecha:</strong>
                         <%= myUtils.parseFecha(avisos[0].fecha) %>
@@ -150,8 +205,8 @@
                       </div>
                       <div class="form-outline mt-3 mb-3">
                         <label class="labelBold" for="comen">Comentario del técnico:</label>
-                        <textarea readonly class="form-control" id="comen"
-                          rows="3"><%= avisos[0].comentario%></textarea>
+                        <textarea readonly class="form-control" name="comentario" id="comen"
+                          rows="3" required><%= avisos[0].comentario%></textarea>
                       </div>
 
                       <input class="avisoInv" id="idAvisoModal" name="idAviso" value="<%=avisos[0].idAviso%>"></input>
@@ -160,6 +215,9 @@
                   <div class="modal-footer mt-3">
                     <button type="button" class="btn btn-secondary labelBold" data-bs-
                       data-bs-dismiss="modal">Cerrar</button>
+                    <% if (sesion.tecnico) { %>
+                      <button type="submit" class="btn btnRojo" id="botonTerminar">Terminar aviso</button>
+                    <% } %>
                   </div>
 
                   </form>
@@ -169,6 +227,84 @@
             </div>
           </div>
           <% } %> 
+
+
+          <!-- Modal ELIMINAR AVISO -->
+          <% if(avisos.length > 0){ %> 
+            <div class="modal fade" id="eliminarAviso" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+              aria-hidden="true">
+              <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+  
+                  <div class="modal-header">
+  
+                    <h5 class="modal-title ml-3" id="nombreModal">
+                      <%=avisos[0].nombreUsu%>
+                    </h5>
+                    <div class="tAviso">
+                      <h5 class="modal-title" id="infoAvisoModal" name="">Aviso <%=avisos[0].idAviso%> -
+                          <%=myUtils.parseTipo(avisos[0].tipo)%>
+                      </h5>
+                    </div>
+  
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+  
+                  <div class="modal-body">
+  
+                    <div class="container-fluid">
+                      <form id="asignarTecnicoForm" enctype="application/json" action="/terminarAviso" method="post">
+                        <div class="mb-3" id="fechaModal">
+                          <strong>Fecha:</strong>
+                          <%= myUtils.parseFecha(avisos[0].fecha) %>
+                        </div>
+                        <div class="mb-3" id="categoriasModal">
+  
+                          <strong>
+                            <%= myUtils.parseCategorias(avisos[0].categoria)%>
+                          </strong>
+                          <% if(avisos[0].tipo !='felicitacion' ) { %>
+                            - <%= myUtils.parseCategorias(avisos[0].subcategoria) %>
+                              <% } %>
+  
+                        </div>
+                        <div class="mb-3" id="perfilModal">
+                          <strong>Perfil:</strong>
+                          <%= myUtils.parsePerfil(avisos[0].perfil) %>
+                        </div>
+  
+                        <div class="form-outline mt-3 mb-3">
+                          <label class="labelBold" for="obs">Observaciones:</label>
+                          <textarea readonly class="form-control" id="obs" rows="3"><%= avisos[0].texto%></textarea>
+                        </div>
+                        <div class="form-outline mt-3 mb-3">
+                          <label class="labelBold" for="comen">Comentario del técnico:</label>
+                          <textarea readonly class="form-control" name="comentario" id="comen"
+                            rows="3" required><%= avisos[0].comentario%></textarea>
+                        </div>
+  
+                        <input class="avisoInv" id="idAvisoModal" name="idAviso" value="<%=avisos[0].idAviso%>"></input>
+                    </div>
+  
+                    <div class="modal-footer mt-3">
+                      <button type="button" class="btn btn-secondary labelBold" data-bs-
+                        data-bs-dismiss="modal">Cerrar</button>
+                      <% if (sesion.tecnico) { %>
+                        <button type="submit" class="btn btnRojo" id="botonTerminar">Eliminar aviso</button>
+                      <% } %>
+                    </div>
+  
+                    </form>
+  
+                  </div>
+                </div>
+              </div>
+            </div>
+            <% } %> 
+
+
           <!-- Modal NUEVO AVISO -->
           <div class="modal fade" id="nuevoAviso" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
             aria-hidden="true">
@@ -293,7 +429,6 @@
 
 
               $.get('/obtener_aviso/' + idAviso, function (nAviso, status) {
-                console.log(nAviso);
                 $("#nombreModal").html(nAviso.nombre);
                 $("#infoAvisoModal").html("Aviso " + nAviso.idAviso + " - " + nAviso.tipo);
                 $("#fechaModal").html("<strong>Fecha:</strong> " + nAviso.fecha);
@@ -302,10 +437,24 @@
                 $("#categoriasModal").html("<strong>" + nAviso.categoria + "</strong>" + sub);
                 $("#perfilModal").html("<strong>Perfil:</strong> " + nAviso.perfil);
                 $("#obs").val(nAviso.texto);
-                $("#comen").val(nAviso.comentario);
+                $("#comen").val(nAviso.comentario_tecnico);
+                console.log(nAviso.sesionTecnico);
+                if(nAviso.sesionTecnico) { $("#comen").prop("readonly", false);}
+                else { $("#comen").prop("readonly", true); }
+
+                if(nAviso.comentario_tecnico){$("#comen").prop("readonly", true);$("#botonTerminar").prop("disabled", true);}
+                else if(!nAviso.sesionTecnico) {$("#comen").prop("readonly", true); $("#botonTerminar").prop("disabled", false);}
+                else {$("#comen").prop("readonly", false); $("#botonTerminar").prop("disabled", false);}
+                
                 $("#idAvisoModal").val(nAviso.idAviso);
+                
 
               });
+              $('#infoAviso').modal('toggle');
+            })
+
+
+            $("botonElim").click(function () {
               $('#infoAviso').modal('toggle');
             })
 
@@ -316,10 +465,13 @@
               filter = input.value.toUpperCase();
               table = document.getElementById("t_avisos");
               tr = table.getElementsByTagName("tr");
-              var z = 1;
+              let f;
+              if("<%=sesion.tecnico%>" == "1") {f=2;}
+              else {f=1;}
+              var z = 1; 
               // Loop through all table rows, and hide those who don't match the search query
               for (i = 0; i < tr.length; i++) {
-                td = tr[i].getElementsByTagName("td")[1];
+                td = tr[i].getElementsByTagName("td")[f];
                 if (td) {
                   txtValue = td.textContent || td.innerText;
                   if (txtValue.toUpperCase().indexOf(filter) > -1) {
@@ -329,6 +481,12 @@
                     z++;
                   }
                 }
+              }
+              if(z == tr.length){
+                $("#noAviso").html("No se ha encontrado ningún aviso");
+              }
+              else{
+                $("#noAviso").html("");
               }
 
             }
@@ -380,49 +538,9 @@
               });
             });
 
-            /*
-              
-              function cambiarOpciones() {
-                let categoria = document.getElementById("selectorCategoria");
-                console.log(categoria.value)
-                switch(categoria.value) {
-                  case "adigital" : { document.getElementById("comu").style.display='none';
-                    document.getElementById("adigital").style.display='block';
-                                      
-                                    }
-                  case "comu" : {document.getElementById("adigital").style.display='block';
-                                  document.getElementById("comu").style.display='block';
-                                      
-                                    }
-                }
-              }
-              */
 
           </script>
 
 </body>
 
-
-
-
-
-
 </html>
-
-
-<!--
-<div class="row d-flex cabecera align-items-center">
-                <div class="col-2">
-                    <img src="ucm_logo2.png" class="img-fluid" width="330" height="330">
-                </div>
-                <div class="col-5"><h1 class="titulo">Centro de Atención al Usuario</h1></div>
-                <div class="col-1 offset-xl-2 offset-lg-2 offset-1">
-                    <img src="fernando-alonso-alpine-1.jpg" class="img-fluid foto" width="130" height="130"/>
-                </div>
-                <div class="col-1 offset-1 offset-md-0">
-                    <h4 class="correo">elplan@ucm.es</h4>
-                    <button type="submit" class="btn btn-light btblanco">Desconectar</button>
-                </div>
-            </div>
-
--->
