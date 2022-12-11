@@ -84,10 +84,58 @@ app.get("/", middleNoLogueado, (request, response) => {
 });
     
 app.get("/mis_avisos", middleLogueado, function(request, response) {
-    console.log(request.session.user);
-    response.render("mis_avisos", {sesion: request.session.user, msgPantalla: null});
-    
+    if(request.session.user.tecnico){
+        daoA.leerAvisosPorTecnico(request.session.user.idUsuario,function(err,res){
+            if(err){
+                console.log(err)
+            }
+            else{
+                let listaAvisos = []
+                for(let aviso of res){
+                    if(aviso.tecnico){
+                        aviso.tecnico = daoU.leerNombrePorId(aviso.tecnico)
+                    }
+                    listaAvisos.push({idAviso:aviso.idAviso,texto:aviso.texto,fecha:aviso.fecha, tecnico:aviso.tecnico, perfil:aviso.perfil,tipo:aviso.tipo,categoria:aviso.categoria, subcategoria:aviso.subcategoria,comentario:aviso.comentario_tecnico})
+                }
+                response.render("mis_avisos", {sesion: request.session.user, msgPantalla: null, avisos:listaAvisos});
+            }
+        })
+    }
+    else{
+        daoA.leerAvisosPorUsuario(request.session.user.idUsuario, function(err,res){
+            if(err){
+                console.log(err)
+            }
+            else{
+                let listaAvisos = []
+                for(let aviso of res){
+                    if(aviso.tecnico){
+                        aviso.tecnico = daoU.leerNombrePorId(aviso.tecnico)
+                    }
+                    listaAvisos.push({idAviso:aviso.idAviso,texto:aviso.texto,fecha:aviso.fecha, tecnico:aviso.tecnico, perfil:aviso.perfil,tipo:aviso.tipo,categoria:aviso.categoria, subcategoria:aviso.subcategoria,comentario:aviso.comentario_tecnico})
+                }
+                console.log(listaAvisos)
+                console.log(listaAvisos[0].fecha.toLocaleDateString())
+                response.render("mis_avisos", {sesion: request.session.user, msgPantalla: null, avisos:listaAvisos});
+            }
+        })
+    }    
 });
+
+function cb_leerAvisos(err, res){
+    listaAvisos = []
+    if(err){
+        console.log(err.message);
+    }
+    else {
+        for(let aviso of res){
+            if(aviso.tecnico){
+                aviso.tecnico = daoU.leerNombrePorId(aviso.tecnico)
+            }
+            listaAvisos.push({idAviso:aviso.idAviso,texto:aviso.texto,fecha:aviso.fecha, tecnico:aviso.tecnico, perfil:aviso.perfil,tipo:aviso.tipo,categoria:aviso.categoria,comentario:aviso.comentario_tecnico})
+        }
+    }
+}
 
 app.get("/historico_de_avisos", middleLogueado, function(request, response) {
     
@@ -349,10 +397,10 @@ app.post("/mis_avisos", function(request, response){
             if (err){
                 
                 console.log(request.session.user);
-                response.render("mis_avisos",{sesion: request.session.user, msgPantalla: null})
+                response.redirect("/mis_avisos")
             }
             else{
-                response.render("mis_avisos",{sesion: request.session.user , msgPantalla : "El aviso ha sido creado correctamente"})
+                response.redirect("/mis_avisos")
             }
         })
 //    }
@@ -371,22 +419,6 @@ app.post("/asignarTecnico", function(request, response){
     })
 
 })
-
-
-function cb_leerAvisos(err, res){
-    listaAvisos = []
-    if(err){
-        console.log(err.message);
-    }
-    else {
-        for(let aviso of res){
-            if(aviso.tecnico){
-                aviso.tecnico = daoU.leerNombrePorId(aviso.tecnico)
-            }
-            listaAvisos.push({idAviso:aviso.idAviso,texto:aviso.texto,fecha:aviso.fecha, tecnico:aviso.tecnico, perfil:aviso.perfil,tipo:aviso.tipo,categoria:aviso.categoria,comentario:aviso.comentario_tecnico})
-        }
-    }
-}
 
 
 
