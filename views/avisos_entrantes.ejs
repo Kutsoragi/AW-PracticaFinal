@@ -8,6 +8,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <link rel="stylesheet"  media="screen" href="/css/main.css"/>
         <link rel="stylesheet"  media="screen" href="/css/mis_avisos.css"/>
+        
     </head>
 
     <body>
@@ -99,9 +100,9 @@
 
                 <div class="modal-header">
                     
-                  <h5 class="modal-title ml-3" id="exampleModalLabel"><%=avisos[0].nombreUsu%></h5>
+                  <h5 class="modal-title ml-3" id="nombreModal"><%=avisos[0].nombreUsu%></h5>
                   <div class="tAviso">
-                    <h5 class="modal-title" id="exampleModalLabel" name="">Aviso <%=avisos[0].idAviso%> - <%=myUtils.parseTipo(avisos[0].tipo)%></h5>
+                    <h5 class="modal-title" id="infoAvisoModal" name="">Aviso <%=avisos[0].idAviso%> - <%=myUtils.parseTipo(avisos[0].tipo)%></h5>
                   </div>
                   
                   <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
@@ -115,10 +116,10 @@
                   
                   <div class="container-fluid">
                     <form id="asignarTecnicoForm" enctype="application/json" action="/asignarTecnico" method="post">
-                      <div class="mb-3">
+                      <div class="mb-3" id="fechaModal">
                         <strong>Fecha:</strong> <%= myUtils.parseFecha(avisos[0].fecha) %>
                       </div>
-                      <div class="mb-3">
+                      <div class="mb-3" id="categoriasModal">
                         
                         <strong><%= myUtils.parseCategorias(avisos[0].categoria)%></strong> 
                         <% if(avisos[0].tipo != 'felicitacion') { %>
@@ -126,7 +127,7 @@
                         <% } %>
                         
                       </div>
-                      <div class="mb-3">
+                      <div class="mb-3" id="perfilModal">
                         <strong>Perfil:</strong> <%= myUtils.parsePerfil(avisos[0].perfil) %>
                       </div>
 
@@ -143,8 +144,7 @@
                           <% }); %>
                         </select>
                       </div>
-                      <% if (avisos[0].idTecnico) { %> <span class="labelBold">Técnico asignado</span> <% } %>
-                      <input class="avisoInv" name="idAviso" value="<%=avisos[0].idAviso%>"></input>
+                      <input class="avisoInv" id="idAvisoModal"name="idAviso" value="<%=avisos[0].idAviso%>"></input>
                     
 
                     
@@ -153,7 +153,7 @@
                 </div>
                 <div class="modal-footer mt-3">
                   <button type="button" class="btn btn-secondary labelBold" data-bs- data-bs-dismiss="modal">Cerrar</button>
-                  <button type="submit" class="btn btnRojo" id="botonEnviar" <% if (avisos[0].idTecnico) { %> disabled <% } %>>Asignar técnico</button>
+                  <button type="submit" class="btn btnRojo" id="botonAsignar" <% if (avisos[0].idTecnico) { %> disabled <% } %>>Asignar técnico</button>
                 </div>
 
               </form>
@@ -200,9 +200,38 @@
           $("tr").click(function() {
             let id = $(this).closest("tr").index();
             let idAviso = ($(this).attr('value'));
+            
 
             $("#obs").val("<%= avisos[0].texto %>");
+            $.get('/obtener_aviso/'+idAviso, function(nAviso, status){
+              console.log(nAviso);
+              $("#nombreModal").html(nAviso.nombre);
+              $("#infoAvisoModal").html("Aviso "+nAviso.idAviso+" - "+ nAviso.tipo);
+              $("#fechaModal").html("<strong>Fecha:</strong> "+ nAviso.fecha);
+              let sub ='';
+              if(nAviso.tipo != 'Felicitación') sub = " - "+nAviso.subcategoria;
+              $("#categoriasModal").html("<strong>"+nAviso.categoria+"</strong>"+sub);
+              $("#perfilModal").html("<strong>Perfil:</strong> " + nAviso.perfil);
+              $("#obs").val(nAviso.texto);
+              if(nAviso.idTecnico) {
+                $("#botonAsignar").html("Tecnico asignado");
+                $("#selectorTec").prop("disabled",true);
+                $("#botonAsignar").prop("disabled",true);
+                $("#selectorTec option[value='"+nAviso.idTecnico+"']").prop('selected', true)
+                
+              } else {
+                $("#botonAsignar").html("Asignar técnico");
+                $("#selectorTec").prop("disabled",false);
+                $("#botonAsignar").prop("disabled",false);
+                $("#selectorTec option[value='<%=sesion.idUsuario%>']").prop('selected', true)
+              }
+              $("#idAvisoModal").val(nAviso.idAviso);
 
+            });
+
+
+
+            
             $('#asignarTecnico').modal('toggle');
             
 

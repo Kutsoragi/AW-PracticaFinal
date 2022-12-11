@@ -288,7 +288,7 @@
                 $("#botonEnviar").prop("disabled",false);
                 break;
               case 'incidencia':
-                $("#selectorCategoria").html("<option value='adigital' selected>Administración digital</option><option value='comu'>Comunicaciones</option><option value='conect'>Conectividad</option><option value='docencia'>Docencia</option><option value='web'>Web</option>");
+                $("#selectorCategoria").html("<option value='adigital' selected>Administración digital</option><option value='comu'>Comunicaciones</option><% if(sesion.perfil != 'aa') { %><option value='conect'>Conectividad</option><option value='docencia'>Docencia</option><% } %><option value='web'>Web</option>");
                 $("#opciones").show();
                 $("#divSelectorSub").show();
                 $("#botonEnviar").prop("disabled",false);

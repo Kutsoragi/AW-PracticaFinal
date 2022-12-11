@@ -200,17 +200,28 @@ app.get("/obtener_imagen", middleLogueado, function(request, response){
     })
 })
 
-app.get("/obtener_aviso", function(request, response){
-    let idAviso = '25';
-    console.log("idAviso");
-    console.log(request);
-    daoU.leerAvisoPorId(idAviso, function(err,res){
+app.get("/obtener_aviso/:idAviso", function(request, response){
+    let id = request.params.idAviso;
+    daoA.leerAvisoPorId(id, function(err,res){
         if (err){
             console.log(err,message);
         }
         else {
-            console.log(res);
-            response.send(res);
+            daoU.leerNombrePorId(res.idUsuario,function (err, res2){
+                if(err){
+                    console.log(err.message)
+                }
+                else{
+                    res.nombre = res2.nombre;
+                    res.tipo = utils.parseTipo(res.tipo);
+                    res.fecha = utils.parseFecha(res.fecha);
+                    res.categoria = utils.parseCategorias(res.categoria);
+                    res.subcategoria = utils.parseCategorias(res.subcategoria);
+                    res.perfil = utils.parsePerfil(res.perfil);
+                    setTimeout(function(){ response.send(res);}, 50);
+                }
+            })
+                 
         }
     })
 })
