@@ -88,10 +88,7 @@ function middleTecnico(req,res,next){
 }
 
 
-app.get("/", middleNoLogueado, (request, response) => {
-    response.redirect("/login");
-});
-    
+
 app.get("/mis_avisos", middleLogueado, function(request, response) {
     if(request.session.user.tecnico){
         daoA.leerAvisosPorTecnico(request.session.user.idUsuario,function(err,res){
@@ -103,7 +100,7 @@ app.get("/mis_avisos", middleLogueado, function(request, response) {
                 for(let aviso of res){
                     daoU.leerNombrePorId(aviso.idUsuario,function (err, res2){   
                         if(err){
-                           console.log(err);
+                            console.log(err);
                         }
                         else {
                             aviso.nombreUsuario = res2.nombre;
@@ -112,14 +109,14 @@ app.get("/mis_avisos", middleLogueado, function(request, response) {
 
                     if(aviso.idTecnico){
                         daoU.leerNombrePorId(aviso.idTecnico,function (err, res2){   
-                        if(err){
-                           console.log(err);
-                        }
-                        else {
-                            aviso.ntecnico = res2.nombre;
-                        }
-                    });
-
+                            if(err){
+                                console.log(err);
+                            }
+                            else {
+                                aviso.ntecnico = res2.nombre;
+                            }
+                        });
+                        
                     }
                     setTimeout(function(){
                         listaAvisos.push({idAviso:aviso.idAviso,texto:aviso.texto,fecha:aviso.fecha,nombreUsu:aviso.nombreUsuario, tecnico:aviso.ntecnico, perfil:aviso.perfil,tipo:aviso.tipo,categoria:aviso.categoria, subcategoria:aviso.subcategoria,comentario:aviso.comentario_tecnico})
@@ -129,8 +126,7 @@ app.get("/mis_avisos", middleLogueado, function(request, response) {
                     listaAvisos = listaAvisos.sort(function(a,b){
                         return new Date(b.fecha) - new Date(a.fecha);
                     });
-                    console.log(listaAvisos)
-                    response.render("mis_avisos", {sesion: request.session.user, myUtils: utils, msgPantalla: null, avisos:listaAvisos});
+                    response.status(200).render("mis_avisos", {sesion: request.session.user, myUtils: utils, msgPantalla: null, avisos:listaAvisos});
                 }, 50);
             }
         })
@@ -145,23 +141,23 @@ app.get("/mis_avisos", middleLogueado, function(request, response) {
                 for(let aviso of res){
                     daoU.leerNombrePorId(aviso.idUsuario,function (err, res){   
                         if(err){
-                           console.log(err);
+                            console.log(err);
                         }
                         else {
                             aviso.nombreUsuario = res.nombre;
                         }
                     });
-
+                    
                     if(aviso.idTecnico){
                         daoU.leerNombrePorId(aviso.idTecnico,function (err, res){   
-                        if(err){
-                           console.log(err);
-                        }
-                        else {
-                            aviso.ntecnico = res.nombre;
-                        }
-                    });
-
+                            if(err){
+                                console.log(err);
+                            }
+                            else {
+                                aviso.ntecnico = res.nombre;
+                            }
+                        });
+                        
                     }
                     setTimeout(function(){
                         listaAvisos.push({idAviso:aviso.idAviso,texto:aviso.texto,fecha:aviso.fecha,nombreUsu:aviso.nombreUsuario, tecnico:aviso.ntecnico, perfil:aviso.perfil,tipo:aviso.tipo,categoria:aviso.categoria, subcategoria:aviso.subcategoria,comentario:aviso.comentario_tecnico})
@@ -171,7 +167,7 @@ app.get("/mis_avisos", middleLogueado, function(request, response) {
                     listaAvisos = listaAvisos.sort(function(a,b){
                         return new Date(b.fecha) - new Date(a.fecha);
                     });
-                    response.render("mis_avisos", {sesion: request.session.user, myUtils: utils, msgPantalla: null, avisos:listaAvisos});
+                    response.status(200).render("mis_avisos", {sesion: request.session.user, myUtils: utils, msgPantalla: null, avisos:listaAvisos});
                 }, 50);
             }
         })
@@ -190,6 +186,7 @@ app.get("/avisos_entrantes", middleLogueado, middleTecnico, function(request, re
         if(err){
             console.log(err.message);
             response.render("avisos_entrantes", {sesion: request.session.user, msgPantalla: err.message, avisos: null, myUtils: utils, tecnicos: null});
+            
         }
         else {
             for(let aviso of res){
@@ -461,7 +458,13 @@ app.post("/asignarTecnico", function(request, response){
 
 })
 
+app.get("/", middleNoLogueado, (request, response) => {
+    response.redirect("/login");
+});
 
+app.get("*", function(request,response){
+    response.status(404).send("Error 404 - Not found")
+})
 
 app.listen(3000, (err) => {
     if (err) {
