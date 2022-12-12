@@ -213,7 +213,7 @@ class DAOUsuarios {
                                 callback(null,rows);
                             }
                             else{
-                                callback(new Error("No existe ningún usuario"))
+                                callback(new Error("No existe ningún usuario activo"))
                             }
                         }
                     }
@@ -221,43 +221,23 @@ class DAOUsuarios {
             }
         });
     }
-    obtenerEstadisticasUsuario(idUsuario, callback){
-        this._pool.getConnection(function(err, connection) {
-            if (err) {
-                callback(new Error("Error de conexion a la base de datos"));
-            }
-            else {
-                connection.query("SELECT tipo, count(*) as cifra FROM ucm_cau.ucm_aw_cau_avi_avisos WHERE idUsuario = ? GROUP BY tipo;" , [idUsuario],//Aquí va la query a la BD
-                    function(err, rows) {
-                        connection.release();
-                        if (err) {
-                            callback(new Error("Error de acceso a la base de datos"));
-                        }
-                        else {
-                            //Aquí se tratan los datos y llama al callback (Habría que devolver el ID generado por el insert)
-                            callback(null,rows);
-                        }
-                    }
-                );
-            }
-        });
-    }
+    
+    
 
-    obtenerEstadisticasTecnico(idUsuario, callback){
+    eliminarUsuario(idUsuario,callback){
         this._pool.getConnection(function(err, connection) {
             if (err) {
                 callback(new Error("Error de conexion a la base de datos"));
             }
             else {
-                connection.query("SELECT tipo, count(*) as cifra FROM ucm_cau.ucm_aw_cau_avi_avisos WHERE idTecnico = ? GROUP BY tipo;" , [idUsuario],//Aquí va la query a la BD
+                connection.query("UPDATE ucm_aw_cau_usu_usuarios SET activo = false WHERE idUsuario = ?" , [idUsuario] ,//Aquí va la query a la BD
                     function(err, rows) {
                         connection.release();
                         if (err) {
-                            callback(new Error("Error de acceso a la base de datos"));
+                            callback(err);
                         }
                         else {
-                            //Aquí se tratan los datos y llama al callback (Habría que devolver el ID generado por el insert)
-                            callback(null,rows);
+                            callback(null,"Usuario eliminado");                              
                         }
                     }
                 );

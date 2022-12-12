@@ -28,6 +28,10 @@ body{
     
 }
 
+.botonCabecera{
+    font-size: calc(10px + 0.3vw);
+}
+
 
 @media screen and (max-width: 768px){   
  

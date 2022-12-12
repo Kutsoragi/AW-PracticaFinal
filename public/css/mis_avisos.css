@@ -42,7 +42,11 @@
     vertical-align: middle;
 }
 
-.tabla tr {
+.visible{
+    cursor: pointer;
+}
+
+.eliminar{
     cursor: pointer;
 }
 
@@ -77,5 +81,9 @@
 }
 
 #opciones{
+    display: none;
+}
+
+#pGestion .BUsuLabel {
     display: none;
 }

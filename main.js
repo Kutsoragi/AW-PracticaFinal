@@ -313,7 +313,23 @@ app.get("/avisos_entrantes", middleLogueado, middleTecnico, function(request, re
 });
 
 app.get("/gestion_de_usuarios", middleLogueado, middleTecnico, function(request, response) {
-    response.render("gestion_de_usuarios",{sesion: request.session.user, myUtils: utils, avisos: null});
+    let listaUsuarios = [];
+    daoU.leerUsuarios(function(err,res){
+        if(err){
+            console.log(err.message);
+        }
+        else {
+            for(let usuario of res){
+                listaUsuarios.push({idUsuario:usuario.idUsuario, nombre: usuario.nombre, perfil: usuario.perfil, tecnico:usuario.tecnico, fecha: usuario.fecha})
+            }
+            listaUsuarios = listaUsuarios.sort(function(a,b){
+                return new Date(b.fecha) - new Date(a.fecha);
+            });
+            response.render("gestion_de_usuarios", {sesion: request.session.user, avisos: listaUsuarios, myUtils: utils});
+           
+        }
+    })
+    
 });
 
 app.get("/login", middleNoLogueado,function(request, response) {
@@ -399,12 +415,24 @@ app.get("/obtener_aviso/:idAviso", function(request, response){
     })
 })
 
+app.get("/obtener_info_usuario/:idUsuario", function(request, response){
+    let id = request.params.idUsuario;
+    daoU.leerNombrePorId(id,function (err, res){
+        if(err){
+            console.log(err.message)
+        }
+        else{
+            response.send(res);
+        }
+    })
+})
+
 app.get("/obtener_contador_avisos/:idUsuario&:tecnico", function(request, response){
     let id = request.params.idUsuario;
     let tecnico = request.params.tecnico;
     
     if(tecnico == '1'){
-        daoU.obtenerEstadisticasTecnico(id, function(err,res){
+        daoA.obtenerEstadisticasTecnico(id, function(err,res){
             if (err){
                 console.log(err.message);
             }
@@ -414,7 +442,7 @@ app.get("/obtener_contador_avisos/:idUsuario&:tecnico", function(request, respon
         })
     }
     else{
-        daoU.obtenerEstadisticasUsuario(id, function(err,res){
+        daoA.obtenerEstadisticasUsuario(id, function(err,res){
             if (err){
                 console.log(err.message);
             }
@@ -594,6 +622,18 @@ app.post("/eliminarAviso", function(request, response){
         }
         else{
             response.redirect("back")
+        }
+    })
+})
+
+app.post("/eliminarCuenta", function(request, response){
+    daoU.eliminarUsuario(request.body.idUsuario, function(err,res){
+        if (err){
+            console.log(err.message);
+            response.redirect("back")
+        }
+        else{
+            response.redirect("/gestion_de_usuarios")
         }
     })
 })

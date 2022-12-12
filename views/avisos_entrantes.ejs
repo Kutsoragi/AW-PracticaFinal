@@ -66,11 +66,11 @@
               <tbody>
                 <% avisos.forEach((aviso)=> { %>
                   <tr>
-                    <td class="visualizar" value="<%=aviso.idAviso%>"><img src="/img/<%=aviso.tipo%>.png" width="40" height="40" title="<%=aviso.tipo%>" /></td>
-                    <td class="fechaT visualizar" value="<%=aviso.idAviso%>">
+                    <td class="visible" value="<%=aviso.idAviso%>"><img src="/img/<%=aviso.tipo%>.png" width="40" height="40" title="<%=aviso.tipo%>" /></td>
+                    <td class="fechaT visible" value="<%=aviso.idAviso%>">
                       <%= myUtils.parseFecha(aviso.fecha) %>
                     </td>
-                    <td class="visualizar" value="<%=aviso.idAviso%>">
+                    <td class="visible" value="<%=aviso.idAviso%>">
                       <% if(aviso.texto.length> 200) { %>
                         <%= aviso.texto.substring(0,200) + "..." %>
                           <% } else { %>
@@ -79,7 +79,7 @@
                     </td>
                     <td>
                       <div class="row justify-content-around">
-                        <a class="visualizar" value="<%=aviso.idAviso%>">
+                        <a class="visible" value="<%=aviso.idAviso%>">
                           <% if(aviso.idTecnico) { %>
                             <img src="/img/tecnicoAsignado.png" width="40" height="40" title="Técnico asignado" />
                             <% } else { %>
@@ -277,7 +277,7 @@
 
 
 
-            $(".visualizar").click(function () {
+            $(".visible").click(function () {
               let id = $(this).closest("tr").index();
               let idAviso = ($(this).attr('value'));
               
