@@ -44,11 +44,11 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
             </div> 
         </div>
 
-        <div class="row justify-content-center">
-            <div class="col-7"><strong>Fecha de creación:</strong> <%= sesion.fecha %></div> 
-            <div class="col-7"><strong>Perfil:</strong> <%= myUtils.parsePerfil(sesion.perfil) %></div> 
-            <div class="col-7"><strong>Correo:</strong> <%=sesion.correo%></div> 
-            <div class="col-7"><strong>Correo:</strong> <%=sesion.correo%></div>
+        <div class="ml-5">
+            <div id="contAvisosGest"><strong><% if(sesion.tecnico) { %>Avisos gestionados:<% } else { %>Avisos realizados:<% } %></strong> 0</div> 
+            <div id="contInci"><strong>Incidencias:</strong> 1</div> 
+            <div id="contSuge"><strong>Sugerencias:</strong> 2</div>
+            <div id="contFeli"><strong>Felicitaciones:</strong> 3</div>
         </div>
         
         
@@ -75,7 +75,22 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
 
 <script>
         $("#fotoPerfil").click(function () {
-          
+            
+            $.get("/obtener_contador_avisos/" + "<%=sesion.idUsuario%>"+ "&<%=sesion.tecnico%>", function (data, status) {
+                let inc = 0; let sug = 0; let fel = 0;
+                for(let i = 0; i < data.length; i++){
+                    if(data[i].tipo == "felicitacion") fel = data[i].cifra;
+                    else if(data[i].tipo == "sugerencia") sug = data[i].cifra;
+                    else if(data[i].tipo == "incidencia") inc = data[i].cifra;
+                }
+                let total = inc + sug+ fel;
+                $("#contAvisosGest").html("<strong><% if(sesion.tecnico) { %>Avisos gestionados:<% } else { %>Avisos realizados:<% } %></strong> " + total);
+                $("#contInci").html("<strong>Incidencias:</strong> " + inc);
+                $("#contSuge").html("<strong>Sugerencias:</strong> " + sug);
+                $("#contFeli").html("<strong>Felicitaciones:</strong> " + fel);
+
+
+            })
 
             $('#modalPerfil').modal('toggle');
         })

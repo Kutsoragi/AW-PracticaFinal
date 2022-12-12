@@ -34,7 +34,7 @@
                   <a class="nav-link" href="/mis_avisos">Mis avisos</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="/historico_de_avisos">Histórico de Avisos</a>
+                  <a class="nav-link" href="/historico_de_avisos">Histórico de avisos</a>
                 </li>
                 <% if(sesion.tecnico) { %>
                   <li class="nav-item">
@@ -45,11 +45,7 @@
         </div>
       </nav>
 
-      <div class="row buscador align-items-center">
-        <div class="buscar">Buscar</div>
-        <input type="text" class="col-3 form-control" onkeyup="buscador()" id="buscadorTabla">
-        <button type="submit" class="btn btnRojo">Buscar</button>
-      </div>
+      <%- include("buscador") %>
 
       <% if(msgPantalla) { %>
         <div class="text-center mt-3 rojoError labelBold">
@@ -237,7 +233,7 @@
                             rows="3"><%= avisos[0].texto%></textarea>
                         </div>
                         <div class="form-outline mt-3 mb-3">
-                          <label class="labelBold" for="comen2">Introduzca el motivo de la eliminación del comentario:</label>
+                          <label class="labelBold" for="comen2">Introduzca el motivo de la eliminación del aviso:</label>
                           <textarea readonly class="form-control" name="comentario" id="comen2" rows="3"
                             required><%= avisos[0].comentario%></textarea>
                         </div>
@@ -272,7 +268,7 @@
 
           <script>
 
-            function buscador() {
+            /*function buscador() {
               // Declare variables
               var input, filter, table, tr, td, i, txtValue;
               input = document.getElementById("buscadorTabla");
@@ -294,7 +290,7 @@
                 }
               }
 
-            }
+            }*/
 
 
             $(".visualizar").click(function () {

@@ -395,38 +395,30 @@ app.get("/obtener_aviso/:idAviso", function(request, response){
     })
 })
 
-app.get("/obtener_contador_avisos/:idUsuario/:tecnico", function(request, response){
+app.get("/obtener_contador_avisos/:idUsuario&:tecnico", function(request, response){
     let id = request.params.idUsuario;
     let tecnico = request.params.tecnico;
-    console.log(id);
-    console.log(tecnico);
-    if(tecnico){
-        daoA.leerAvisoPorId(id, function(err,res){
+    
+    if(tecnico == '1'){
+        daoU.obtenerEstadisticasTecnico(id, function(err,res){
             if (err){
                 console.log(err.message);
             }
-            else {
-                daoU.leerNombrePorId(res.idUsuario,function (err, res2){
-                    if(err){
-                        console.log(err.message)
-                    }
-                    else{
-                        res.nombre = res2.nombre;
-                        res.tipo = utils.parseTipo(res.tipo);
-                        res.fecha = utils.parseFecha(res.fecha);
-                        res.categoria = utils.parseCategorias(res.categoria);
-                        res.subcategoria = utils.parseCategorias(res.subcategoria);
-                        res.perfil = utils.parsePerfil(res.perfil);
-                        res.sesionTecnico = request.session.user.tecnico;
-                        setTimeout(function(){ response.send(res);}, 50);
-                    }
-                })
-                     
+            else {                
+                response.send(res);
             }
         })
     }
-    else {
-        
+    else{
+        daoU.obtenerEstadisticasUsuario(id, function(err,res){
+            if (err){
+                console.log(err.message);
+            }
+            else {                
+                
+                response.send(res);
+            }
+        })
     }
     
 })

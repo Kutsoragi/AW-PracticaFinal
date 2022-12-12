@@ -53,32 +53,6 @@ class DAOAvisos {
             }
         })
     }
-    leerAvisosPorUsuarioTodos(idUsuario,callback){
-        this._pool.getConnection(function(err, connection) {
-            if (err) {
-                callback(new Error("Error de conexion a la base de datos"));
-            }
-            else {
-                connection.query("SELECT * FROM ucm_aw_cau_avi_avisos where idUsuario = ?" , [idUsuario] ,
-                    function(err, rows) {
-                        connection.release();
-                        if (err) {
-                            callback(new Error("Error de acceso a la base de datos"));
-                        }
-                        else {
-                            if(rows.length == 0){
-                                callback(new Error("No hay avisos asociados al usuario"))
-                            }
-                            else{
-                                callback(null,rows)
-                            }
-                            
-                        }
-                    }
-                );
-            }
-        })
-    }
     leerAvisosPorTecnico(idTecnico,callback){
         this._pool.getConnection(function(err, connection) {
             if (err) {
@@ -100,26 +74,6 @@ class DAOAvisos {
         })
     }
 
-    leerAvisosPorTecnicoTodos(idTecnico,callback){
-        this._pool.getConnection(function(err, connection) {
-            if (err) {
-                callback(new Error("Error de conexion a la base de datos"));
-            }
-            else {
-                connection.query("SELECT * FROM ucm_aw_cau_avi_avisos where idTecnico = ?" , [idTecnico] ,
-                    function(err, rows) {
-                        connection.release();
-                        if (err) {
-                            callback(new Error("Error de acceso a la base de datos"));
-                        }
-                        else {
-                            callback(null,rows)   
-                        }
-                    }
-                );
-            }
-        })
-    }
 
     leerAvisosPorTecnicoCerrados(idTecnico,callback){
         this._pool.getConnection(function(err, connection) {

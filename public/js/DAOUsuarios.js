@@ -227,7 +227,7 @@ class DAOUsuarios {
                 callback(new Error("Error de conexion a la base de datos"));
             }
             else {
-                connection.query("SELECT tipo, count(*) as cifra FROM ucm_cau.ucm_aw_cau_avi_avisos WHERE idUsuario = 5 GROUP BY tipo;" ,//Aquí va la query a la BD
+                connection.query("SELECT tipo, count(*) as cifra FROM ucm_cau.ucm_aw_cau_avi_avisos WHERE idUsuario = ? GROUP BY tipo;" , [idUsuario],//Aquí va la query a la BD
                     function(err, rows) {
                         connection.release();
                         if (err) {
@@ -249,7 +249,7 @@ class DAOUsuarios {
                 callback(new Error("Error de conexion a la base de datos"));
             }
             else {
-                connection.query("SELECT tipo, count(*) as cifra FROM ucm_cau.ucm_aw_cau_avi_avisos WHERE idTecnico = 5 GROUP BY tipo;" ,//Aquí va la query a la BD
+                connection.query("SELECT tipo, count(*) as cifra FROM ucm_cau.ucm_aw_cau_avi_avisos WHERE idTecnico = ? GROUP BY tipo;" , [idUsuario],//Aquí va la query a la BD
                     function(err, rows) {
                         connection.release();
                         if (err) {
