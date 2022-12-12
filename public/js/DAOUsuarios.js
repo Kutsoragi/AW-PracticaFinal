@@ -22,14 +22,14 @@ class DAOUsuarios {
                         }
                         else{
                             if (usuario.tecnico){
-                                connection.query("SELECT * FROM ucm_aw_cau_tec_tecnico WHERE num_empleado = ?;", [usuario.numEmpleado],
+                                connection.query("SELECT * FROM ucm_aw_cau_tec_tecnico WHERE num_empleado = ? and correo = ?;", [usuario.numEmpleado, usuario.correo],
                                 function(err, rows) {
                                     if(err) {
                                         callback(new Error("Error de acceso a la base de datos"));
                                     }
                                     else{
-                                        if (rows.length > 0) {
-                                            callback(new Error("Ya existe el numero de empleado")); //no está el usuario en la base de datos
+                                        if (rows.length === 0) {
+                                            callback(new Error("El numero de empleado y/o correo no coinciden con los del registro.")); //no está el usuario en la base de datos
                                         }
                                         else{
                                             connection.query("INSERT INTO ucm_aw_cau_usu_usuarios (correo, nombre, contraseña, fecha, perfil, tecnico, foto) VALUES (?, ?, ?, ?, ?, ?, ?)",  [ usuario.correo, usuario.nombre, usuario.contraseña, new Date().toISOString().slice(0, 19).replace('T', ' '), usuario.perfil, usuario.tecnico, usuario.foto], 
@@ -39,16 +39,7 @@ class DAOUsuarios {
                                                     callback("Ha ocurrido un error en la base de datos, por favor intentelo de nuevo más tarde");
                                                 }
                                                 else {
-                                                    usuario.ID = result.insertId
-                                                    connection.query("INSERT INTO ucm_aw_cau_tec_tecnico (idUsuario, num_empleado) VALUES (?,?);", [usuario.ID, usuario.numEmpleado],
-                                                    function(err, rows) {
-                                                        if(err) {
-                                                            callback(new Error("Error de acceso a la base de datos"));
-                                                        }
-                                                        else{
-                                                            callback(null, usuario);
-                                                        }
-                                                    })
+                                                    callback(null, usuario);
                                                 }
                                             });
                                         }
