@@ -192,7 +192,7 @@ class DAOAvisos {
                 callback(new Error("Error de conexion a la base de datos"));
             }
             else {
-                connection.query("UPDATE ucm_aw_cau_avi_avisos SET comentario_tecnico = ? WHERE idAviso = ?;" , [comentario,idAviso] ,//Aquí va la query a la BD
+                connection.query("UPDATE ucm_aw_cau_avi_avisos SET activo = false, comentario_tecnico = ? WHERE idAviso = ?;" , [comentario,idAviso] ,//Aquí va la query a la BD
                     function(err, rows) {
                         connection.release();
                         if (err) {

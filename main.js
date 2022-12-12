@@ -88,19 +88,18 @@ function middleTecnico(req,res,next){
 
 
 app.get("/mis_avisos", middleLogueado, function(request, response) {
-    console.log(request.session.user);
     let listaAvisos = []
     if(request.session.user.tecnico){
         daoA.leerAvisosPorTecnico(request.session.user.idUsuario,function(err,res){
             if(err){
-                console.log(err)
+                console.log(err.message)
             }
             else{
                 
                 for(let aviso of res){
                     daoU.leerNombrePorId(aviso.idUsuario,function (err, res2){   
                         if(err){
-                            console.log(err);
+                            console.log(err.message);
                         }
                         else {
                             aviso.nombreUsuario = res2.nombre;
@@ -110,7 +109,7 @@ app.get("/mis_avisos", middleLogueado, function(request, response) {
                     if(aviso.idTecnico){
                         daoU.leerNombrePorId(aviso.idTecnico,function (err, res2){   
                             if(err){
-                                console.log(err);
+                                console.log(err.message);
                             }
                             else {
                                 aviso.ntecnico = res2.nombre;
@@ -142,7 +141,7 @@ app.get("/mis_avisos", middleLogueado, function(request, response) {
                 for(let aviso of res){
                     daoU.leerNombrePorId(aviso.idUsuario,function (err, res){   
                         if(err){
-                            console.log(err);
+                            console.log(err.message);
                         }
                         else {
                             aviso.nombreUsuario = res.nombre;
@@ -152,7 +151,7 @@ app.get("/mis_avisos", middleLogueado, function(request, response) {
                     if(aviso.idTecnico){
                         daoU.leerNombrePorId(aviso.idTecnico,function (err, res){   
                             if(err){
-                                console.log(err);
+                                console.log(err.message);
                             }
                             else {
                                 aviso.ntecnico = res.nombre;
@@ -180,14 +179,14 @@ app.get("/historico_de_avisos", middleLogueado, function(request, response) {
     if(request.session.user.tecnico){
         daoA.leerAvisosPorTecnicoCerrados(request.session.user.idUsuario,function(err,res){
             if(err){
-                console.log(err)
+                console.log(err.message)
             }
             else{
                 
                 for(let aviso of res){
                     daoU.leerNombrePorId(aviso.idUsuario,function (err, res2){   
                         if(err){
-                            console.log(err);
+                            console.log(err.message);
                         }
                         else {
                             aviso.nombreUsuario = res2.nombre;
@@ -197,7 +196,7 @@ app.get("/historico_de_avisos", middleLogueado, function(request, response) {
                     if(aviso.idTecnico){
                         daoU.leerNombrePorId(aviso.idTecnico,function (err, res2){   
                             if(err){
-                                console.log(err);
+                                console.log(err.message);
                             }
                             else {
                                 aviso.ntecnico = res2.nombre;
@@ -221,14 +220,14 @@ app.get("/historico_de_avisos", middleLogueado, function(request, response) {
     else{
         daoA.leerAvisosPorUsuarioCerrados(request.session.user.idUsuario, function(err,res){
             if(err){
-                console.log(err)
+                console.log(err.message)
             }
             else{
                 let listaAvisos = []
                 for(let aviso of res){
                     daoU.leerNombrePorId(aviso.idUsuario,function (err, res){   
                         if(err){
-                            console.log(err);
+                            console.log(err.message);
                         }
                         else {
                             aviso.nombreUsuario = res.nombre;
@@ -238,7 +237,7 @@ app.get("/historico_de_avisos", middleLogueado, function(request, response) {
                     if(aviso.idTecnico){
                         daoU.leerNombrePorId(aviso.idTecnico,function (err, res){   
                             if(err){
-                                console.log(err);
+                                console.log(err.message);
                             }
                             else {
                                 aviso.ntecnico = res.nombre;
@@ -274,7 +273,7 @@ app.get("/avisos_entrantes", middleLogueado, middleTecnico, function(request, re
             for(let aviso of res){
                 daoU.leerNombrePorId(aviso.idUsuario,function (err, res2){   
                     if(err){
-                       console.log(err);
+                       console.log(err.message);
                     }
                     else {
                         aviso.nombreUsuario = res2.nombre;
@@ -368,7 +367,6 @@ function(request, response){
 
 app.get("/cerrarSesion", middleLogueado, function(req,res){
     req.session.user = null
-    console.log("Has cerrado sesion")
     res.redirect("/login")
 });
 
@@ -460,6 +458,8 @@ app.post("/crear_cuenta", multerFactory.single("foto"),
     check("correo", "Por favor, introduce un correo electrónico").notEmpty(),
     // El campo correo ha de ser una dirección de correo válida.
     check("correo","Por favor, introduce un correo electrónico").isEmail(),
+    // El campo correo debe terminar en @ucm.es.
+    check("correo","El correo debe terminar en '@ucm.es')").custom((value) => (value.endsWith("@ucm.es"))),
     // El campo nombre ha de ser no vacío.
     check("nombre", "Por favor, introduce un nombre").notEmpty(),
     // El campo password ha de ser no vacío.
@@ -490,8 +490,16 @@ app.post("/crear_cuenta", multerFactory.single("foto"),
             else return false;
         }
     }),
+    
     // El campo empleado debe tener 4 dígitos y 3 letras
-    //check("numEmpl", "El formato de nº de empleado no es válido").matches(/^[0-9]{4}-[a-z]{3}$/),
+    check("numEmpl", "El formato de nº de empleado no es correcto(E.g:1234-abc)").custom((value, {req}) => {
+        if(req.body.tecnico !== "si") return true
+        else {
+            var reg = new RegExp(/^[0-9]{4}-[a-z]{3}$/)
+            if(reg.test(value)) return true;
+            else return false;
+        }
+    }),
     
 
 function(request, response){
@@ -534,7 +542,7 @@ function(request, response){
         }
         daoU.agregarUsuario(usuario, function(err,res){
             if (err){
-                console.log(err)
+                console.log(err.message)
                 response.render("crear_cuenta",{errMsg : err.message, errores : null, camposC : campos})
             }
             else{
@@ -576,8 +584,6 @@ app.post("/mis_avisos", function(request, response){
        
         daoA.crearAviso(aviso, function(err,res){
             if (err){
-                
-                console.log(request.session.user);
                 response.redirect("/mis_avisos")
             }
             else{
