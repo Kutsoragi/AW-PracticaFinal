@@ -62,7 +62,6 @@ const daoA = new DAOAvisos(pool)
 
 function middleLogueado(req, res, next){
 	//if usuario loggueado, next
-     console.log("ENTRO LOGGEADO")
 	if(req.session.user){
 		next()
 	}
@@ -71,7 +70,6 @@ function middleLogueado(req, res, next){
 
 function middleNoLogueado(req, res, next){
 	//if usuario loggueado, next
-    console.log("ENTRO NO LOGGEADO")
 	if(!req.session.user){
 		next()
 	}
@@ -471,6 +469,18 @@ app.post("/terminarAviso", function(request, response){
         }
     })
 
+})
+app.post("/eliminarAviso", function(request, response){
+    let comentario = "Este aviso ha sido eliminado por el técnico " + request.session.user.nombre + " debido a:\n\n" + '"' + request.body.comentario + '"';
+    daoA.eliminarAviso(request.body.idAviso,comentario, function(err,res){
+        if (err){
+            console.log(err.message);
+            response.redirect("/mis_avisos")
+        }
+        else{
+            response.redirect("/mis_avisos")
+        }
+    })
 })
 
 app.get("/", middleNoLogueado, (request, response) => {

@@ -82,12 +82,12 @@
 
                 <tbody>
                   <% avisos.forEach((aviso)=> { %>
-                    <tr value="<%=aviso.idAviso%>">
-                      <td><img src="/img/<%=aviso.tipo%>.png" width="40" height="40" title="<%=aviso.tipo%>" /></td>
-                      <td class="fechaT">
+                    <tr>
+                      <td class="visible" value="<%=aviso.idAviso%>"><img src="/img/<%=aviso.tipo%>.png" width="40" height="40" title="<%=aviso.tipo%>" /></td>
+                      <td class="fechaT visible" value="<%=aviso.idAviso%>">
                         <%= aviso.fecha.toLocaleDateString() %>
                       </td>
-                      <td>
+                      <td  class="visible" value="<%=aviso.idAviso%>">
                         <% if(aviso.texto.length> 200) { %>
                           <%= aviso.texto.substring(0,200) + "..." %>
                             <% } else { %>
@@ -96,10 +96,10 @@
                       </td>
                       <td>
                         <div class="row justify-content-around">
-                          <a data-bs-target="#asignarTecnico" data-bs-toggle="modal">
+                          <a class="visible"  value="<%=aviso.idAviso%>">
                             <img src="/img/visualizar.png" width="40" height="40" title="Ver aviso" />
                           </a>
-                          <a data-bs-target="#eliminarAviso" data-bs-toggle="modal" data-bs-dismiss="modal">
+                          <a class="eliminar"  value="<%=aviso.idAviso%>">
                             <img src="/img/eliminar2.png" class="botonElim" width="40" height="40" />
                           </a>
                         </div>
@@ -116,7 +116,7 @@
                   <tbody>
 
                     <% avisos.forEach((aviso)=> { %>
-                      <tr value="<%=aviso.idAviso%>">
+                      <tr class="visible" value="<%=aviso.idAviso%>">
                         <td class="fechaT">
                           <%=aviso.fecha.toLocaleDateString()%>
                         </td>
@@ -245,11 +245,11 @@
 
                           <div class="modal-header">
 
-                            <h5 class="modal-title ml-3" id="nombreModal">
+                            <h5 class="modal-title ml-3" id="nombreModal2">
                               <%=avisos[0].nombreUsu%>
                             </h5>
                             <div class="tAviso">
-                              <h5 class="modal-title" id="infoAvisoModal" name="">Aviso <%=avisos[0].idAviso%> -
+                              <h5 class="modal-title" id="infoAvisoModal2" name="">Aviso <%=avisos[0].idAviso%> -
                                   <%=myUtils.parseTipo(avisos[0].tipo)%>
                               </h5>
                             </div>
@@ -262,13 +262,13 @@
                           <div class="modal-body">
 
                             <div class="container-fluid">
-                              <form id="asignarTecnicoForm" enctype="application/json" action="/terminarAviso"
+                              <form id="asignarTecnicoForm" enctype="application/json" action="/eliminarAviso"
                                 method="post">
-                                <div class="mb-3" id="fechaModal">
+                                <div class="mb-3" id="fechaModal2">
                                   <strong>Fecha:</strong>
                                   <%= myUtils.parseFecha(avisos[0].fecha) %>
                                 </div>
-                                <div class="mb-3" id="categoriasModal">
+                                <div class="mb-3" id="categoriasModal2">
 
                                   <strong>
                                     <%= myUtils.parseCategorias(avisos[0].categoria)%>
@@ -278,23 +278,23 @@
                                       <% } %>
 
                                 </div>
-                                <div class="mb-3" id="perfilModal">
+                                <div class="mb-3" id="perfilModal2">
                                   <strong>Perfil:</strong>
                                   <%= myUtils.parsePerfil(avisos[0].perfil) %>
                                 </div>
 
                                 <div class="form-outline mt-3 mb-3">
                                   <label class="labelBold" for="obs">Observaciones:</label>
-                                  <textarea readonly class="form-control" id="obs"
+                                  <textarea readonly class="form-control" id="obs2"
                                     rows="3"><%= avisos[0].texto%></textarea>
                                 </div>
                                 <div class="form-outline mt-3 mb-3">
-                                  <label class="labelBold" for="comen">Comentario del técnico:</label>
-                                  <textarea readonly class="form-control" name="comentario" id="comen" rows="3"
+                                  <label class="labelBold" for="comen2">Comentario del técnico:</label>
+                                  <textarea readonly class="form-control" name="comentario" id="comen2" rows="3"
                                     required><%= avisos[0].comentario%></textarea>
                                 </div>
 
-                                <input class="avisoInv" id="idAvisoModal" name="idAviso"
+                                <input class="avisoInv" id="idAvisoModal2" name="idAviso"
                                   value="<%=avisos[0].idAviso%>"></input>
                             </div>
 
@@ -302,7 +302,7 @@
                               <button type="button" class="btn btn-secondary labelBold" data-bs-
                                 data-bs-dismiss="modal">Cerrar</button>
                               <% if (sesion.tecnico) { %>
-                                <button type="submit" class="btn btnRojo" id="botonTerminar">Eliminar aviso</button>
+                                <button type="submit" class="btn btnRojo" id="botonTerminar2">Eliminar aviso</button>
                                 <% } %>
                             </div>
 
@@ -436,11 +436,11 @@
 
                       <script>
 
-                        $("tr").click(function () {
+                        $(".visible").click(function () {
                           let id = $(this).closest("tr").index();
                           let idAviso = ($(this).attr('value'));
 
-
+                          
                           $.get('/obtener_aviso/' + idAviso, function (nAviso, status) {
                             $("#nombreModal").html(nAviso.nombre);
                             $("#infoAvisoModal").html("Aviso " + nAviso.idAviso + " - " + nAviso.tipo);
@@ -466,9 +466,34 @@
                           $('#infoAviso').modal('toggle');
                         })
 
+                        $(".eliminar").click(function () {
+                          let id = $(this).closest("tr").index();
+                          let idAviso = ($(this).attr('value'));
 
-                        $("botonElim").click(function () {
-                          $('#infoAviso').modal('toggle');
+                          
+                          $.get('/obtener_aviso/' + idAviso, function (nAviso, status) {
+                            $("#nombreModal2").html(nAviso.nombre);
+                            $("#infoAvisoModal2").html("Aviso " + nAviso.idAviso + " - " + nAviso.tipo);
+                            $("#fechaModal2").html("<strong>Fecha:</strong> " + nAviso.fecha);
+                            let sub = '';
+                            if (nAviso.tipo != 'Felicitación') sub = " - " + nAviso.subcategoria;
+                            $("#categoriasModal2").html("<strong>" + nAviso.categoria + "</strong>" + sub);
+                            $("#perfilModal2").html("<strong>Perfil:</strong> " + nAviso.perfil);
+                            $("#obs2").val(nAviso.texto);
+                            $("#comen2").val(nAviso.comentario_tecnico);
+                            console.log(nAviso.sesionTecnico);
+                            if (nAviso.sesionTecnico) { $("#comen2").prop("readonly", false); }
+                            else { $("#comen2").prop("readonly", true); }
+
+                            if (nAviso.comentario_tecnico) { $("#comen2").prop("readonly", true); $("#botonTerminar2").prop("disabled", false); }
+                            else if (!nAviso.sesionTecnico) { $("#comen2").prop("readonly", true); $("#botonTerminar2").prop("disabled", false); }
+                            else { $("#comen2").prop("readonly", false); $("#botonTerminar2").prop("disabled", false); }
+
+                            $("#idAvisoModal2").val(nAviso.idAviso);
+
+
+                          });
+                          $('#eliminarAviso').modal('toggle');
                         })
 
                         function buscador() {
