@@ -47,6 +47,9 @@
       <div class="row buscador align-items-center">
         <div class="buscar">Buscar</div>
         <input type="text" class="col-3 form-control" onkeyup="buscador()" id="buscadorTabla">
+        <% if (sesion.tecnico) { %>
+        <input type="checkbox" id="buscadorUsuario" name="buscadorUsuario" value="usuario"><label for="buscadorUsuario">Usuario</label>
+        <% } %> 
         <button type="submit" class="btn btnRojo">Buscar</button>
       </div>
 
@@ -56,343 +59,370 @@
         </div>
         <% } %>
 
-      
+
           <div class="col-10 tabla">
             <table class="table" id="t_avisos" value="<%=sesion.tecnico%>">
               <thead class="thead-dark">
                 <tr>
-                <% if (sesion.tecnico) { %>
-                  <th scope="col"  style="width: 5%">Tipo</th>
-                  <th scope="col"  style="width: 10%">Fecha</th>
-                  <th scope="col"  style="width: 40%">Texto</th>
-                  <th scope="col"  style="width: 10%">Acciones</th>
-                <% } else { %>
-                  <th scope="col" style="width: 15%">Fecha</th>
-                  <th scope="col" style="width: 40%">Texto</th>
-                  <th scope="col" style="width: 15%">Tipo</th>
-                  <th scope="col" style="width: 15%">Técnico</th>
-                <% } %> 
+                  <% if (sesion.tecnico) { %>
+                    <th scope="col" style="width: 5%">Tipo</th>
+                    <th scope="col" style="width: 10%">Fecha</th>
+                    <th scope="col" style="width: 40%">Texto</th>
+                    <th scope="col" style="width: 10%">Acciones</th>
+                    <% } else { %>
+                      <th scope="col" style="width: 15%">Fecha</th>
+                      <th scope="col" style="width: 40%">Texto</th>
+                      <th scope="col" style="width: 15%">Tipo</th>
+                      <th scope="col" style="width: 15%">Técnico</th>
+                      <% } %>
                 </tr>
               </thead>
-              
-            <% if (sesion.tecnico) { %>
 
-              <tbody>
-                <% avisos.forEach((aviso) => {  %>
-                  <tr value="<%=aviso.idAviso%>">
-                    <td><img src="/img/<%=aviso.tipo%>.png" width="40" height="40" title="<%=aviso.tipo%>"/></td>
-                    <td class="fechaT"><%= aviso.fecha.toLocaleDateString() %></td>
-                    <td>
-                      <% if(aviso.texto.length> 200) { %>
-                        <%= aviso.texto.substring(0,200) + "..." %>
-                          <% } else { %>
-                            <%= aviso.texto %>
+              <% if (sesion.tecnico) { %>
+
+                <tbody>
+                  <% avisos.forEach((aviso)=> { %>
+                    <tr value="<%=aviso.idAviso%>">
+                      <td><img src="/img/<%=aviso.tipo%>.png" width="40" height="40" title="<%=aviso.tipo%>" /></td>
+                      <td class="fechaT">
+                        <%= aviso.fecha.toLocaleDateString() %>
+                      </td>
+                      <td>
+                        <% if(aviso.texto.length> 200) { %>
+                          <%= aviso.texto.substring(0,200) + "..." %>
+                            <% } else { %>
+                              <%= aviso.texto %>
+                                <% } %>
+                      </td>
+                      <td>
+                        <div class="row justify-content-around">
+                          <a data-bs-target="#asignarTecnico" data-bs-toggle="modal">
+                            <img src="/img/visualizar.png" width="40" height="40" title="Ver aviso" />
+                          </a>
+                          <a data-bs-target="#eliminarAviso" data-bs-toggle="modal" data-bs-dismiss="modal">
+                            <img src="/img/eliminar2.png" class="botonElim" width="40" height="40" />
+                          </a>
+                        </div>
+                      </td>
+                    </tr>
+
+                    <% }); %>
+
+                </tbody>
+
+
+                <% } else { %>
+
+                  <tbody>
+
+                    <% avisos.forEach((aviso)=> { %>
+                      <tr value="<%=aviso.idAviso%>">
+                        <td class="fechaT">
+                          <%=aviso.fecha.toLocaleDateString()%>
+                        </td>
+                        <td>
+                          <% if(aviso.texto.length> 200) { %>
+                            <%= aviso.texto.substring(0,200) + "..." %>
+                              <% } else { %>
+                                <%= aviso.texto %>
+                                  <% } %>
+                        </td>
+                        <td><img src="/img/<%=aviso.tipo%>.png" width="40" height="40" title="<%=aviso.tipo%>" /></td>
+                        <td>
+                          <% if(aviso.tecnico) { %>
+                            <%= aviso.tecnico %>
                               <% } %>
-                    </td>
-                    <td>
-                      <div class="row justify-content-around">
-                        <a data-bs-target="#asignarTecnico" data-bs-toggle="modal">              
-                            <img src="/img/visualizar.png" width="40" height="40" title="Ver aviso"/>        
-                        </a>
-                        <a data-bs-target="#eliminarAviso" data-bs-toggle="modal" data-bs-dismiss="modal">
-                          <img src="/img/eliminar2.png" class="botonElim" width="40" height="40" />
-                        </a>
-                      </div>                         
-                    </td>
-                  </tr>
-
-                <% }); %>
-                
-              </tbody>
-
-
-            <% } else { %>
-            
-              <tbody>
-              
-                <% avisos.forEach((aviso)=> { %>
-                  <tr value="<%=aviso.idAviso%>">
-                    <td class="fechaT">
-                      <%=aviso.fecha.toLocaleDateString()%>
-                    </td>
-                    <td>
-                      <% if(aviso.texto.length> 200) { %>
-                        <%= aviso.texto.substring(0,200) + "..." %>
-                          <% } else { %>
-                            <%= aviso.texto %>
-                              <% } %>
-                    </td>
-                    <td><img src="/img/<%=aviso.tipo%>.png" width="40" height="40" title="<%=aviso.tipo%>" /></td>
-                    <td>
-                      <% if(aviso.tecnico) { %>
-                        <%= aviso.tecnico %>
-                          <% } %>
-                    </td>
-                  </tr>
-                  <% }); %>
-              </tbody>
-              <% } %> 
+                        </td>
+                      </tr>
+                      <% }); %>
+                  </tbody>
+                  <% } %>
             </table>
           </div>
 
-        
+
 
           <div class="text-center mb-4" id="noAviso">
-          <% if(avisos.length == 0) { %>
-            No se ha encontrado ningún aviso
-          <% } %>
+            <% if(avisos.length==0) { %>
+              No se ha encontrado ningún aviso
+              <% } %>
           </div>
 
-        <% if (!sesion.tecnico) { %>
-          <div class="row nuevoAviso justify-content-center">
-            <button type="button" class="btn btnRojo" data-bs-toggle="modal" data-bs-target="#nuevoAviso">Nuevo
-              aviso</button>
-          </div>
+          <% if (!sesion.tecnico) { %>
+            <div class="row nuevoAviso justify-content-center">
+              <button type="button" class="btn btnRojo" data-bs-toggle="modal" data-bs-target="#nuevoAviso">Nuevo
+                aviso</button>
+            </div>
 
-        <% } %>
+            <% } %>
 
-          <!-- Button trigger modal -->
+              <!-- Button trigger modal -->
 
-          <!-- Modal INFO/TERMINAR AVISO -->
-          <% if(avisos.length > 0){ %> 
-          <div class="modal fade" id="infoAviso" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-              <div class="modal-content">
+              <!-- Modal INFO/TERMINAR AVISO -->
+              <% if(avisos.length> 0){ %>
+                <div class="modal fade" id="infoAviso" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                  aria-hidden="true">
+                  <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
 
-                <div class="modal-header">
+                      <div class="modal-header">
 
-                  <h5 class="modal-title ml-3" id="nombreModal">
-                    <%=avisos[0].nombreUsu%>
-                  </h5>
-                  <div class="tAviso">
-                    <h5 class="modal-title" id="infoAvisoModal" name="">Aviso <%=avisos[0].idAviso%> -
-                        <%=myUtils.parseTipo(avisos[0].tipo)%>
-                    </h5>
-                  </div>
+                        <h5 class="modal-title ml-3" id="nombreModal">
+                          <%=avisos[0].nombreUsu%>
+                        </h5>
+                        <div class="tAviso">
+                          <h5 class="modal-title" id="infoAvisoModal" name="">Aviso <%=avisos[0].idAviso%> -
+                              <%=myUtils.parseTipo(avisos[0].tipo)%>
+                          </h5>
+                        </div>
 
-                  <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-
-                <div class="modal-body">
-
-                  <div class="container-fluid">
-                    <form id="asignarTecnicoForm" enctype="application/json" action="/terminarAviso" method="post">
-                      <div class="mb-3" id="fechaModal">
-                        <strong>Fecha:</strong>
-                        <%= myUtils.parseFecha(avisos[0].fecha) %>
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
                       </div>
-                      <div class="mb-3" id="categoriasModal">
 
-                        <strong>
-                          <%= myUtils.parseCategorias(avisos[0].categoria)%>
-                        </strong>
-                        <% if(avisos[0].tipo !='felicitacion' ) { %>
-                          - <%= myUtils.parseCategorias(avisos[0].subcategoria) %>
+                      <div class="modal-body">
+
+                        <div class="container-fluid">
+                          <form id="asignarTecnicoForm" enctype="application/json" action="/terminarAviso"
+                            method="post">
+                            <div class="mb-3" id="fechaModal">
+                              <strong>Fecha:</strong>
+                              <%= myUtils.parseFecha(avisos[0].fecha) %>
+                            </div>
+                            <div class="mb-3" id="categoriasModal">
+
+                              <strong>
+                                <%= myUtils.parseCategorias(avisos[0].categoria)%>
+                              </strong>
+                              <% if(avisos[0].tipo !='felicitacion' ) { %>
+                                - <%= myUtils.parseCategorias(avisos[0].subcategoria) %>
+                                  <% } %>
+
+                            </div>
+                            <div class="mb-3" id="perfilModal">
+                              <strong>Perfil:</strong>
+                              <%= myUtils.parsePerfil(avisos[0].perfil) %>
+                            </div>
+
+                            <div class="form-outline mt-3 mb-3">
+                              <label class="labelBold" for="obs">Observaciones:</label>
+                              <textarea readonly class="form-control" id="obs" rows="3"><%= avisos[0].texto%></textarea>
+                            </div>
+                            <div class="form-outline mt-3 mb-3">
+                              <label class="labelBold" for="comen">Comentario del técnico:</label>
+                              <textarea readonly class="form-control" name="comentario" id="comen" rows="3"
+                                required><%= avisos[0].comentario%></textarea>
+                            </div>
+
+                            <input class="avisoInv" id="idAvisoModal" name="idAviso"
+                              value="<%=avisos[0].idAviso%>"></input>
+                        </div>
+
+                        <div class="modal-footer mt-3">
+                          <button type="button" class="btn btn-secondary labelBold" data-bs-
+                            data-bs-dismiss="modal">Cerrar</button>
+                          <% if (sesion.tecnico) { %>
+                            <button type="submit" class="btn btnRojo" id="botonTerminar">Terminar aviso</button>
                             <% } %>
+                        </div>
+
+                        </form>
 
                       </div>
-                      <div class="mb-3" id="perfilModal">
-                        <strong>Perfil:</strong>
-                        <%= myUtils.parsePerfil(avisos[0].perfil) %>
-                      </div>
-
-                      <div class="form-outline mt-3 mb-3">
-                        <label class="labelBold" for="obs">Observaciones:</label>
-                        <textarea readonly class="form-control" id="obs" rows="3"><%= avisos[0].texto%></textarea>
-                      </div>
-                      <div class="form-outline mt-3 mb-3">
-                        <label class="labelBold" for="comen">Comentario del técnico:</label>
-                        <textarea readonly class="form-control" name="comentario" id="comen"
-                          rows="3" required><%= avisos[0].comentario%></textarea>
-                      </div>
-
-                      <input class="avisoInv" id="idAvisoModal" name="idAviso" value="<%=avisos[0].idAviso%>"></input>
-                  </div>
-
-                  <div class="modal-footer mt-3">
-                    <button type="button" class="btn btn-secondary labelBold" data-bs-
-                      data-bs-dismiss="modal">Cerrar</button>
-                    <% if (sesion.tecnico) { %>
-                      <button type="submit" class="btn btnRojo" id="botonTerminar">Terminar aviso</button>
-                    <% } %>
-                  </div>
-
-                  </form>
-
-                </div>
-              </div>
-            </div>
-          </div>
-          <% } %> 
-
-
-          <!-- Modal ELIMINAR AVISO -->
-          <% if(avisos.length > 0){ %> 
-            <div class="modal fade" id="eliminarAviso" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-              aria-hidden="true">
-              <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-  
-                  <div class="modal-header">
-  
-                    <h5 class="modal-title ml-3" id="nombreModal">
-                      <%=avisos[0].nombreUsu%>
-                    </h5>
-                    <div class="tAviso">
-                      <h5 class="modal-title" id="infoAvisoModal" name="">Aviso <%=avisos[0].idAviso%> -
-                          <%=myUtils.parseTipo(avisos[0].tipo)%>
-                      </h5>
                     </div>
-  
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-  
-                  <div class="modal-body">
-  
-                    <div class="container-fluid">
-                      <form id="asignarTecnicoForm" enctype="application/json" action="/terminarAviso" method="post">
-                        <div class="mb-3" id="fechaModal">
-                          <strong>Fecha:</strong>
-                          <%= myUtils.parseFecha(avisos[0].fecha) %>
-                        </div>
-                        <div class="mb-3" id="categoriasModal">
-  
-                          <strong>
-                            <%= myUtils.parseCategorias(avisos[0].categoria)%>
-                          </strong>
-                          <% if(avisos[0].tipo !='felicitacion' ) { %>
-                            - <%= myUtils.parseCategorias(avisos[0].subcategoria) %>
-                              <% } %>
-  
-                        </div>
-                        <div class="mb-3" id="perfilModal">
-                          <strong>Perfil:</strong>
-                          <%= myUtils.parsePerfil(avisos[0].perfil) %>
-                        </div>
-  
-                        <div class="form-outline mt-3 mb-3">
-                          <label class="labelBold" for="obs">Observaciones:</label>
-                          <textarea readonly class="form-control" id="obs" rows="3"><%= avisos[0].texto%></textarea>
-                        </div>
-                        <div class="form-outline mt-3 mb-3">
-                          <label class="labelBold" for="comen">Comentario del técnico:</label>
-                          <textarea readonly class="form-control" name="comentario" id="comen"
-                            rows="3" required><%= avisos[0].comentario%></textarea>
-                        </div>
-  
-                        <input class="avisoInv" id="idAvisoModal" name="idAviso" value="<%=avisos[0].idAviso%>"></input>
-                    </div>
-  
-                    <div class="modal-footer mt-3">
-                      <button type="button" class="btn btn-secondary labelBold" data-bs-
-                        data-bs-dismiss="modal">Cerrar</button>
-                      <% if (sesion.tecnico) { %>
-                        <button type="submit" class="btn btnRojo" id="botonTerminar">Eliminar aviso</button>
-                      <% } %>
-                    </div>
-  
-                    </form>
-  
                   </div>
                 </div>
-              </div>
-            </div>
-            <% } %> 
+                <% } %>
 
 
-          <!-- Modal NUEVO AVISO -->
-          <div class="modal fade" id="nuevoAviso" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
+                  <!-- Modal ELIMINAR AVISO -->
+                  <% if(avisos.length> 0){ %>
+                    <div class="modal fade" id="eliminarAviso" tabindex="-1" role="dialog"
+                      aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
 
-                  <h5 class="modal-title ml-3">Nuevo Aviso</h5>
+                          <div class="modal-header">
 
+                            <h5 class="modal-title ml-3" id="nombreModal">
+                              <%=avisos[0].nombreUsu%>
+                            </h5>
+                            <div class="tAviso">
+                              <h5 class="modal-title" id="infoAvisoModal" name="">Aviso <%=avisos[0].idAviso%> -
+                                  <%=myUtils.parseTipo(avisos[0].tipo)%>
+                              </h5>
+                            </div>
 
-                  <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
+                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
 
+                          <div class="modal-body">
 
-                </div>
+                            <div class="container-fluid">
+                              <form id="asignarTecnicoForm" enctype="application/json" action="/terminarAviso"
+                                method="post">
+                                <div class="mb-3" id="fechaModal">
+                                  <strong>Fecha:</strong>
+                                  <%= myUtils.parseFecha(avisos[0].fecha) %>
+                                </div>
+                                <div class="mb-3" id="categoriasModal">
 
-                <div class="modal-body">
-                  <div class="container-fluid">
-                    <form id="nuevoAvisoForm needs-validation" enctype="application/json" action="/mis_avisos"
-                      method="post">
-                      <div class="mb-3 labelBold">
-                        Seleccione el tipo de aviso que desea realizar: <span class="rojoError labelBold"
-                          title="Es obligatorio rellenar este campo"> *</span>
-                      </div>
-                      <div class="row">
-                        <div class="form-check ml-3 mb-3">
-                          <input class="form-check-input" type="radio" name="tipo" value="sugerencia" id="sug"
-                            autocomplete="off">
-                          <label class="form-check-label" for="sug">Sugerencia</label>
-                        </div>
-                        <div class="form-check ml-2">
-                          <input class="form-check-input" type="radio" name="tipo" value="incidencia" id="inc"
-                            autocomplete="off">
-                          <label class="form-check-label" for="inc">Incidencia</label>
-                        </div>
-                        <div class="form-check ml-2">
-                          <input class="form-check-input" type="radio" name="tipo" value="felicitacion" id="fel"
-                            autocomplete="off">
-                          <label class="form-check-label" for="fel">Felicitación</label>
-                        </div>
-                      </div>
-
-                      <div id="opciones">
-
-                        <div class="form-outline mb-4 mr-4">
-                          <label class="form-label labelBold" for="selectorCategoria">Categoría:</label><span
-                            class="rojoError labelBold" title="Es obligatorio rellenar este campo"> *</span>
-                          <select class="form-control" id="selectorCategoria" name="categoria" onchange="">
-                            <option value="adigital">Administración digital</option>
-                            <option value="comu">Comunicaciones</option>
-                            <% if(sesion.perfil !='aa' ) { %>
-                              <option value="conect">Conectividad</option>
-                              <% } %>
-                                <% if(sesion.perfil !='aa' ) { %>
-                                  <option value="docencia">Docencia</option>
-                                  <% } %>
-                                    <option value="web">Web</option>
-                          </select>
-                        </div>
-
-
-
-                        <div class="form-outline mb-4 mr-4 mt-3" id="divSelectorSub">
-                          <label class="form-label labelBold" for="selectorSub">Subcategoría:</label><span
-                            class="rojoError labelBold" title="Es obligatorio rellenar este campo"> *</span>
-                          <select class="form-control" id="selectorSub" name="subcategoria" onchange="">
-                            <% if(sesion.perfil !='aa' ) { %>
-                              <option value="cfisica">Certificado digital de persona física</option>
-                              <% } %>
-                                <% if(sesion.perfil=='pas' || sesion.perfil=='pdi' ) { %>
-                                  <option value="cpublico">Certificado electrónico de empleado público</option>
-                                  <% } %>
-                                    <option value="registroElec">Registro electrónico</option>
-                                    <option value="sede">Sede electrónica</option>
-                                    <% if(sesion.perfil=='pas' || sesion.perfil=='pdi' ) { %>
-                                      <option value="portafirmas">Portafirmas</option>
+                                  <strong>
+                                    <%= myUtils.parseCategorias(avisos[0].categoria)%>
+                                  </strong>
+                                  <% if(avisos[0].tipo !='felicitacion' ) { %>
+                                    - <%= myUtils.parseCategorias(avisos[0].subcategoria) %>
                                       <% } %>
 
-                          </select>
-                        </div>
+                                </div>
+                                <div class="mb-3" id="perfilModal">
+                                  <strong>Perfil:</strong>
+                                  <%= myUtils.parsePerfil(avisos[0].perfil) %>
+                                </div>
 
-                        <div class="form-outline mt-3 mb-3">
-                          <label class="labelBold" for="obs">Observaciones:</label><span class="rojoError labelBold"
-                            title="Es obligatorio rellenar este campo"> *</span>
-                          <textarea class="form-control" id="obs" name="observacion" rows="3" required></textarea>
-                          <div class="invalid-feedback">
-                            Es obligatorio rellenar este campo
+                                <div class="form-outline mt-3 mb-3">
+                                  <label class="labelBold" for="obs">Observaciones:</label>
+                                  <textarea readonly class="form-control" id="obs"
+                                    rows="3"><%= avisos[0].texto%></textarea>
+                                </div>
+                                <div class="form-outline mt-3 mb-3">
+                                  <label class="labelBold" for="comen">Comentario del técnico:</label>
+                                  <textarea readonly class="form-control" name="comentario" id="comen" rows="3"
+                                    required><%= avisos[0].comentario%></textarea>
+                                </div>
+
+                                <input class="avisoInv" id="idAvisoModal" name="idAviso"
+                                  value="<%=avisos[0].idAviso%>"></input>
+                            </div>
+
+                            <div class="modal-footer mt-3">
+                              <button type="button" class="btn btn-secondary labelBold" data-bs-
+                                data-bs-dismiss="modal">Cerrar</button>
+                              <% if (sesion.tecnico) { %>
+                                <button type="submit" class="btn btnRojo" id="botonTerminar">Eliminar aviso</button>
+                                <% } %>
+                            </div>
+
+                            </form>
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <% } %>
+
+
+                      <!-- Modal NUEVO AVISO -->
+                      <div class="modal fade" id="nuevoAviso" tabindex="-1" role="dialog"
+                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+
+                              <h5 class="modal-title ml-3">Nuevo Aviso</h5>
+
+
+                              <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+
+
+                            </div>
+
+                            <div class="modal-body">
+                              <div class="container-fluid">
+                                <form id="nuevoAvisoForm needs-validation" enctype="application/json"
+                                  action="/mis_avisos" method="post">
+                                  <div class="mb-3 labelBold">
+                                    Seleccione el tipo de aviso que desea realizar: <span class="rojoError labelBold"
+                                      title="Es obligatorio rellenar este campo"> *</span>
+                                  </div>
+                                  <div class="row">
+                                    <div class="form-check ml-3 mb-3">
+                                      <input class="form-check-input" type="radio" name="tipo" value="sugerencia"
+                                        id="sug" autocomplete="off">
+                                      <label class="form-check-label" for="sug">Sugerencia</label>
+                                    </div>
+                                    <div class="form-check ml-2">
+                                      <input class="form-check-input" type="radio" name="tipo" value="incidencia"
+                                        id="inc" autocomplete="off">
+                                      <label class="form-check-label" for="inc">Incidencia</label>
+                                    </div>
+                                    <div class="form-check ml-2">
+                                      <input class="form-check-input" type="radio" name="tipo" value="felicitacion"
+                                        id="fel" autocomplete="off">
+                                      <label class="form-check-label" for="fel">Felicitación</label>
+                                    </div>
+                                  </div>
+
+                                  <div id="opciones">
+
+                                    <div class="form-outline mb-4 mr-4">
+                                      <label class="form-label labelBold"
+                                        for="selectorCategoria">Categoría:</label><span class="rojoError labelBold"
+                                        title="Es obligatorio rellenar este campo"> *</span>
+                                      <select class="form-control" id="selectorCategoria" name="categoria" onchange="">
+                                        <option value="adigital">Administración digital</option>
+                                        <option value="comu">Comunicaciones</option>
+                                        <% if(sesion.perfil !='aa' ) { %>
+                                          <option value="conect">Conectividad</option>
+                                          <% } %>
+                                            <% if(sesion.perfil !='aa' ) { %>
+                                              <option value="docencia">Docencia</option>
+                                              <% } %>
+                                                <option value="web">Web</option>
+                                      </select>
+                                    </div>
+
+
+
+                                    <div class="form-outline mb-4 mr-4 mt-3" id="divSelectorSub">
+                                      <label class="form-label labelBold" for="selectorSub">Subcategoría:</label><span
+                                        class="rojoError labelBold" title="Es obligatorio rellenar este campo"> *</span>
+                                      <select class="form-control" id="selectorSub" name="subcategoria" onchange="">
+                                        <% if(sesion.perfil !='aa' ) { %>
+                                          <option value="cfisica">Certificado digital de persona física</option>
+                                          <% } %>
+                                            <% if(sesion.perfil=='pas' || sesion.perfil=='pdi' ) { %>
+                                              <option value="cpublico">Certificado electrónico de empleado público
+                                              </option>
+                                              <% } %>
+                                                <option value="registroElec">Registro electrónico</option>
+                                                <option value="sede">Sede electrónica</option>
+                                                <% if(sesion.perfil=='pas' || sesion.perfil=='pdi' ) { %>
+                                                  <option value="portafirmas">Portafirmas</option>
+                                                  <% } %>
+
+                                      </select>
+                                    </div>
+
+                                    <div class="form-outline mt-3 mb-3">
+                                      <label class="labelBold" for="obs">Observaciones:</label><span
+                                        class="rojoError labelBold" title="Es obligatorio rellenar este campo"> *</span>
+                                      <textarea class="form-control" id="obs" name="observacion" rows="3"
+                                        required></textarea>
+                                      <div class="invalid-feedback">
+                                        Es obligatorio rellenar este campo
+                                      </div>
+                                    </div>
+
+
+                                  </div>
+
+
+                              </div>
+                              <div class="modal-footer mt-3">
+                                <button type="button" class="btn btn-secondary labelBold" data-bs-
+                                  data-bs-dismiss="modal">Cerrar</button>
+                                <button type="submit" class="btn btnRojo" id="botonEnviar" disabled>Enviar</button>
+                              </div>
+
+                              </form>
+
+                            </div>
                           </div>
                         </div>
 
@@ -400,146 +430,136 @@
                       </div>
 
 
-                  </div>
-                  <div class="modal-footer mt-3">
-                    <button type="button" class="btn btn-secondary labelBold" data-bs-
-                      data-bs-dismiss="modal">Cerrar</button>
-                    <button type="submit" class="btn btnRojo" id="botonEnviar" disabled>Enviar</button>
-                  </div>
+                      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"
+                        integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8"
+                        crossorigin="anonymous"></script>
 
-                  </form>
+                      <script>
 
-                </div>
-              </div>
-            </div>
+                        $("tr").click(function () {
+                          let id = $(this).closest("tr").index();
+                          let idAviso = ($(this).attr('value'));
 
 
-          </div>
+                          $.get('/obtener_aviso/' + idAviso, function (nAviso, status) {
+                            $("#nombreModal").html(nAviso.nombre);
+                            $("#infoAvisoModal").html("Aviso " + nAviso.idAviso + " - " + nAviso.tipo);
+                            $("#fechaModal").html("<strong>Fecha:</strong> " + nAviso.fecha);
+                            let sub = '';
+                            if (nAviso.tipo != 'Felicitación') sub = " - " + nAviso.subcategoria;
+                            $("#categoriasModal").html("<strong>" + nAviso.categoria + "</strong>" + sub);
+                            $("#perfilModal").html("<strong>Perfil:</strong> " + nAviso.perfil);
+                            $("#obs").val(nAviso.texto);
+                            $("#comen").val(nAviso.comentario_tecnico);
+                            console.log(nAviso.sesionTecnico);
+                            if (nAviso.sesionTecnico) { $("#comen").prop("readonly", false); }
+                            else { $("#comen").prop("readonly", true); }
+
+                            if (nAviso.comentario_tecnico) { $("#comen").prop("readonly", true); $("#botonTerminar").prop("disabled", true); }
+                            else if (!nAviso.sesionTecnico) { $("#comen").prop("readonly", true); $("#botonTerminar").prop("disabled", false); }
+                            else { $("#comen").prop("readonly", false); $("#botonTerminar").prop("disabled", false); }
+
+                            $("#idAvisoModal").val(nAviso.idAviso);
 
 
-          <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8"
-            crossorigin="anonymous"></script>
-
-          <script>
-
-            $("tr").click(function () {
-              let id = $(this).closest("tr").index();
-              let idAviso = ($(this).attr('value'));
+                          });
+                          $('#infoAviso').modal('toggle');
+                        })
 
 
-              $.get('/obtener_aviso/' + idAviso, function (nAviso, status) {
-                $("#nombreModal").html(nAviso.nombre);
-                $("#infoAvisoModal").html("Aviso " + nAviso.idAviso + " - " + nAviso.tipo);
-                $("#fechaModal").html("<strong>Fecha:</strong> " + nAviso.fecha);
-                let sub = '';
-                if (nAviso.tipo != 'Felicitación') sub = " - " + nAviso.subcategoria;
-                $("#categoriasModal").html("<strong>" + nAviso.categoria + "</strong>" + sub);
-                $("#perfilModal").html("<strong>Perfil:</strong> " + nAviso.perfil);
-                $("#obs").val(nAviso.texto);
-                $("#comen").val(nAviso.comentario_tecnico);
-                console.log(nAviso.sesionTecnico);
-                if(nAviso.sesionTecnico) { $("#comen").prop("readonly", false);}
-                else { $("#comen").prop("readonly", true); }
+                        $("botonElim").click(function () {
+                          $('#infoAviso').modal('toggle');
+                        })
 
-                if(nAviso.comentario_tecnico){$("#comen").prop("readonly", true);$("#botonTerminar").prop("disabled", true);}
-                else if(!nAviso.sesionTecnico) {$("#comen").prop("readonly", true); $("#botonTerminar").prop("disabled", false);}
-                else {$("#comen").prop("readonly", false); $("#botonTerminar").prop("disabled", false);}
-                
-                $("#idAvisoModal").val(nAviso.idAviso);
-                
+                        function buscador() {
+                          // Declare variables
+                          var input, filter, table, tr, td, i, txtValue, buscadorUsuario;
+                          input = document.getElementById("buscadorTabla");
+                          filter = input.value.toUpperCase();
+                          table = document.getElementById("t_avisos");
+                          tr = table.getElementsByTagName("tr");
+                          buscadorUsuario = document.getElementById("buscadorUsuario")
+                          let f;
+                          if ("<%=sesion.tecnico%>" == "1") { f = 2; }
+                          else { f = 1; }
+                          var z = 1;
+                          var count = 1;
+                          // Loop through all table rows, and hide those who don't match the search query                       
+                          
+                          "<% avisos.forEach((aviso)=> { %>"
+                              if(buscadorUsuario && buscadorUsuario.checked){
+                                txtValue = "<%= aviso.nombreUsu %>";
+                              }
+                              else{
+                                txtValue = "<%= aviso.texto %>";
+                              }
+                              if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                                tr[count].style.display = "";
+                              } else {
+                                tr[count].style.display = "none";
+                                z++;
+                              }
+                              count++;
+                          "<%})%>"
 
-              });
-              $('#infoAviso').modal('toggle');
-            })
+                          if (z == tr.length) {
+                            $("#noAviso").html("No se ha encontrado ningún aviso");
+                          }
+                          else {
+                            $("#noAviso").html("");
+                          }
 
+                        }
 
-            $("botonElim").click(function () {
-              $('#infoAviso').modal('toggle');
-            })
+                        $(document).ready(function () {
+                          $("#selectorCategoria").change(function () {
+                            switch ($(this).val()) {
+                              case 'adigital':
+                                $("#selectorSub").html("<% if(sesion.perfil != 'aa') { %><option value='cfisica' >Certificado digital de persona física</option><% } %><% if(sesion.perfil == 'pas' || sesion.perfil == 'pdi') { %><option value='cpublico'>Certificado electrónico de empleado público</option><% } %><option value='registroElec'>Registro electrónico</option><option value='sede'>Sede electrónica</option><% if(sesion.perfil == 'pas' || sesion.perfil == 'pdi') { %><option value='portafirmas'>Portafirmas</option> <% } %>");
+                                break;
+                              case 'comu':
+                                $("#selectorSub").html("<option value='correo' >Correo electrónico</option><option value='meet'>Google Meet</option><% if(sesion.perfil == 'alumno' || sesion.perfil == 'aa') { %><option value='calumno'>Cuenta de alumno</option><% } if(sesion.perfil == 'pas' || sesion.perfil == 'pdi') { %><option value='cpersonal'>Cuenta de personal</option><option value='cgenerica'>Cuenta genérica</option><% } %>");
+                                break;
+                              case 'conect':
+                                $("#selectorSub").html("<% if(sesion.perfil == 'pas') { %><option value='sara' >Cuenta as la Red SARA</option><% } if(sesion.perfil == 'pas' || sesion.perfil == 'pdi') { %><option value='conex'>Conexión por cable en despachos</option><% } %><option value='cortafuegos'>Cortafuegos corporativo</option><% if(sesion.perfil == 'pas') { %><option value='dns'>Resolución de nombres de dominio (DNS)</option><% } %><option value='vpn'>VPN Acceso remoto</option><option value='eduroam'>Wifi Eduroam (ssid: eduroam)</option><% if(sesion.perfil != 'alumno') { %><option value='wifivis'>Wifi para visitantes (ssid: UCM-Visitantes)</option><% } %>");
+                                break;
+                              case 'docencia':
+                                $("#selectorSub").html("<% if(sesion.perfil != 'pas') { %><option value='aula' >Aula Virtual</option><% } if(sesion.perfil != 'alumno') { %><option value='blackboard'>Blackboard Collaborate</option><option value='listados'>Listados de clase</option><% } %><option value='moodle'>Moodle: Aula Global</option><% if(sesion.perfil != 'pas') { %><option value='cursosprivados'>Plataforma de cursos online privados</option><% } %>");
+                                break;
+                              case 'web':
+                                $("#selectorSub").html("<% if(sesion.perfil == 'pas' || sesion.perfil == 'pdi') { %><option value='analitica' >Analitica Web</option><option value='ssl'>Emisión de certificados SSL</option><option value='hosting'>Hosting: alojamiento de páginas web</option><% } %><option value='portal'>Portal de eventos</option><% if(sesion.perfil == 'pas' || sesion.perfil == 'pdi') { %><option value='redirecciones'>Redirecciones web</option><% } %>");
+                                break;
+                              default:
+                                $("#selectorSub").html("<option value='cfisica' >Certificado digital de persona física</option><option value='cpublico'>Certificado electrónico de empleado público</option><option value='registroElec'>Registro electrónico</option><option value='sede'>Sede electrónica</option><option value='portafirmas'>Portafirmas</option>");
 
-            function buscador() {
-              // Declare variables
-              var input, filter, table, tr, td, i, txtValue;
-              input = document.getElementById("buscadorTabla");
-              filter = input.value.toUpperCase();
-              table = document.getElementById("t_avisos");
-              tr = table.getElementsByTagName("tr");
-              let f;
-              if("<%=sesion.tecnico%>" == "1") {f=2;}
-              else {f=1;}
-              var z = 1; 
-              // Loop through all table rows, and hide those who don't match the search query
-              for (i = 0; i < tr.length; i++) {
-                td = tr[i].getElementsByTagName("td")[f];
-                if (td) {
-                  txtValue = td.textContent || td.innerText;
-                  if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                    tr[i].style.display = "";
-                  } else {
-                    tr[i].style.display = "none";
-                    z++;
-                  }
-                }
-              }
-              if(z == tr.length){
-                $("#noAviso").html("No se ha encontrado ningún aviso");
-              }
-              else{
-                $("#noAviso").html("");
-              }
-
-            }
-
-            $(document).ready(function () {
-              $("#selectorCategoria").change(function () {
-                switch ($(this).val()) {
-                  case 'adigital':
-                    $("#selectorSub").html("<% if(sesion.perfil != 'aa') { %><option value='cfisica' >Certificado digital de persona física</option><% } %><% if(sesion.perfil == 'pas' || sesion.perfil == 'pdi') { %><option value='cpublico'>Certificado electrónico de empleado público</option><% } %><option value='registroElec'>Registro electrónico</option><option value='sede'>Sede electrónica</option><% if(sesion.perfil == 'pas' || sesion.perfil == 'pdi') { %><option value='portafirmas'>Portafirmas</option> <% } %>");
-                    break;
-                  case 'comu':
-                    $("#selectorSub").html("<option value='correo' >Correo electrónico</option><option value='meet'>Google Meet</option><% if(sesion.perfil == 'alumno' || sesion.perfil == 'aa') { %><option value='calumno'>Cuenta de alumno</option><% } if(sesion.perfil == 'pas' || sesion.perfil == 'pdi') { %><option value='cpersonal'>Cuenta de personal</option><option value='cgenerica'>Cuenta genérica</option><% } %>");
-                    break;
-                  case 'conect':
-                    $("#selectorSub").html("<% if(sesion.perfil == 'pas') { %><option value='sara' >Cuenta as la Red SARA</option><% } if(sesion.perfil == 'pas' || sesion.perfil == 'pdi') { %><option value='conex'>Conexión por cable en despachos</option><% } %><option value='cortafuegos'>Cortafuegos corporativo</option><% if(sesion.perfil == 'pas') { %><option value='dns'>Resolución de nombres de dominio (DNS)</option><% } %><option value='vpn'>VPN Acceso remoto</option><option value='eduroam'>Wifi Eduroam (ssid: eduroam)</option><% if(sesion.perfil != 'alumno') { %><option value='wifivis'>Wifi para visitantes (ssid: UCM-Visitantes)</option><% } %>");
-                    break;
-                  case 'docencia':
-                    $("#selectorSub").html("<% if(sesion.perfil != 'pas') { %><option value='aula' >Aula Virtual</option><% } if(sesion.perfil != 'alumno') { %><option value='blackboard'>Blackboard Collaborate</option><option value='listados'>Listados de clase</option><% } %><option value='moodle'>Moodle: Aula Global</option><% if(sesion.perfil != 'pas') { %><option value='cursosprivados'>Plataforma de cursos online privados</option><% } %>");
-                    break;
-                  case 'web':
-                    $("#selectorSub").html("<% if(sesion.perfil == 'pas' || sesion.perfil == 'pdi') { %><option value='analitica' >Analitica Web</option><option value='ssl'>Emisión de certificados SSL</option><option value='hosting'>Hosting: alojamiento de páginas web</option><% } %><option value='portal'>Portal de eventos</option><% if(sesion.perfil == 'pas' || sesion.perfil == 'pdi') { %><option value='redirecciones'>Redirecciones web</option><% } %>");
-                    break;
-                  default:
-                    $("#selectorSub").html("<option value='cfisica' >Certificado digital de persona física</option><option value='cpublico'>Certificado electrónico de empleado público</option><option value='registroElec'>Registro electrónico</option><option value='sede'>Sede electrónica</option><option value='portafirmas'>Portafirmas</option>");
-
-                }
-              });
-              $('input[type=radio][name=tipo]').change(function () {
-                switch (this.value) {
-                  case 'sugerencia':
-                    $("#selectorCategoria").html("<option value='adigital' selected>Administración digital</option><option value='comu'>Comunicaciones</option><% if(sesion.perfil != 'aa') { %><option value='conect'>Conectividad</option><option value='docencia'>Docencia</option><% } %><option value='web'>Web</option>");
-                    $("#opciones").show();
-                    $("#divSelectorSub").show();
-                    $("#botonEnviar").prop("disabled", false);
-                    break;
-                  case 'incidencia':
-                    $("#selectorCategoria").html("<option value='adigital' selected>Administración digital</option><option value='comu'>Comunicaciones</option><% if(sesion.perfil != 'aa') { %><option value='conect'>Conectividad</option><option value='docencia'>Docencia</option><% } %><option value='web'>Web</option>");
-                    $("#opciones").show();
-                    $("#divSelectorSub").show();
-                    $("#botonEnviar").prop("disabled", false);
-                    break;
-                  case 'felicitacion':
-                    $("#selectorCategoria").html("<option value='archivo' selected>Archivo Universitario</option><option value='asesoria'>Asesoría Jurídica</option><option value='biblioteca'>Biblioteca</option><option value='cInfo'>Centro de Información</option><option value='dDocentes'>Departamentos docentes</option><option value='iServicios'>Inspección de Servicios</option><option value='ofGest'>Oficina de Gestión de Infraestructuras y Mantenimiento</option><option value='sAdmin'>Servicio de Administracion</option><option value='sInfor'>Servicios Informáticos</option><option value='sDocu'>Servicio de Documentación</option><option value='sImp'>Servicio de Imprenta</option><option value='sCafe'>Servicio de Cafetería</option><option value='todauni'>Toda la universidad</option>");
-                    $("#opciones").show();
-                    $("#divSelectorSub").hide();
-                    $("#botonEnviar").prop("disabled", false);
-                    break;
-                }
-              });
-            });
+                            }
+                          });
+                          $('input[type=radio][name=tipo]').change(function () {
+                            switch (this.value) {
+                              case 'sugerencia':
+                                $("#selectorCategoria").html("<option value='adigital' selected>Administración digital</option><option value='comu'>Comunicaciones</option><% if(sesion.perfil != 'aa') { %><option value='conect'>Conectividad</option><option value='docencia'>Docencia</option><% } %><option value='web'>Web</option>");
+                                $("#opciones").show();
+                                $("#divSelectorSub").show();
+                                $("#botonEnviar").prop("disabled", false);
+                                break;
+                              case 'incidencia':
+                                $("#selectorCategoria").html("<option value='adigital' selected>Administración digital</option><option value='comu'>Comunicaciones</option><% if(sesion.perfil != 'aa') { %><option value='conect'>Conectividad</option><option value='docencia'>Docencia</option><% } %><option value='web'>Web</option>");
+                                $("#opciones").show();
+                                $("#divSelectorSub").show();
+                                $("#botonEnviar").prop("disabled", false);
+                                break;
+                              case 'felicitacion':
+                                $("#selectorCategoria").html("<option value='archivo' selected>Archivo Universitario</option><option value='asesoria'>Asesoría Jurídica</option><option value='biblioteca'>Biblioteca</option><option value='cInfo'>Centro de Información</option><option value='dDocentes'>Departamentos docentes</option><option value='iServicios'>Inspección de Servicios</option><option value='ofGest'>Oficina de Gestión de Infraestructuras y Mantenimiento</option><option value='sAdmin'>Servicio de Administracion</option><option value='sInfor'>Servicios Informáticos</option><option value='sDocu'>Servicio de Documentación</option><option value='sImp'>Servicio de Imprenta</option><option value='sCafe'>Servicio de Cafetería</option><option value='todauni'>Toda la universidad</option>");
+                                $("#opciones").show();
+                                $("#divSelectorSub").hide();
+                                $("#botonEnviar").prop("disabled", false);
+                                break;
+                            }
+                          });
+                        });
 
 
-          </script>
+                      </script>
 
 </body>
 
