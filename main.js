@@ -432,6 +432,8 @@ app.post("/crear_cuenta", multerFactory.single("foto"),
     check("correo", "Por favor, introduce un correo electrónico").notEmpty(),
     // El campo correo ha de ser una dirección de correo válida.
     check("correo","Por favor, introduce un correo electrónico").isEmail(),
+    // El campo correo debe terminar en @ucm.es.
+    check("correo","El correo debe terminar en '@ucm.es')").custom((value) => (value.endsWith("@ucm.es"))),
     // El campo nombre ha de ser no vacío.
     check("nombre", "Por favor, introduce un nombre").notEmpty(),
     // El campo password ha de ser no vacío.
@@ -462,8 +464,16 @@ app.post("/crear_cuenta", multerFactory.single("foto"),
             else return false;
         }
     }),
+    
     // El campo empleado debe tener 4 dígitos y 3 letras
-    //check("numEmpl", "El formato de nº de empleado no es válido").matches(/^[0-9]{4}-[a-z]{3}$/),
+    check("numEmpl", "El formato de nº de empleado no es correcto(E.g:1234-abc)").custom((value, {req}) => {
+        if(req.body.tecnico !== "si") return true
+        else {
+            var reg = new RegExp(/^[0-9]{4}-[a-z]{3}$/)
+            if(reg.test(value)) return true;
+            else return false;
+        }
+    }),
     
 
 function(request, response){

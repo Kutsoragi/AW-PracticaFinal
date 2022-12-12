@@ -10,6 +10,7 @@ module.exports =  {
             if (dateOfMonth < 10) dateOfMonth = "0" + dateOfMonth;
             let year = currentDate.getFullYear();
             let hours = currentDate.getHours() + 1;
+            hours = hours % 24;
             if (hours < 10) hours = "0" + hours;
             let mins = currentDate.getMinutes();
             if (mins < 10) mins = "0" + mins;
