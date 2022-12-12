@@ -11,12 +11,18 @@
 <script>
 
 
-  function buscador() {
+  function buscador() { 
+    let pag = window.location.href.substring(22,window.location.href.length);
+    let tab;
+    if(pag == "avisos_entrantes") tab = "t_entrantes";
+    else if(pag == "mis_avisos") tab = "t_avisos";
+    else if(pag == "historico_de_avisos") tab = "t_historico";
+    else tab = "t_gestion";
     // Declare variables
     var input, filter, table, tr, td, i, txtValue, buscadorUsuario;
     input = document.getElementById("buscadorTabla");
     filter = input.value.toUpperCase();
-    table = document.getElementById("t_avisos");
+    table = document.getElementById(tab);
     tr = table.getElementsByTagName("tr");
     buscadorUsuario = document.getElementById("buscadorUsuario")
     let f;

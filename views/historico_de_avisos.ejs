@@ -44,14 +44,7 @@
         </div>
       </nav>
 
-      <div class="row buscador align-items-center">
-        <div class="buscar">Buscar</div>
-        <input type="text" class="col-3 form-control" onkeyup="buscador()" id="buscadorTabla">
-        <% if (sesion.tecnico) { %>
-        <input type="checkbox" id="buscadorUsuario" name="buscadorUsuario" onchange="buscador()" value="usuario"><label for="buscadorUsuario">Usuario</label>
-        <% } %> 
-        <button type="submit" class="btn btnRojo">Buscar</button>
-      </div>
+      <%- include("buscador") %>
 
       <% if(msgPantalla) { %>
         <div class="text-center mt-3 verdeExito labelBold">
@@ -61,7 +54,7 @@
 
 
           <div class="col-10 tabla">
-            <table class="table" id="t_avisos" value="<%=sesion.tecnico%>">
+            <table class="table" id="t_historico" value="<%=sesion.tecnico%>">
               <thead class="thead-dark">
                 <tr>
                     <th scope="col" style="width: 5%">Tipo</th>
@@ -212,45 +205,6 @@
                           $('#infoAviso').modal('toggle');
                         })
 
-                        function buscador() {
-                          // Declare variables
-                          var input, filter, table, tr, td, i, txtValue, buscadorUsuario;
-                          input = document.getElementById("buscadorTabla");
-                          filter = input.value.toUpperCase();
-                          table = document.getElementById("t_avisos");
-                          tr = table.getElementsByTagName("tr");
-                          buscadorUsuario = document.getElementById("buscadorUsuario")
-                          let f;
-                          if ("<%=sesion.tecnico%>" == "1") { f = 2; }
-                          else { f = 1; }
-                          var z = 1;
-                          var count = 1;
-                          // Loop through all table rows, and hide those who don't match the search query                       
-                          
-                          "<% avisos.forEach((aviso)=> { %>"
-                              if(buscadorUsuario && buscadorUsuario.checked){
-                                txtValue = "<%= aviso.nombreUsu %>";
-                              }
-                              else{
-                                txtValue = "<%= aviso.texto %>";
-                              }
-                              if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                                tr[count].style.display = "";
-                              } else {
-                                tr[count].style.display = "none";
-                                z++;
-                              }
-                              count++;
-                          "<%})%>"
-
-                          if (z == tr.length) {
-                            $("#noAviso").html("No se ha encontrado ningún aviso");
-                          }
-                          else {
-                            $("#noAviso").html("");
-                          }
-
-                        }
 
                         $(document).ready(function () {
                           $("#selectorCategoria").change(function () {
