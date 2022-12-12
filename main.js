@@ -639,7 +639,12 @@ app.post("/eliminarCuenta", function(request, response){
             response.redirect("back")
         }
         else{
-            response.redirect("/gestion_de_usuarios")
+            if (request.body.idUsuario == request.session.user.idUsuario){
+                response.redirect("/cerrarSesion")
+            }
+            else{
+                response.redirect("/gestion_de_usuarios")
+            }
         }
     })
 })
