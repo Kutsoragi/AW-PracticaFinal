@@ -88,7 +88,6 @@ function middleTecnico(req,res,next){
 
 
 app.get("/mis_avisos", middleLogueado, function(request, response) {
-    console.log(request.session.user);
     let listaAvisos = []
     if(request.session.user.tecnico){
         daoA.leerAvisosPorTecnico(request.session.user.idUsuario,function(err,res){
@@ -266,7 +265,7 @@ app.get("/avisos_entrantes", middleLogueado, middleTecnico, function(request, re
         let listaAvisos = [];
         
         if(err){
-            console.log(err.message);
+            console.log(err);
             response.render("avisos_entrantes", {sesion: request.session.user, msgPantalla: err.message, avisos: null, myUtils: utils, tecnicos: null});
             
         }
@@ -352,7 +351,6 @@ function(request, response){
 
 app.get("/cerrarSesion", middleLogueado, function(req,res){
     req.session.user = null
-    console.log("Has cerrado sesion")
     res.redirect("/login")
 });
 
@@ -558,8 +556,6 @@ app.post("/mis_avisos", function(request, response){
        
         daoA.crearAviso(aviso, function(err,res){
             if (err){
-                
-                console.log(request.session.user);
                 response.redirect("/mis_avisos")
             }
             else{
@@ -573,7 +569,7 @@ app.post("/mis_avisos", function(request, response){
 app.post("/asignarTecnico", function(request, response){
     daoA.asignarTecnico(request.body.asigTec,request.body.idAviso, function(err,res){
         if (err){
-            console.log(err.message);
+            console.log(err);
             response.redirect("/avisos_entrantes")
         }
         else{
@@ -586,7 +582,7 @@ app.post("/asignarTecnico", function(request, response){
 app.post("/terminarAviso", function(request, response){
     daoA.terminarAviso(request.body.idAviso,request.body.comentario, function(err,res){
         if (err){
-            console.log(err.message);
+            console.log(err);
             response.redirect("/mis_avisos")
         }
         else{
@@ -599,7 +595,7 @@ app.post("/eliminarAviso", function(request, response){
     let comentario = "Este aviso ha sido eliminado por el técnico " + request.session.user.nombre + " debido a:\n\n" + '"' + request.body.comentario + '"';
     daoA.eliminarAviso(request.body.idAviso,comentario, function(err,res){
         if (err){
-            console.log(err.message);
+            console.log(err);
             response.redirect("back")
         }
         else{
