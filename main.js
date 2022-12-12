@@ -312,6 +312,10 @@ app.get("/avisos_entrantes", middleLogueado, middleTecnico, function(request, re
     
 });
 
+app.get("/gestion_de_usuarios", middleLogueado, middleTecnico, function(request, response) {
+    response.render("gestion_de_usuarios",{sesion: request.session.user, myUtils: utils, avisos: null});
+});
+
 app.get("/login", middleNoLogueado,function(request, response) {
     response.render("login", {errMsg: null, errores : null, campoEmail : null});
 });

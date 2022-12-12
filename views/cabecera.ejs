@@ -1,13 +1,13 @@
 <div class="row d-flex cabecera align-items-center justify-content-center">
     <div class="col-xl-2 col-md-2 col-sm-3 col-3">
-        <img src="/img/ucm_logo2.png" id="logo">
+        <a href="/mis_avisos"><img src="/img/ucm_logo2.png" id="logo"></a>
     </div>
     <div class="col-xl-7 col-md-6 col-sm-3 col-3"><h1 class="titulo">Centro de Atención al Usuario</h1><% if(sesion.tecnico) { %><h4 class="correo text-center">PERFIL DE TÉCNICO</h4><% } %></div>
     <div class="col-xl-1 col-md-1 col-sm-1 col-1 mr-4">
         <img src="/obtener_imagen" id= "fotoPerfil" class="puntero" />
     </div>
     <div class="col-xl-1 col-md-1 col-sm-3 col-4">
-        <h4 class="correo"><%=sesion.nombre%></h4>
+        <h4 class="correo puntero" id="nombreUsuarioPerfil"><%=sesion.nombre%></h4>
         <a class="btn btn-light btnBlanco" href="/cerrarSesion" role="button">Cerrar sesión</a>
     </div>
 </div>
@@ -37,7 +37,7 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
             </div>
             <div class="ml-2">
                 <h4><%=sesion.nombre%></h4>
-                <div><strong>Fecha de creación:</strong> <%= sesion.fecha %></div> 
+                <div><strong>Fecha de creación:</strong> <%= myUtils.parseFecha(new Date(sesion.fecha)) %></div> 
                 <div><strong>Perfil:</strong> <%= myUtils.parsePerfil(sesion.perfil) %></div> 
                 <div><strong>Correo:</strong> <%=sesion.correo%></div> 
                 <div><strong>Contraseña:</strong> ********</div> 
@@ -74,9 +74,9 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
 </div>
 
 <script>
-        $("#fotoPerfil").click(function () {
-            
-            $.get("/obtener_contador_avisos/" + "<%=sesion.idUsuario%>"+ "&<%=sesion.tecnico%>", function (data, status) {
+
+    function infoPerfil(){
+        $.get("/obtener_contador_avisos/" + "<%=sesion.idUsuario%>"+ "&<%=sesion.tecnico%>", function (data, status) {
                 let inc = 0; let sug = 0; let fel = 0;
                 for(let i = 0; i < data.length; i++){
                     if(data[i].tipo == "felicitacion") fel = data[i].cifra;
@@ -93,7 +93,17 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
             })
 
             $('#modalPerfil').modal('toggle');
+    }
+
+        $("#fotoPerfil").click(function () {
+            infoPerfil();
         })
+
+        $("#nombreUsuarioPerfil").click(function () {
+            infoPerfil();
+        })
+
+
 </script>
 
 
