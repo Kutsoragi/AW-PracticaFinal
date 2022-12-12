@@ -174,8 +174,89 @@ app.get("/mis_avisos", middleLogueado, function(request, response) {
 });
 
 app.get("/historico_de_avisos", middleLogueado, function(request, response) {
-    
-    response.render("historico_de_avisos", {sesion: request.session.user, msgPantalla: null});
+    let listaAvisos = []
+    if(request.session.user.tecnico){
+        daoA.leerAvisosPorTecnicoCerrados(request.session.user.idUsuario,function(err,res){
+            if(err){
+                console.log(err)
+            }
+            else{
+                
+                for(let aviso of res){
+                    daoU.leerNombrePorId(aviso.idUsuario,function (err, res2){   
+                        if(err){
+                            console.log(err);
+                        }
+                        else {
+                            aviso.nombreUsuario = res2.nombre;
+                        }
+                    });
+
+                    if(aviso.idTecnico){
+                        daoU.leerNombrePorId(aviso.idTecnico,function (err, res2){   
+                            if(err){
+                                console.log(err);
+                            }
+                            else {
+                                aviso.ntecnico = res2.nombre;
+                            }
+                        });
+                        
+                    }
+                    setTimeout(function(){
+                        listaAvisos.push({idAviso:aviso.idAviso,texto:aviso.texto,fecha:aviso.fecha,nombreUsu:aviso.nombreUsuario, tecnico:aviso.ntecnico, perfil:aviso.perfil,tipo:aviso.tipo,categoria:aviso.categoria, subcategoria:aviso.subcategoria,comentario:aviso.comentario_tecnico})
+                    }, 50);
+                }
+                setTimeout(function(){
+                    listaAvisos = listaAvisos.sort(function(a,b){
+                        return new Date(b.fecha) - new Date(a.fecha);
+                    });
+                    response.status(200).render("historico_de_avisos", {sesion: request.session.user, myUtils: utils, msgPantalla: null, avisos:listaAvisos});
+                }, 50);
+            }
+        })
+    }
+    else{
+        daoA.leerAvisosPorUsuarioCerrados(request.session.user.idUsuario, function(err,res){
+            if(err){
+                console.log(err)
+            }
+            else{
+                let listaAvisos = []
+                for(let aviso of res){
+                    daoU.leerNombrePorId(aviso.idUsuario,function (err, res){   
+                        if(err){
+                            console.log(err);
+                        }
+                        else {
+                            aviso.nombreUsuario = res.nombre;
+                        }
+                    });
+                    
+                    if(aviso.idTecnico){
+                        daoU.leerNombrePorId(aviso.idTecnico,function (err, res){   
+                            if(err){
+                                console.log(err);
+                            }
+                            else {
+                                aviso.ntecnico = res.nombre;
+                            }
+                        });
+                        
+                    }
+                    setTimeout(function(){
+                        listaAvisos.push({idAviso:aviso.idAviso,texto:aviso.texto,fecha:aviso.fecha,nombreUsu:aviso.nombreUsuario, tecnico:aviso.ntecnico, perfil:aviso.perfil,tipo:aviso.tipo,categoria:aviso.categoria, subcategoria:aviso.subcategoria,comentario:aviso.comentario_tecnico})
+                    }, 50);  
+                }
+                setTimeout(function(){
+                    listaAvisos = listaAvisos.sort(function(a,b){
+                        return new Date(b.fecha) - new Date(a.fecha);
+                    });
+                    response.status(200).render("historico_de_avisos", {sesion: request.session.user, myUtils: utils, msgPantalla: null, avisos:listaAvisos});
+                }, 50);
+            }
+        })
+    }
 });
 
 app.get("/avisos_entrantes", middleLogueado, middleTecnico, function(request, response) {

@@ -48,7 +48,7 @@
         <div class="buscar">Buscar</div>
         <input type="text" class="col-3 form-control" onkeyup="buscador()" id="buscadorTabla">
         <% if (sesion.tecnico) { %>
-        <input type="checkbox" id="buscadorUsuario" name="buscadorUsuario" value="usuario"><label for="buscadorUsuario">Usuario</label>
+        <input type="checkbox" id="buscadorUsuario" name="buscadorUsuario" onchange="buscador()" value="usuario"><label for="buscadorUsuario">Usuario</label>
         <% } %> 
         <button type="submit" class="btn btnRojo">Buscar</button>
       </div>
