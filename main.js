@@ -88,6 +88,7 @@ function middleTecnico(req,res,next){
 
 
 app.get("/mis_avisos", middleLogueado, function(request, response) {
+    console.log(request.session.user);
     let listaAvisos = []
     if(request.session.user.tecnico){
         daoA.leerAvisosPorTecnico(request.session.user.idUsuario,function(err,res){
@@ -125,6 +126,7 @@ app.get("/mis_avisos", middleLogueado, function(request, response) {
                     listaAvisos = listaAvisos.sort(function(a,b){
                         return new Date(b.fecha) - new Date(a.fecha);
                     });
+                    
                     response.status(200).render("mis_avisos", {sesion: request.session.user, myUtils: utils, msgPantalla: null, avisos:listaAvisos});
                 }, 50);
             }
@@ -310,6 +312,42 @@ app.get("/obtener_aviso/:idAviso", function(request, response){
                  
         }
     })
+})
+
+app.get("/obtener_contador_avisos/:idUsuario/:tecnico", function(request, response){
+    let id = request.params.idUsuario;
+    let tecnico = request.params.tecnico;
+    console.log(id);
+    console.log(tecnico);
+    if(tecnico){
+        daoA.leerAvisoPorId(id, function(err,res){
+            if (err){
+                console.log(err.message);
+            }
+            else {
+                daoU.leerNombrePorId(res.idUsuario,function (err, res2){
+                    if(err){
+                        console.log(err.message)
+                    }
+                    else{
+                        res.nombre = res2.nombre;
+                        res.tipo = utils.parseTipo(res.tipo);
+                        res.fecha = utils.parseFecha(res.fecha);
+                        res.categoria = utils.parseCategorias(res.categoria);
+                        res.subcategoria = utils.parseCategorias(res.subcategoria);
+                        res.perfil = utils.parsePerfil(res.perfil);
+                        res.sesionTecnico = request.session.user.tecnico;
+                        setTimeout(function(){ response.send(res);}, 50);
+                    }
+                })
+                     
+            }
+        })
+    }
+    else {
+        
+    }
+    
 })
 
 app.post("/crear_cuenta", multerFactory.single("foto"),

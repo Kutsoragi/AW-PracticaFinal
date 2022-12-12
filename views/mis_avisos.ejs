@@ -48,9 +48,10 @@
         <div class="buscar">Buscar</div>
         <input type="text" class="col-3 form-control" onkeyup="buscador()" id="buscadorTabla">
         <% if (sesion.tecnico) { %>
-        <input type="checkbox" id="buscadorUsuario" name="buscadorUsuario" value="usuario"><label for="buscadorUsuario">Usuario</label>
+        <input type="checkbox" id="buscadorUsuario" name="buscadorUsuario" value="usuario" onchange="buscador()">
+        <label class="form-check-label ml-2" for="buscadorUsuario">Usuario</label>
         <% } %> 
-        <button type="submit" class="btn btnRojo">Buscar</button>
+        
       </div>
 
       <% if(msgPantalla) { %>
@@ -156,7 +157,6 @@
 
             <% } %>
 
-              <!-- Button trigger modal -->
 
               <!-- Modal INFO/TERMINAR AVISO -->
               <% if(avisos.length> 0){ %>
@@ -455,9 +455,9 @@
                             if (nAviso.sesionTecnico) { $("#comen").prop("readonly", false); }
                             else { $("#comen").prop("readonly", true); }
 
-                            if (nAviso.comentario_tecnico) { $("#comen").prop("readonly", true); $("#botonTerminar").prop("disabled", true); }
-                            else if (!nAviso.sesionTecnico) { $("#comen").prop("readonly", true); $("#botonTerminar").prop("disabled", false); }
-                            else { $("#comen").prop("readonly", false); $("#botonTerminar").prop("disabled", false); }
+                            if (nAviso.comentario_tecnico) { $("#comen").prop("readonly", true); $("#botonTerminar").prop("disabled", true); $("#botonTerminar").html("Aviso terminado"); }
+                            else if (!nAviso.sesionTecnico) { $("#comen").prop("readonly", true); $("#botonTerminar").prop("disabled", false); $("#botonTerminar").html("Terminar aviso");}
+                            else { $("#comen").prop("readonly", false); $("#botonTerminar").prop("disabled", false); $("#botonTerminar").html("Terminar aviso"); }
 
                             $("#idAvisoModal").val(nAviso.idAviso);
 
@@ -495,6 +495,10 @@
                           });
                           $('#eliminarAviso').modal('toggle');
                         })
+
+                        
+
+
 
                         function buscador() {
                           // Declare variables
