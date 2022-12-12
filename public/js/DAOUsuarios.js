@@ -82,7 +82,7 @@ class DAOUsuarios {
                 callback(new Error("Error de conexion a la base de datos"));
             }
             else {
-                connection.query("SELECT nombre FROM ucm_aw_cau_usu_usuarios WHERE idUsuario = ?" , [idUsuario] ,//Aquí va la query a la BD
+                connection.query("SELECT nombre FROM ucm_aw_cau_usu_usuarios WHERE idUsuario = ? and activo = true" , [idUsuario] ,//Aquí va la query a la BD
                     function(err, rows) {
                         connection.release();
                         if (err) {
@@ -109,7 +109,7 @@ class DAOUsuarios {
                 callback(new Error("Error de conexion a la base de datos"));
             }
             else {
-                connection.query("SELECT * FROM ucm_aw_cau_usu_usuarios WHERE correo = ? and contraseña = ?" , [correo,password] ,//Aquí va la query a la BD
+                connection.query("SELECT * FROM ucm_aw_cau_usu_usuarios WHERE correo = ? and contraseña = ? and activo = true" , [correo,password] ,//Aquí va la query a la BD
                     function(err, rows) {
                         connection.release();
                         if (err) {
@@ -172,7 +172,7 @@ class DAOUsuarios {
                 callback(new Error("Error de conexion a la base de datos"));
             }
             else {
-                connection.query("SELECT idUsuario, nombre FROM ucm_aw_cau_usu_usuarios WHERE tecnico = true" ,//Aquí va la query a la BD
+                connection.query("SELECT idUsuario, nombre FROM ucm_aw_cau_usu_usuarios WHERE tecnico = true and activo = true" ,//Aquí va la query a la BD
                     function(err, rows) {
                         connection.release();
                         if (err) {
@@ -194,8 +194,76 @@ class DAOUsuarios {
         });
     }
 
-    
+    leerUsuarios(callback){
+        this._pool.getConnection(function(err, connection) {
+            if (err) {
+                callback(new Error("Error de conexion a la base de datos"));
+            }
+            else {
+                connection.query("SELECT * FROM ucm_aw_cau_usu_usuarios WHERE activo = true" ,//Aquí va la query a la BD
+                    function(err, rows) {
+                        connection.release();
+                        if (err) {
+                            callback(new Error("Error de acceso a la base de datos"));
+                        }
+                        else {
+                            //Aquí se tratan los datos y llama al callback (Habría que devolver el ID generado por el insert)
+                            if(rows.length > 0){
+                               
+                                callback(null,rows);
+                            }
+                            else{
+                                callback(new Error("No existe ningún usuario"))
+                            }
+                        }
+                    }
+                );
+            }
+        });
+    }
+    obtenerEstadisticasUsuario(idUsuario, callback){
+        this._pool.getConnection(function(err, connection) {
+            if (err) {
+                callback(new Error("Error de conexion a la base de datos"));
+            }
+            else {
+                connection.query("SELECT tipo, count(*) as cifra FROM ucm_cau.ucm_aw_cau_avi_avisos WHERE idUsuario = 5 GROUP BY tipo;" ,//Aquí va la query a la BD
+                    function(err, rows) {
+                        connection.release();
+                        if (err) {
+                            callback(new Error("Error de acceso a la base de datos"));
+                        }
+                        else {
+                            //Aquí se tratan los datos y llama al callback (Habría que devolver el ID generado por el insert)
+                            callback(null,rows);
+                        }
+                    }
+                );
+            }
+        });
+    }
 
+    obtenerEstadisticasTecnico(idUsuario, callback){
+        this._pool.getConnection(function(err, connection) {
+            if (err) {
+                callback(new Error("Error de conexion a la base de datos"));
+            }
+            else {
+                connection.query("SELECT tipo, count(*) as cifra FROM ucm_cau.ucm_aw_cau_avi_avisos WHERE idTecnico = 5 GROUP BY tipo;" ,//Aquí va la query a la BD
+                    function(err, rows) {
+                        connection.release();
+                        if (err) {
+                            callback(new Error("Error de acceso a la base de datos"));
+                        }
+                        else {
+                            //Aquí se tratan los datos y llama al callback (Habría que devolver el ID generado por el insert)
+                            callback(null,rows);
+                        }
+                    }
+                );
+            }
+        });
+    }
 }
 
 module.exports = DAOUsuarios;

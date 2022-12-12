@@ -1,198 +1,307 @@
 <!DOCTYPE html>
 <html lang="es">
-    <head>
-        <title>UCM - Centro de Atención al Usuario</title>
-        <meta charset="utf-8"/>
-        <link rel="icon" type="image/x-icon" href="/img/logoucm.ico">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
-        <link rel="stylesheet"  media="screen" href="/css/main.css"/>
-        <link rel="stylesheet"  media="screen" href="/css/mis_avisos.css"/>
-         
+<head>
+  <title>UCM - Centro de Atención al Usuario</title>
+  <meta charset="utf-8" />
+  <link rel="icon" type="image/x-icon" href="/img/logoucm.ico">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <link rel="stylesheet" media="screen" href="/css/main.css" />
+  <link rel="stylesheet" media="screen" href="/css/mis_avisos.css" />
+</head>
 
+<body>
+  <div class="container-fluid">
 
-    
+    <%- include("cabecera") %>
 
-
-
-    </head>
-
-    <body>
-        <div class ="container-fluid">
-            
-            <%- include("cabecera") %>
-
-            <nav class="navbar navbar-expand-sm navbar-light navMenu">
-              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-              </button>
-              <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                  <% if(sesion.tecnico) { %>
-                    <li class="nav-item">
-                      <a class="nav-link" href="/avisos_entrantes">Avisos entrantes</a>
-                    </li>
+      <nav class="navbar navbar-expand-sm navbar-light navMenu">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <% if(sesion.tecnico) { %>
+              <li class="nav-item">
+                <a class="nav-link" href="/avisos_entrantes">Avisos entrantes</a>
+              </li>
+              <% } %>
+                <li class="nav-item">
+                  <a class="nav-link" href="/mis_avisos">Mis avisos</a>
+                </li>
+                <li class="nav-item active navActivo">
+                  <a class="nav-link" href="/historico_de_avisos">Histórico de Avisos</a>
+                </li>
+                <% if(sesion.tecnico) { %>
+                  <li class="nav-item">
+                    <a class="nav-link" href="">Gestión de usuarios</a>
+                  </li>
                   <% } %>
-                    <li class="nav-item">
-                      <a class="nav-link" href="/mis_avisos">Mis avisos</a>
-                    </li>
-                    <li class="nav-item active navActivo">
-                      <a class="nav-link" href="/historico_de_avisos">Histórico de Avisos</a>
-                    </li>
-                  <% if(sesion.tecnico) { %>
-                    <li class="nav-item">
-                      <a class="nav-link" href="">Gestión de usuarios</a>
-                    </li>
-                  <% } %>
-                </ul>
-              </div>
-            </nav>
+          </ul>
+        </div>
+      </nav>
 
-            <div class="row buscador align-items-center">
-                <div class="buscar">Buscar</div>
-                <input type="text" class="col-3 form-control" onkeyup="buscador()" id="buscadorTabla">
-                <button type="submit" class="btn btnRojo">Buscar</button>
-            </div>
+      <div class="row buscador align-items-center">
+        <div class="buscar">Buscar</div>
+        <input type="text" class="col-3 form-control" onkeyup="buscador()" id="buscadorTabla">
+        <% if (sesion.tecnico) { %>
+        <input type="checkbox" id="buscadorUsuario" name="buscadorUsuario" onchange="buscador()" value="usuario"><label for="buscadorUsuario">Usuario</label>
+        <% } %> 
+        <button type="submit" class="btn btnRojo">Buscar</button>
+      </div>
 
-            <div class="col-10 tabla">
-                <table class="table" id="t_historico">
-                    <thead class="thead-dark">
-                      <tr>
-                        <th scope="col"  style="width: 5%">Tipo</th>
-                        <th scope="col"  style="width: 10%">Fecha</th>
-                        <th scope="col"  style="width: 55%">Texto</th>
-                        <th scope="col"  style="width: 15%"></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr onclick="prueba()">
-                        <td><img src="/img/exclamacion.png" width="40" height="40"/></td>
-                        <td class="fechaT">12/10/2021</td>
-                        <td>No puedo conectar a la red corporativa. Parece que el fallo</td>
-                        <td><button type="button" class="btn btnRojo" data-toggle="modal" data-target="#infoAviso">Ver aviso</button></td>
-                      </tr>
-                      <tr onclick="prueba()">
-                        <td><img src="/img/pregunta.png" width="40" height="40"/></td>
-                        <td class="fechaT">10/10/2021</td>
-                        <td>Propongo cambiar el diseño de la web a un modelo responsible para que se pueda visualizar</td>
-                        <td><button type="button" class="btn btnRojo" data-toggle="modal" data-target="#infoAviso">Ver aviso</button></td>
-                      </tr>
-                      <tr onclick="prueba()">
-                        <td><img src="/img/me-gusta.png" width="40" height="40"/></td>
-                        <td class="fechaT">05/01/2021</td>
-                        <td>Feliz año a todos vosotros por el buen trabajo realizado y las atenciones recibidas</td>
-                        <td><button type="button" class="btn btnRojo" data-toggle="modal" data-target="#infoAviso">Ver aviso</button></td>
-                      </tr>
-                    </tbody>
-                  </table>
-            </div>
+      <% if(msgPantalla) { %>
+        <div class="text-center mt-3 verdeExito labelBold">
+          <%= msgPantalla %>
+        </div>
+        <% } %>
 
-     
-            <!-- Button trigger modal -->
-            
-        <!-- Modal -->
-              <div class="modal fade" id="infoAviso" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                        
-                        <h5 class="modal-title" id="exampleModalLabel">Fernando Bellot</h5>
-                          <div class="tAviso">
-                            <h5 class="modal-title" id="exampleModalLabel">Aviso 3242342324232 - Sugerencia</h5>
-                          </div>
-                          
-                          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+
+          <div class="col-10 tabla">
+            <table class="table" id="t_avisos" value="<%=sesion.tecnico%>">
+              <thead class="thead-dark">
+                <tr>
+                    <th scope="col" style="width: 5%">Tipo</th>
+                    <th scope="col" style="width: 10%">Fecha</th>
+                    <th scope="col" style="width: 40%">Texto</th>
+                    <th scope="col" style="width: 5%">Acciones</th>
+                </tr>
+              </thead>
+                <tbody>
+                  <% avisos.forEach((aviso)=> { %>
+                    <tr>
+                      <td class="visible" value="<%=aviso.idAviso%>"><img src="/img/<%=aviso.tipo%>.png" width="40" height="40" title="<%=aviso.tipo%>" /></td>
+                      <td class="fechaT visible" value="<%=aviso.idAviso%>">
+                        <%= aviso.fecha.toLocaleDateString() %>
+                      </td>
+                      <td  class="visible" value="<%=aviso.idAviso%>">
+                        <% if(aviso.texto.length> 200) { %>
+                          <%= aviso.texto.substring(0,200) + "..." %>
+                            <% } else { %>
+                              <%= aviso.texto %>
+                                <% } %>
+                      </td>
+                      <td>
+                        <div class="row justify-content-around">
+                          <a class="visible"  value="<%=aviso.idAviso%>">
+                            <img src="/img/visualizar.png" width="40" height="40" title="Ver aviso" />
+                          </a>
+                        </div>
+                      </td>
+                    </tr>
+
+                    <% }); %>
+                </tbody>
+            </table>
+          </div>
+
+
+
+          <div class="text-center mb-4" id="noAviso">
+            <% if(avisos.length==0) { %>
+              No se ha encontrado ningún aviso
+              <% } %>
+          </div>
+
+              <!-- Button trigger modal -->
+
+              <!-- Modal INFO/TERMINAR AVISO -->
+              <% if(avisos.length> 0){ %>
+                <div class="modal fade" id="infoAviso" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                  aria-hidden="true">
+                  <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+
+                      <div class="modal-header">
+
+                        <h5 class="modal-title ml-3" id="nombreModal">
+                          <%=avisos[0].nombreUsu%>
+                        </h5>
+                        <div class="tAviso">
+                          <h5 class="modal-title" id="infoAvisoModal" name="">Aviso <%=avisos[0].idAviso%> -
+                              <%=myUtils.parseTipo(avisos[0].tipo)%>
+                          </h5>
+                        </div>
+
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
-                          </button>
-                        
-                        
+                        </button>
+                      </div>
+
+                      <div class="modal-body">
+
+                        <div class="container-fluid">
+                          <form id="asignarTecnicoForm" enctype="application/json" action="/terminarAviso"
+                            method="post">
+                            <div class="mb-3" id="fechaModal">
+                              <strong>Fecha:</strong>
+                              <%= myUtils.parseFecha(avisos[0].fecha) %>
+                            </div>
+                            <div class="mb-3" id="categoriasModal">
+
+                              <strong>
+                                <%= myUtils.parseCategorias(avisos[0].categoria)%>
+                              </strong>
+                              <% if(avisos[0].tipo !='felicitacion' ) { %>
+                                - <%= myUtils.parseCategorias(avisos[0].subcategoria) %>
+                                  <% } %>
+
+                            </div>
+                            <div class="mb-3" id="perfilModal">
+                              <strong>Perfil:</strong>
+                              <%= myUtils.parsePerfil(avisos[0].perfil) %>
+                            </div>
+
+                            <div class="form-outline mt-3 mb-3">
+                              <label class="labelBold" for="obs">Observaciones:</label>
+                              <textarea readonly class="form-control" id="obs" rows="3"><%= avisos[0].texto%></textarea>
+                            </div>
+                            <div class="form-outline mt-3 mb-3">
+                              <label class="labelBold" for="comen">Comentario del técnico:</label>
+                              <textarea readonly class="form-control" name="comentario" id="comen" rows="3"
+                                required><%= avisos[0].comentario%></textarea>
+                            </div>
+
+                            <input class="avisoInv" id="idAvisoModal" name="idAviso"
+                              value="<%=avisos[0].idAviso%>"></input>
+                        </div>
+
+                        <div class="modal-footer mt-3">
+                          <button type="button" class="btn btn-secondary labelBold" data-bs-
+                            data-bs-dismiss="modal">Cerrar</button>
+                        </div>
+
+                        </form>
+
+                      </div>
                     </div>
-                    <div class="modal-body">
-                      Fecha: 02/01/2021 <br>
-                      Comunicaciones: Correo Electrónico <br>
-                      Perfil: PDI <br><br>
-                      Observaciones: <br>
-                      <textarea readonly id="obs" class="areaT" name="observaciones" rows="4"> At w3schools.com you will learn how to make a website. They offer free tutorials in all web development technologies.
-                        </textarea> <br> <br>
-                      Comentarios del técnico: <br>
-                      <textarea readonly id="com_tec" class="areaT" name="comentario" rows="4"> At w3schools.com you will learn how to make a website. They offer free tutorials in all web development technologies.
-                      </textarea> <br>
-                      
-                      
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btnRojo" data-bs- data-bs-dismiss="modal">Cerrar</button>
-                    </div>
-                  
                   </div>
                 </div>
-              </div>
-            
+                <% } %>
 
-        </div>
-    
-        
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous"></script>
-    
-        <script>
+                      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"
+                        integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8"
+                        crossorigin="anonymous"></script>
 
-          function prueba(){
-            console.log("hola");
-            $('#infoAviso').modal('toggle');
-            
-          }
-        
-        
+                      <script>
 
-        
-          function buscador() {
-            // Declare variables
-            var input, filter, table, tr, td, i, txtValue;
-            input = document.getElementById("buscadorTabla");
-            filter = input.value.toUpperCase();
-            table = document.getElementById("t_historico");
-            tr = table.getElementsByTagName("tr");
-          
-            // Loop through all table rows, and hide those who don't match the search query
-            for (i = 0; i < tr.length; i++) {
-              td = tr[i].getElementsByTagName("td")[2];
-              if (td) {
-                txtValue = td.textContent || td.innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                  tr[i].style.display = "";
-                } else {
-                  tr[i].style.display = "none";
-                }
-              }
-            }
-          }
+                        $(".visible").click(function () {
+                          let id = $(this).closest("tr").index();
+                          let idAviso = ($(this).attr('value'));
 
-          </script>
+                          
+                          $.get('/obtener_aviso/' + idAviso, function (nAviso, status) {
+                            $("#nombreModal").html(nAviso.nombre);
+                            $("#infoAvisoModal").html("Aviso " + nAviso.idAviso + " - " + nAviso.tipo);
+                            $("#fechaModal").html("<strong>Fecha:</strong> " + nAviso.fecha);
+                            let sub = '';
+                            if (nAviso.tipo != 'Felicitación') sub = " - " + nAviso.subcategoria;
+                            $("#categoriasModal").html("<strong>" + nAviso.categoria + "</strong>" + sub);
+                            $("#perfilModal").html("<strong>Perfil:</strong> " + nAviso.perfil);
+                            $("#obs").val(nAviso.texto);
+                            $("#comen").val(nAviso.comentario_tecnico);
+                            console.log(nAviso.sesionTecnico);
 
-      </body>
-    
-    
+                            $("#idAvisoModal").val(nAviso.idAviso);
 
-    
 
+                          });
+                          $('#infoAviso').modal('toggle');
+                        })
+
+                        function buscador() {
+                          // Declare variables
+                          var input, filter, table, tr, td, i, txtValue, buscadorUsuario;
+                          input = document.getElementById("buscadorTabla");
+                          filter = input.value.toUpperCase();
+                          table = document.getElementById("t_avisos");
+                          tr = table.getElementsByTagName("tr");
+                          buscadorUsuario = document.getElementById("buscadorUsuario")
+                          let f;
+                          if ("<%=sesion.tecnico%>" == "1") { f = 2; }
+                          else { f = 1; }
+                          var z = 1;
+                          var count = 1;
+                          // Loop through all table rows, and hide those who don't match the search query                       
+                          
+                          "<% avisos.forEach((aviso)=> { %>"
+                              if(buscadorUsuario && buscadorUsuario.checked){
+                                txtValue = "<%= aviso.nombreUsu %>";
+                              }
+                              else{
+                                txtValue = "<%= aviso.texto %>";
+                              }
+                              if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                                tr[count].style.display = "";
+                              } else {
+                                tr[count].style.display = "none";
+                                z++;
+                              }
+                              count++;
+                          "<%})%>"
+
+                          if (z == tr.length) {
+                            $("#noAviso").html("No se ha encontrado ningún aviso");
+                          }
+                          else {
+                            $("#noAviso").html("");
+                          }
+
+                        }
+
+                        $(document).ready(function () {
+                          $("#selectorCategoria").change(function () {
+                            switch ($(this).val()) {
+                              case 'adigital':
+                                $("#selectorSub").html("<% if(sesion.perfil != 'aa') { %><option value='cfisica' >Certificado digital de persona física</option><% } %><% if(sesion.perfil == 'pas' || sesion.perfil == 'pdi') { %><option value='cpublico'>Certificado electrónico de empleado público</option><% } %><option value='registroElec'>Registro electrónico</option><option value='sede'>Sede electrónica</option><% if(sesion.perfil == 'pas' || sesion.perfil == 'pdi') { %><option value='portafirmas'>Portafirmas</option> <% } %>");
+                                break;
+                              case 'comu':
+                                $("#selectorSub").html("<option value='correo' >Correo electrónico</option><option value='meet'>Google Meet</option><% if(sesion.perfil == 'alumno' || sesion.perfil == 'aa') { %><option value='calumno'>Cuenta de alumno</option><% } if(sesion.perfil == 'pas' || sesion.perfil == 'pdi') { %><option value='cpersonal'>Cuenta de personal</option><option value='cgenerica'>Cuenta genérica</option><% } %>");
+                                break;
+                              case 'conect':
+                                $("#selectorSub").html("<% if(sesion.perfil == 'pas') { %><option value='sara' >Cuenta as la Red SARA</option><% } if(sesion.perfil == 'pas' || sesion.perfil == 'pdi') { %><option value='conex'>Conexión por cable en despachos</option><% } %><option value='cortafuegos'>Cortafuegos corporativo</option><% if(sesion.perfil == 'pas') { %><option value='dns'>Resolución de nombres de dominio (DNS)</option><% } %><option value='vpn'>VPN Acceso remoto</option><option value='eduroam'>Wifi Eduroam (ssid: eduroam)</option><% if(sesion.perfil != 'alumno') { %><option value='wifivis'>Wifi para visitantes (ssid: UCM-Visitantes)</option><% } %>");
+                                break;
+                              case 'docencia':
+                                $("#selectorSub").html("<% if(sesion.perfil != 'pas') { %><option value='aula' >Aula Virtual</option><% } if(sesion.perfil != 'alumno') { %><option value='blackboard'>Blackboard Collaborate</option><option value='listados'>Listados de clase</option><% } %><option value='moodle'>Moodle: Aula Global</option><% if(sesion.perfil != 'pas') { %><option value='cursosprivados'>Plataforma de cursos online privados</option><% } %>");
+                                break;
+                              case 'web':
+                                $("#selectorSub").html("<% if(sesion.perfil == 'pas' || sesion.perfil == 'pdi') { %><option value='analitica' >Analitica Web</option><option value='ssl'>Emisión de certificados SSL</option><option value='hosting'>Hosting: alojamiento de páginas web</option><% } %><option value='portal'>Portal de eventos</option><% if(sesion.perfil == 'pas' || sesion.perfil == 'pdi') { %><option value='redirecciones'>Redirecciones web</option><% } %>");
+                                break;
+                              default:
+                                $("#selectorSub").html("<option value='cfisica' >Certificado digital de persona física</option><option value='cpublico'>Certificado electrónico de empleado público</option><option value='registroElec'>Registro electrónico</option><option value='sede'>Sede electrónica</option><option value='portafirmas'>Portafirmas</option>");
+
+                            }
+                          });
+                          $('input[type=radio][name=tipo]').change(function () {
+                            switch (this.value) {
+                              case 'sugerencia':
+                                $("#selectorCategoria").html("<option value='adigital' selected>Administración digital</option><option value='comu'>Comunicaciones</option><% if(sesion.perfil != 'aa') { %><option value='conect'>Conectividad</option><option value='docencia'>Docencia</option><% } %><option value='web'>Web</option>");
+                                $("#opciones").show();
+                                $("#divSelectorSub").show();
+                                $("#botonEnviar").prop("disabled", false);
+                                break;
+                              case 'incidencia':
+                                $("#selectorCategoria").html("<option value='adigital' selected>Administración digital</option><option value='comu'>Comunicaciones</option><% if(sesion.perfil != 'aa') { %><option value='conect'>Conectividad</option><option value='docencia'>Docencia</option><% } %><option value='web'>Web</option>");
+                                $("#opciones").show();
+                                $("#divSelectorSub").show();
+                                $("#botonEnviar").prop("disabled", false);
+                                break;
+                              case 'felicitacion':
+                                $("#selectorCategoria").html("<option value='archivo' selected>Archivo Universitario</option><option value='asesoria'>Asesoría Jurídica</option><option value='biblioteca'>Biblioteca</option><option value='cInfo'>Centro de Información</option><option value='dDocentes'>Departamentos docentes</option><option value='iServicios'>Inspección de Servicios</option><option value='ofGest'>Oficina de Gestión de Infraestructuras y Mantenimiento</option><option value='sAdmin'>Servicio de Administracion</option><option value='sInfor'>Servicios Informáticos</option><option value='sDocu'>Servicio de Documentación</option><option value='sImp'>Servicio de Imprenta</option><option value='sCafe'>Servicio de Cafetería</option><option value='todauni'>Toda la universidad</option>");
+                                $("#opciones").show();
+                                $("#divSelectorSub").hide();
+                                $("#botonEnviar").prop("disabled", false);
+                                break;
+                            }
+                          });
+                        });
+
+
+                      </script>
+
+</body>
 
 </html>
-
-
-<!--
-<div class="row d-flex cabecera align-items-center">
-                <div class="col-2">
-                    <img src="ucm_logo2.png" class="img-fluid" width="330" height="330">
-                </div>
-                <div class="col-5"><h1 class="titulo">Centro de Atención al Usuario</h1></div>
-                <div class="col-1 offset-xl-2 offset-lg-2 offset-1">
-                    <img src="fernando-alonso-alpine-1.jpg" class="img-fluid foto" width="130" height="130"/>
-                </div>
-                <div class="col-1 offset-1 offset-md-0">
-                    <h4 class="correo">elplan@ucm.es</h4>
-                    <button type="submit" class="btn btn-light btblanco">Desconectar</button>
-                </div>
-            </div>
-
--->
