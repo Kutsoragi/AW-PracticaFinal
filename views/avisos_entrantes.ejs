@@ -1,176 +1,276 @@
 <!DOCTYPE html>
 <html lang="es">
-    <head>
-        <title>UCM - Centro de Atención al Usuario</title>
-        <meta charset="utf-8"/>
-        <link rel="icon" type="image/x-icon" href="/img/logoucm.ico">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-        <link rel="stylesheet"  media="screen" href="/css/main.css"/>
-        <link rel="stylesheet"  media="screen" href="/css/mis_avisos.css"/>
-        
-    </head>
 
-    <body>
-        <div class ="container-fluid">
-            
-            <%- include("cabecera") %>
+<head>
+  <title>UCM - Centro de Atención al Usuario</title>
+  <meta charset="utf-8" />
+  <link rel="icon" type="image/x-icon" href="/img/logoucm.ico">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <link rel="stylesheet" media="screen" href="/css/main.css" />
+  <link rel="stylesheet" media="screen" href="/css/mis_avisos.css" />
 
-            <nav class="navbar navbar-expand-sm navbar-light navMenu">
-              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-              </button>
-              <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                  <% if(sesion.tecnico) { %>
-                    <li class="nav-item active navActivo">
-                      <a class="nav-link" href="/avisos_entrantes">Avisos entrantes</a>
-                    </li>
+</head>
+
+<body>
+  <div class="container-fluid">
+
+    <%- include("cabecera") %>
+
+      <nav class="navbar navbar-expand-sm navbar-light navMenu">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <% if(sesion.tecnico) { %>
+              <li class="nav-item active navActivo">
+                <a class="nav-link" href="/avisos_entrantes">Avisos entrantes</a>
+              </li>
+              <% } %>
+                <li class="nav-item">
+                  <a class="nav-link" href="/mis_avisos">Mis avisos</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/historico_de_avisos">Histórico de Avisos</a>
+                </li>
+                <% if(sesion.tecnico) { %>
+                  <li class="nav-item">
+                    <a class="nav-link" href="">Gestión de usuarios</a>
+                  </li>
                   <% } %>
-                    <li class="nav-item">
-                      <a class="nav-link" href="/mis_avisos">Mis avisos</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="/historico_de_avisos">Histórico de Avisos</a>
-                    </li>
-                  <% if(sesion.tecnico) { %>
-                    <li class="nav-item">
-                      <a class="nav-link" href="">Gestión de usuarios</a>
-                    </li>
-                  <% } %>
-                </ul>
-              </div>
-            </nav>
+          </ul>
+        </div>
+      </nav>
 
-            <div class="row buscador align-items-center">
-                <div class="buscar">Buscar</div>
-                <input type="text" class="col-3 form-control" onkeyup="buscador()" id="buscadorTabla">
-                <button type="submit" class="btn btnRojo">Buscar</button>
-            </div>
+      <div class="row buscador align-items-center">
+        <div class="buscar">Buscar</div>
+        <input type="text" class="col-3 form-control" onkeyup="buscador()" id="buscadorTabla">
+        <button type="submit" class="btn btnRojo">Buscar</button>
+      </div>
 
-            <% if(msgPantalla) { %>
-              <div class="text-center mt-3 rojoError labelBold">
-                <%= msgPantalla %>
-              </div>
-            <% } %>
+      <% if(msgPantalla) { %>
+        <div class="text-center mt-3 rojoError labelBold">
+          <%= msgPantalla %>
+        </div>
+        <% } %>
 
-            <div class="col-10 tabla">
-              <table class="table" id="t_entrantes">
-                  <thead class="thead-dark">
-                    <tr>
-                      <th scope="col"  style="width: 5%">Tipo</th>
-                      <th scope="col"  style="width: 10%">Fecha</th>
-                      <th scope="col"  style="width: 40%">Texto</th>
-                      <th scope="col"  style="width: 10%">Acciones</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <% avisos.forEach((aviso) => {  %>
-                      <tr value="<%=aviso.idAviso%>">
-                        <td><img src="/img/<%=aviso.tipo%>.png" width="40" height="40" title="<%=aviso.tipo%>"/></td>
-                        <td class="fechaT"><%= myUtils.parseFecha(aviso.fecha) %></td>
-                        <td>
-                          <% if(aviso.texto.length> 200) { %>
-                            <%= aviso.texto.substring(0,200) + "..." %>
-                              <% } else { %>
-                                <%= aviso.texto %>
-                                  <% } %>
-                        </td>
-                        <td>
-                          <div class="row justify-content-around">
-                            <a data-bs-target="#asignarTecnico" data-bs-toggle="modal">
-                              <% if(aviso.idTecnico) { %>
-                                <img src="/img/tecnicoAsignado.png" width="40" height="40" title="Técnico asignado"/>
-                              <% } else { %>        
-                                <img src="/img/tecnicoAsignar.png" width="40" height="40" title="Asignar técnico"/>
-                              <% } %> 
-                            </a>
-                            <a data-bs-target="#asignarTecnico" data-bs-toggle="modal">
-                              <img src="/img/eliminar2.png" width="40" height="40"/>
-                            </a>
-                          </div>                         
-                        </td>
-                      </tr>
+          <div class="col-10 tabla">
+            <table class="table" id="t_entrantes">
+              <thead class="thead-dark">
+                <tr>
+                  <th scope="col" style="width: 5%">Tipo</th>
+                  <th scope="col" style="width: 10%">Fecha</th>
+                  <th scope="col" style="width: 40%">Texto</th>
+                  <th scope="col" style="width: 10%">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% avisos.forEach((aviso)=> { %>
+                  <tr>
+                    <td class="visualizar" value="<%=aviso.idAviso%>"><img src="/img/<%=aviso.tipo%>.png" width="40" height="40" title="<%=aviso.tipo%>" /></td>
+                    <td class="fechaT visualizar" value="<%=aviso.idAviso%>">
+                      <%= myUtils.parseFecha(aviso.fecha) %>
+                    </td>
+                    <td class="visualizar" value="<%=aviso.idAviso%>">
+                      <% if(aviso.texto.length> 200) { %>
+                        <%= aviso.texto.substring(0,200) + "..." %>
+                          <% } else { %>
+                            <%= aviso.texto %>
+                              <% } %>
+                    </td>
+                    <td>
+                      <div class="row justify-content-around">
+                        <a class="visualizar" value="<%=aviso.idAviso%>">
+                          <% if(aviso.idTecnico) { %>
+                            <img src="/img/tecnicoAsignado.png" width="40" height="40" title="Técnico asignado" />
+                            <% } else { %>
+                              <img src="/img/tecnicoAsignar.png" width="40" height="40" title="Asignar técnico" />
+                              <% } %>
+                        </a>
+                        <a class="eliminar" value="<%=aviso.idAviso%>">
+                          <img src="/img/eliminar2.png" width="40" height="40" />
+                        </a>
+                      </div>
+                    </td>
+                  </tr>
 
-                    <% }); %>
-                    
-                  </tbody>
-                </table>
+                  <% }); %>
+
+              </tbody>
+            </table>
           </div>
 
           <!-- Modal ASIGNAR AVISO -->
-                    
-          <div class="modal fade" id="asignarTecnico" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <% if(avisos.length> 0){ %>
+          <div class="modal fade" id="asignarTecnico" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
               <div class="modal-content">
 
                 <div class="modal-header">
-                    
-                  <h5 class="modal-title ml-3" id="nombreModal"><%=avisos[0].nombreUsu%></h5>
+
+                  <h5 class="modal-title ml-3" id="nombreModal">
+                    <%=avisos[0].nombreUsu%>
+                  </h5>
                   <div class="tAviso">
-                    <h5 class="modal-title" id="infoAvisoModal" name="">Aviso <%=avisos[0].idAviso%> - <%=myUtils.parseTipo(avisos[0].tipo)%></h5>
+                    <h5 class="modal-title" id="infoAvisoModal" name="">Aviso <%=avisos[0].idAviso%> -
+                        <%=myUtils.parseTipo(avisos[0].tipo)%>
+                    </h5>
                   </div>
-                  
+
                   <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
+                    <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
 
                 <div class="modal-body">
-                  
+
                   <div class="container-fluid">
                     <form id="asignarTecnicoForm" enctype="application/json" action="/asignarTecnico" method="post">
                       <div class="mb-3" id="fechaModal">
-                        <strong>Fecha:</strong> <%= myUtils.parseFecha(avisos[0].fecha) %>
+                        <strong>Fecha:</strong>
+                        <%= myUtils.parseFecha(avisos[0].fecha) %>
                       </div>
                       <div class="mb-3" id="categoriasModal">
-                        
-                        <strong><%= myUtils.parseCategorias(avisos[0].categoria)%></strong> 
-                        <% if(avisos[0].tipo != 'felicitacion') { %>
+
+                        <strong>
+                          <%= myUtils.parseCategorias(avisos[0].categoria)%>
+                        </strong>
+                        <% if(avisos[0].tipo !='felicitacion' ) { %>
                           - <%= myUtils.parseCategorias(avisos[0].subcategoria) %>
-                        <% } %>
-                        
+                            <% } %>
+
                       </div>
                       <div class="mb-3" id="perfilModal">
-                        <strong>Perfil:</strong> <%= myUtils.parsePerfil(avisos[0].perfil) %>
+                        <strong>Perfil:</strong>
+                        <%= myUtils.parsePerfil(avisos[0].perfil) %>
                       </div>
 
                       <div class="form-outline mt-3 mb-3">
                         <label class="labelBold" for="obs">Observaciones:</label>
                         <textarea readonly class="form-control" id="obs" rows="3"><%= avisos[0].texto%></textarea>
                       </div>
-                      
+
                       <div class="form-outline mb-4 mr-4">
                         <label class="form-label labelBold" for="selectorTec">Asignar técnico:</label>
-                        <select class="form-control col-6" id="selectorTec" name="asigTec" <% if (avisos[0].idTecnico) { %> disabled <% } %>>
-                          <% tecnicos.forEach((tec) => { %>
-                            <option value="<%=tec.idUsuario%>"><%=tec.nombre%></option>
-                          <% }); %>
+                        <select class="form-control col-6" id="selectorTec" name="asigTec" 
+                        <% if (avisos[0].idTecnico) {%> disabled 
+                          <% } %>>
+                            <% tecnicos.forEach((tec)=> { %>
+                              <option value="<%=tec.idUsuario%>">
+                                <%=tec.nombre%>
+                              </option>
+                              <% }); %>
                         </select>
                       </div>
-                      <input class="avisoInv" id="idAvisoModal"name="idAviso" value="<%=avisos[0].idAviso%>"></input>  
-                </div>
+                      <input class="avisoInv" id="idAvisoModal" name="idAviso" value="<%=avisos[0].idAviso%>"></input>
+                  </div>
 
-                <div class="modal-footer mt-3">
-                  <button type="button" class="btn btn-secondary labelBold" data-bs- data-bs-dismiss="modal">Cerrar</button>
-                  <button type="submit" class="btn btnRojo" id="botonAsignar" <% if (avisos[0].idTecnico) { %> disabled <% } %>>Asignar técnico</button>
-                </div>
+                  <div class="modal-footer mt-3">
+                    <button type="button" class="btn btn-secondary labelBold" data-bs-
+                      data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btnRojo" id="botonAsignar" <% if (avisos[0].idTecnico) { %>
+                      disabled <% } %>>Asignar técnico</button>
+                  </div>
 
-              </form>
-              
+                  </form>
+
+                </div>
               </div>
             </div>
           </div>
+          <% } %>
+
+          <!-- Modal ELIMINAR AVISO -->
+          <% if(avisos.length> 0){ %>
+            <div class="modal fade" id="eliminarAviso" tabindex="-1" role="dialog"
+              aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+
+                  <div class="modal-header">
+
+                    <h5 class="modal-title ml-3" id="nombreModal2">
+                      <%=avisos[0].nombreUsu%>
+                    </h5>
+                    <div class="tAviso">
+                      <h5 class="modal-title" id="infoAvisoModal2" name="">Aviso <%=avisos[0].idAviso%> -
+                          <%=myUtils.parseTipo(avisos[0].tipo)%>
+                      </h5>
+                    </div>
+
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+
+                  <div class="modal-body">
+
+                    <div class="container-fluid">
+                      <form id="asignarTecnicoForm" enctype="application/json" action="/eliminarAviso"
+                        method="post">
+                        <div class="mb-3" id="fechaModal2">
+                          <strong>Fecha:</strong>
+                          <%= myUtils.parseFecha(avisos[0].fecha) %>
+                        </div>
+                        <div class="mb-3" id="categoriasModal2">
+
+                          <strong>
+                            <%= myUtils.parseCategorias(avisos[0].categoria)%>
+                          </strong>
+                          <% if(avisos[0].tipo !='felicitacion' ) { %>
+                            - <%= myUtils.parseCategorias(avisos[0].subcategoria) %>
+                              <% } %>
+
+                        </div>
+                        <div class="mb-3" id="perfilModal2">
+                          <strong>Perfil:</strong>
+                          <%= myUtils.parsePerfil(avisos[0].perfil) %>
+                        </div>
+
+                        <div class="form-outline mt-3 mb-3">
+                          <label class="labelBold" for="obs">Observaciones:</label>
+                          <textarea readonly class="form-control" id="obs2"
+                            rows="3"><%= avisos[0].texto%></textarea>
+                        </div>
+                        <div class="form-outline mt-3 mb-3">
+                          <label class="labelBold" for="comen2">Introduzca el motivo de la eliminación del comentario:</label>
+                          <textarea readonly class="form-control" name="comentario" id="comen2" rows="3"
+                            required><%= avisos[0].comentario%></textarea>
+                        </div>
+
+                        <input class="avisoInv" id="idAvisoModal2" name="idAviso"
+                          value="<%=avisos[0].idAviso%>"></input>
+                    </div>
+
+                    <div class="modal-footer mt-3">
+                      <button type="button" class="btn btn-secondary labelBold" data-bs-
+                        data-bs-dismiss="modal">Cerrar</button>
+                      <% if (sesion.tecnico) { %>
+                        <button type="submit" class="btn btnRojo" id="botonTerminar2">Eliminar aviso</button>
+                        <% } %>
+                    </div>
+
+                    </form>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+            <% } %>
+          
+
+          <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8"
+            crossorigin="anonymous"></script>
 
 
-        </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous"></script>
 
-        
-        
-        
-        <script>
+          <script>
 
             function buscador() {
               // Declare variables
@@ -179,7 +279,7 @@
               filter = input.value.toUpperCase();
               table = document.getElementById("t_entrantes");
               tr = table.getElementsByTagName("tr");
-              var z=1;
+              var z = 1;
               // Loop through all table rows, and hide those who don't match the search query
               for (i = 0; i < tr.length; i++) {
                 td = tr[i].getElementsByTagName("td")[2];
@@ -193,55 +293,72 @@
                   }
                 }
               }
-              
+
             }
 
-          
-          $("tr").click(function() {
-            let id = $(this).closest("tr").index();
-            let idAviso = ($(this).attr('value'));
-            
 
-            $.get('/obtener_aviso/'+idAviso, function(nAviso, status){
-              console.log(nAviso);
-              $("#nombreModal").html(nAviso.nombre);
-              $("#infoAvisoModal").html("Aviso "+nAviso.idAviso+" - "+ nAviso.tipo);
-              $("#fechaModal").html("<strong>Fecha:</strong> "+ nAviso.fecha);
-              let sub ='';
-              if(nAviso.tipo != 'Felicitación') sub = " - "+nAviso.subcategoria;
-              $("#categoriasModal").html("<strong>"+nAviso.categoria+"</strong>"+sub);
-              $("#perfilModal").html("<strong>Perfil:</strong> " + nAviso.perfil);
-              $("#obs").val(nAviso.texto);
-              if(nAviso.idTecnico) {
-                $("#botonAsignar").html("Tecnico asignado");
-                $("#selectorTec").prop("disabled",true);
-                $("#botonAsignar").prop("disabled",true);
-                $("#selectorTec option[value='"+nAviso.idTecnico+"']").prop('selected', true)
+            $(".visualizar").click(function () {
+              let id = $(this).closest("tr").index();
+              let idAviso = ($(this).attr('value'));
+              
+              
+              $.get('/obtener_aviso/' + idAviso, function (nAviso, status) {
+                console.log(nAviso);
+                $("#nombreModal").html(nAviso.nombre);
+                $("#infoAvisoModal").html("Aviso " + nAviso.idAviso + " - " + nAviso.tipo);
+                $("#fechaModal").html("<strong>Fecha:</strong> " + nAviso.fecha);
+                let sub = '';
+                if (nAviso.tipo != 'Felicitación') sub = " - " + nAviso.subcategoria;
+                $("#categoriasModal").html("<strong>" + nAviso.categoria + "</strong>" + sub);
+                $("#perfilModal").html("<strong>Perfil:</strong> " + nAviso.perfil);
+                $("#obs").val(nAviso.texto);
+                if (nAviso.idTecnico) {
+                  $("#botonAsignar").html("Tecnico asignado");
+                  $("#selectorTec").prop("disabled", true);
+                  $("#botonAsignar").prop("disabled", true);
+                  $("#selectorTec option[value='" + nAviso.idTecnico + "']").prop('selected', true)
+                  
+                } else {
+                  $("#botonAsignar").html("Asignar técnico");
+                  $("#selectorTec").prop("disabled", false);
+                  $("#botonAsignar").prop("disabled", false);
+                  $("#selectorTec option[value='<%=sesion.idUsuario%>']").prop('selected', true)
+                }
+                $("#idAvisoModal").val(nAviso.idAviso);
                 
-              } else {
-                $("#botonAsignar").html("Asignar técnico");
-                $("#selectorTec").prop("disabled",false);
-                $("#botonAsignar").prop("disabled",false);
-                $("#selectorTec option[value='<%=sesion.idUsuario%>']").prop('selected', true)
-              }
-              $("#idAvisoModal").val(nAviso.idAviso);
+              });
+              $('#asignarTecnico').modal('toggle');
+            })
 
-            });
+            $(".eliminar").click(function () {
+                let id = $(this).closest("tr").index();
+                let idAviso = ($(this).attr('value'));
+
+                
+                $.get('/obtener_aviso/' + idAviso, function (nAviso, status) {
+                  $("#nombreModal2").html(nAviso.nombre);
+                  $("#infoAvisoModal2").html("Aviso " + nAviso.idAviso + " - " + nAviso.tipo);
+                  $("#fechaModal2").html("<strong>Fecha:</strong> " + nAviso.fecha);
+                  let sub = '';
+                  if (nAviso.tipo != 'Felicitación') sub = " - " + nAviso.subcategoria;
+                  $("#categoriasModal2").html("<strong>" + nAviso.categoria + "</strong>" + sub);
+                  $("#perfilModal2").html("<strong>Perfil:</strong> " + nAviso.perfil);
+                  $("#obs2").val(nAviso.texto);
+                  $("#comen2").val(nAviso.comentario_tecnico);
+                  console.log(nAviso.sesionTecnico);
+                  if (nAviso.sesionTecnico) { $("#comen2").prop("readonly", false); }
+                  else { $("#comen2").prop("readonly", true); }
+
+                  if (nAviso.comentario_tecnico) { $("#comen2").prop("readonly", true); $("#botonTerminar2").prop("disabled", false); }
+                  else if (!nAviso.sesionTecnico) { $("#comen2").prop("readonly", true); $("#botonTerminar2").prop("disabled", false); }
+                  else { $("#comen2").prop("readonly", false); $("#botonTerminar2").prop("disabled", false); }
+
+                  $("#idAvisoModal2").val(nAviso.idAviso);
 
 
+                });
+                $('#eliminarAviso').modal('toggle');
+            })
+          </script>
 
-            
-            $('#asignarTecnico').modal('toggle');
-            
-
-           
-            
-
-
-          })
-  
-      </script>
-
-    </body>
-
-    
+</body>

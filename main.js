@@ -556,10 +556,10 @@ app.post("/eliminarAviso", function(request, response){
     daoA.eliminarAviso(request.body.idAviso,comentario, function(err,res){
         if (err){
             console.log(err.message);
-            response.redirect("/mis_avisos")
+            response.redirect("back")
         }
         else{
-            response.redirect("/mis_avisos")
+            response.redirect("back")
         }
     })
 })
