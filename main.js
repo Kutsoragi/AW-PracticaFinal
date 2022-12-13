@@ -654,7 +654,7 @@ app.get("/", middleNoLogueado, (request, response) => {
 });
 
 app.get("*", function(request,response){
-    response.status(404).send("Error 404 - Not found")
+    response.status(404).sendFile(path.join(__dirname, '/public/error404.html'));
 })
 
 app.listen(3000, (err) => {

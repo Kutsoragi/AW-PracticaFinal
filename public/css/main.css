@@ -105,3 +105,8 @@ h4{
 .puntero {
     cursor: pointer;
 }
+
+#error404{
+    margin-top: 3rem;
+    font-size: calc(2px + 0.3vw);
+}
