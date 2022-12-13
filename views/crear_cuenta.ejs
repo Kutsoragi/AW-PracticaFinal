@@ -30,7 +30,7 @@
                         
                         <div class="form-outline mb-4 mr-4">
                         <label class="form-label labelBold" for="correo">Correo electrónico:</label><span class="rojoError labelBold" title="Es obligatorio rellenar este campo"> *</span>
-                        <input type="email" name="correo" class="form-control inputWidth" value="<%= camposC.correo %>" />
+                        <input maxlength="45" type="email" name="correo" class="form-control inputWidth" value="<%= camposC.correo %>" />
                         <% if (errores) { %>
                             <% if (errores.correo) { %>
                                 <div class="rojoError labelBold letraError" title="<%= errores.correo.msg %>"">
@@ -43,7 +43,7 @@
                         <!-- Nombre input -->
                         <div class="form-outline mb-4">
                             <label class="form-label labelBold" for="nombre">Nombre para mostrar:</label><span class="rojoError labelBold" title="Es obligatorio rellenar este campo"> *</span>
-                            <input type="text" name="nombre" class="form-control inputWidth" value="<%= camposC.nombre %>"/>
+                            <input maxlength="45" type="text" name="nombre" class="form-control inputWidth" value="<%= camposC.nombre %>"/>
                             <% if (errores) { %>
                                 <% if (errores.nombre) { %>
                                     <div class="rojoError labelBold letraError" title="<%= errores.nombre.msg %>"">

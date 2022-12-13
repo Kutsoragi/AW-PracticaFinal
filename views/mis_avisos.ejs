@@ -199,11 +199,11 @@
 
                             <div class="form-outline mt-3 mb-3">
                               <label class="labelBold" for="obs">Observaciones:</label>
-                              <textarea readonly class="form-control" id="obs" rows="3"><%= avisos[0].texto%></textarea>
+                              <textarea maxlength="1800" readonly class="form-control" id="obs" rows="3"><%= avisos[0].texto%></textarea>
                             </div>
                             <div class="form-outline mt-3 mb-3">
                               <label class="labelBold" for="comen">Comentario del técnico:</label>
-                              <textarea readonly class="form-control" name="comentario" id="comen" rows="3"
+                              <textarea maxlength="1800" readonly class="form-control" name="comentario" id="comen" rows="3"
                                 required><%= avisos[0].comentario%></textarea>
                             </div>
 
@@ -277,12 +277,12 @@
 
                                 <div class="form-outline mt-3 mb-3">
                                   <label class="labelBold" for="obs">Observaciones:</label>
-                                  <textarea readonly class="form-control" id="obs2"
+                                  <textarea maxlength="1800" readonly class="form-control" id="obs2"
                                     rows="3"><%= avisos[0].texto%></textarea>
                                 </div>
                                 <div class="form-outline mt-3 mb-3">
                                   <label class="labelBold" for="comen2">Comentario del técnico:</label>
-                                  <textarea readonly class="form-control" name="comentario" id="comen2" rows="3"
+                                  <textarea maxlength="1800" readonly class="form-control" name="comentario" id="comen2" rows="3"
                                     required><%= avisos[0].comentario%></textarea>
                                 </div>
 
@@ -394,7 +394,7 @@
                                     <div class="form-outline mt-3 mb-3">
                                       <label class="labelBold" for="obs">Observaciones:</label><span
                                         class="rojoError labelBold" title="Es obligatorio rellenar este campo"> *</span>
-                                      <textarea class="form-control" id="obs" name="observacion" rows="3"
+                                      <textarea maxlength="1800" class="form-control" id="obs" name="observacion" rows="3"
                                         required></textarea>
                                       <div class="invalid-feedback">
                                         Es obligatorio rellenar este campo

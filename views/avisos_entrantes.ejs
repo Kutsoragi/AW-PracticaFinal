@@ -68,7 +68,7 @@
                   <tr>
                     <td class="visible" value="<%=aviso.idAviso%>"><img src="/img/<%=aviso.tipo%>.png" width="40" height="40" title="<%=aviso.tipo%>" /></td>
                     <td class="fechaT visible" value="<%=aviso.idAviso%>">
-                      <%= myUtils.parseFecha(aviso.fecha) %>
+                      <%= aviso.fecha.toLocaleDateString() %>
                     </td>
                     <td class="visible" value="<%=aviso.idAviso%>">
                       <% if(aviso.texto.length> 200) { %>
@@ -154,7 +154,7 @@
 
                       <div class="form-outline mt-3 mb-3">
                         <label class="labelBold" for="obs">Observaciones:</label>
-                        <textarea readonly class="form-control" id="obs" rows="3"><%= avisos[0].texto%></textarea>
+                        <textarea maxlength="1800" readonly class="form-control" id="obs" rows="3"><%= avisos[0].texto%></textarea>
                       </div>
 
                       <div class="form-outline mb-4 mr-4">
@@ -236,12 +236,12 @@
 
                         <div class="form-outline mt-3 mb-3">
                           <label class="labelBold" for="obs">Observaciones:</label>
-                          <textarea readonly class="form-control" id="obs2"
+                          <textarea maxlength="1800" readonly class="form-control" id="obs2"
                             rows="3"><%= avisos[0].texto%></textarea>
                         </div>
                         <div class="form-outline mt-3 mb-3">
                           <label class="labelBold" for="comen2">Introduzca el motivo de la eliminación del aviso:</label>
-                          <textarea readonly class="form-control" name="comentario" id="comen2" rows="3"
+                          <textarea maxlength="1800" readonly class="form-control" name="comentario" id="comen2" rows="3"
                             required><%= avisos[0].comentario%></textarea>
                         </div>
 

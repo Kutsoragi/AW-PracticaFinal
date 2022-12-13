@@ -73,7 +73,7 @@ class DAOUsuarios {
                 callback(new Error("Error de conexion a la base de datos"));
             }
             else {
-                connection.query("SELECT nombre FROM ucm_aw_cau_usu_usuarios WHERE idUsuario = ? and activo = true", [idUsuario],//Aquí va la query a la BD
+                connection.query("SELECT nombre FROM ucm_aw_cau_usu_usuarios WHERE idUsuario = ?;", [idUsuario],//Aquí va la query a la BD
                     function (err, rows) {
                         connection.release();
                         if (err) {
@@ -227,7 +227,7 @@ class DAOUsuarios {
                             callback(err);
                         }
                         else {
-                            connection.query("UPDATE ucm_aw_cau_avi_avisos SET activo = false WHERE idUsuario = ?", [idUsuario],//Aquí va la query a la BD
+                            connection.query("UPDATE ucm_aw_cau_avi_avisos SET activo = false, comentario_tecnico = 'Este aviso ha sido eliminado debido a que la cuenta del usuario que lo había creado ha sido eliminada.' WHERE (comentario_tecnico  IS NULL OR comentario_tecnico = '') and idUsuario = ?;", [idUsuario],//Aquí va la query a la BD
                             function (err, rows) {
                                     connection.release();
                                     if (err) {
