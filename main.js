@@ -85,7 +85,300 @@ function middleTecnico(req,res,next){
     }
 }
 
+app.post("/login", 
+    // El campo correo ha de ser no vacío.
+    check("correo", "Por favor, introduce un correo electrónico").notEmpty(),
+    // El campo correo ha de ser una dirección de correo válida.
+    check("correo","Por favor, introduce un correo electrónico").isEmail(),
+    // El campo nombre ha de ser no vacío.
+    check("password", "Por favor, introduce una contraseña").notEmpty(),
 
+function(request, response){
+
+    const errors = validationResult(request);
+    if(!errors.isEmpty()) {
+        response.render("login", {errMsg : null, errores: errors.mapped(), campoEmail : request.body.correo });
+    }
+    else {
+        daoU.leerUsuarioPorCorreo(request.body.correo, request.body.password,function(err,res){
+            if (err){
+                response.render("login", {errMsg : err.message, errores : null, campoEmail : request.body.correo })
+            }
+            else{
+                request.session.user = res
+                response.redirect("/mis_avisos")
+            }
+        })
+
+    }
+
+    
+})
+
+app.post("/crear_cuenta", multerFactory.single("foto"),
+    // El campo correo ha de ser no vacío.
+    check("correo", "Por favor, introduce un correo electrónico").notEmpty(),
+    // El campo correo ha de ser una dirección de correo válida.
+    check("correo","Por favor, introduce un correo electrónico").isEmail(),
+    // El campo correo debe terminar en @ucm.es.
+    check("correo","El correo debe terminar en '@ucm.es')").custom((value) => (value.endsWith("@ucm.es"))),
+    // El campo nombre ha de ser no vacío.
+    check("nombre", "Por favor, introduce un nombre").notEmpty(),
+    // El campo password ha de ser no vacío.
+    check("password", "Por favor, introduce la contraseña").notEmpty(),
+    // El campo pass ha de tener entre 6 y 10 caracteres.
+    check("password","Contraseña no válida").matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.-¿=])[A-Za-z\d@$!%*?&.-¿=]{8,16}$/),
+    // El campo password2 ha de ser no vacío.
+    check("password2", "Por favor, confirma la contraseña").notEmpty(),
+    // El campo password2  tiene que coincidir.
+    check("password2", "Las contraseñas deben coincidir").custom((value, {req}) => (value === req.body.password)),
+    // El campo perfil hay que seleccionarlo.
+    check("perfil", "Por favor, selecciona un perfil universitario").custom(valorPerfil),
+    // El campo foto tiene que ser una foto.
+    check("foto", "Sólo se admiten archivos .jpeg o .png").custom((value, {req}) => {
+        if(req.file === undefined) return true
+        else {
+            switch(req.file.mimetype){
+                case "image/jpeg" : return ".jpeg"
+                case "image/png" : return ".png"
+                default : return false;
+            }
+        }
+    }),
+    check("foto", "La imagen debe ocupar menos de 1MB").custom((value, {req}) => {
+        if(req.file === undefined) return true
+        else {
+            if(req.file.size < 1000000) return true;
+            else return false;
+        }
+    }),
+    
+    // El campo empleado debe tener 4 dígitos y 3 letras
+    check("numEmpl", "El formato de nº de empleado no es correcto(E.g:1234-abc)").custom((value, {req}) => {
+        if(req.body.tecnico !== "si") return true
+        else {
+            var reg = new RegExp(/^[0-9]{4}-[a-z]{3}$/)
+            if(reg.test(value)) return true;
+            else return false;
+        }
+    }),
+    
+
+function(request, response){
+
+    
+
+    let campos = {
+    
+        correo:request.body.correo,
+        nombre:request.body.nombre,
+        password: request.body.password,
+        password2: request.body.password2,
+        perfil: request.body.perfil,
+        tecnico : request.body.tecnico,
+        foto : request.body.file,
+        numEmpl : request.body.numEmpl
+
+    }
+        
+    const errors = validationResult(request);
+    //console.log(errors);
+    if(!errors.isEmpty()) {          
+        response.render("crear_cuenta", {errMsg : "Por favor, completa todos los campos correctamente" , errores: errors.mapped(), camposC : campos});
+    }
+    else {
+        let usuario = {
+            correo:request.body.correo,
+            nombre:request.body.nombre,
+            contraseña: request.body.password,
+            perfil: request.body.perfil,
+            tecnico: request.body.tecnico === "si" ? true : false,
+            foto: null,
+            numEmpleado: null
+        }
+        if (request.file){
+            usuario.foto = request.file.buffer
+        }
+        if (usuario.tecnico){
+            usuario.numEmpleado = request.body.numEmpl
+        }
+        daoU.agregarUsuario(usuario, function(err,res){
+            if (err){
+                console.log(err.message)
+                response.render("crear_cuenta",{errMsg : err.message, errores : null, camposC : campos})
+            }
+            else{
+                daoU.leerUsuarioPorCorreo(usuario.correo, usuario.contraseña,function(err,res){
+                    if (err){
+                        response.render("login", {errMsg : err.message, errores : null, campoEmail : request.body.correo })
+                    }
+                    else{
+                        request.session.user = res
+                        response.redirect("/mis_avisos")
+                    }
+                })
+            }
+        })
+    }
+        
+})
+
+app.post("/mis_avisos", function(request, response){
+        let aviso = {
+            idUsuario: request.session.user.idUsuario,
+            texto: request.body.observacion,
+            perfil : request.session.user.perfil,
+            tipo: request.body.tipo,
+            categoria: request.body.categoria,
+            subcategoria : request.body.subcategoria
+        }
+        if(aviso.tipo == "felicitacion"){
+            aviso.subcategoria = '';
+        }
+
+       
+        daoA.crearAviso(aviso, function(err,res){
+            if (err){
+                response.redirect("/mis_avisos")
+            }
+            else{
+                response.redirect("/mis_avisos")
+            }
+        })     
+})
+
+app.post("/asignarTecnico", function(request, response){
+    daoA.asignarTecnico(request.body.asigTec,request.body.idAviso, function(err,res){
+        if (err){
+            console.log(err.message);
+            response.redirect("/avisos_entrantes")
+        }
+        else{
+            response.redirect("/avisos_entrantes")
+        }
+    })
+
+})
+
+app.post("/terminarAviso", function(request, response){
+    daoA.terminarAviso(request.body.idAviso,request.body.comentario, function(err,res){
+        if (err){
+            console.log(err.message);
+            response.redirect("/mis_avisos")
+        }
+        else{
+            response.redirect("/mis_avisos")
+        }
+    })
+
+})
+app.post("/eliminarAviso", function(request, response){
+    let comentario = "Este aviso ha sido eliminado por el técnico " + request.session.user.nombre + " debido a:\n\n" + '"' + request.body.comentario + '"';
+    daoA.eliminarAviso(request.body.idAviso,comentario, function(err,res){
+        if (err){
+            console.log(err.message);
+            response.redirect("back")
+        }
+        else{
+            response.redirect("back")
+        }
+    })
+})
+
+app.post("/eliminarCuenta", function(request, response){
+    daoU.eliminarUsuario(request.body.idUsuario, function(err,res){
+        if (err){
+            console.log(err.message);
+            response.redirect("back")
+        }
+        else{
+            if (request.body.idUsuario == request.session.user.idUsuario){
+                response.redirect("/cerrarSesion")
+            }
+            else{
+                response.redirect("/gestion_de_usuarios")
+            }
+        }
+    })
+})
+
+app.get("/obtener_aviso/:idAviso", function(request, response){
+    let id = request.params.idAviso;
+    daoA.leerAvisoPorId(id, function(err,res){
+        if (err){
+            console.log(err.message);
+        }
+        else {
+            daoU.leerNombrePorId(res.idUsuario,function (err, res2){
+                if(err){
+                    console.log(err.message)
+                }
+                else{
+                    res.nombre = res2.nombre;
+                    res.tipo = utils.parseTipo(res.tipo);
+                    res.fecha = utils.parseFecha(res.fecha);
+                    res.categoria = utils.parseCategorias(res.categoria);
+                    res.subcategoria = utils.parseCategorias(res.subcategoria);
+                    res.perfil = utils.parsePerfil(res.perfil);
+                    res.sesionTecnico = request.session.user.tecnico;
+                    setTimeout(function(){ response.send(res);}, 50);
+                }
+            })
+                 
+        }
+    })
+})
+
+app.get("/obtener_info_usuario/:idUsuario", function(request, response){
+    let id = request.params.idUsuario;
+    daoU.leerNombrePorId(id,function (err, res){
+        if(err){
+            console.log(err.message)
+        }
+        else{
+            response.send(res);
+        }
+    })
+})
+
+app.get("/obtener_contador_avisos/:idUsuario&:tecnico", function(request, response){
+    let id = request.params.idUsuario;
+    let tecnico = request.params.tecnico;
+    
+    if(tecnico == '1'){
+        daoA.obtenerEstadisticasTecnico(id, function(err,res){
+            if (err){
+                console.log(err.message);
+            }
+            else {                
+                response.send(res);
+            }
+        })
+    }
+    else{
+        daoA.obtenerEstadisticasUsuario(id, function(err,res){
+            if (err){
+                console.log(err.message);
+            }
+            else {                
+                
+                response.send(res);
+            }
+        })
+    }
+    
+})
+
+app.get("/obtener_imagen", middleLogueado, function(request, response){
+    daoU.obtenerImagen(request.session.user.idUsuario, function(err,res){
+        if (res){
+            response.end(new Buffer.from(res))
+        }
+        else{
+            response.sendFile(__dirname + "/public/img/avatar.jpg")
+        }
+    })
+})
 
 app.get("/mis_avisos", middleLogueado, function(request, response) {
     let listaAvisos = []
@@ -331,323 +624,18 @@ app.get("/gestion_de_usuarios", middleLogueado, middleTecnico, function(request,
     
 });
 
-app.get("/login", middleNoLogueado,function(request, response) {
-    response.render("login", {errMsg: null, errores : null, campoEmail : null});
+app.get("/crear_cuenta", middleNoLogueado, function(request, response) {
+    response.render("crear_cuenta", {errMsg : null, errores : null, camposC : camposVacios});
 });
-
-app.post("/login", 
-    // El campo correo ha de ser no vacío.
-    check("correo", "Por favor, introduce un correo electrónico").notEmpty(),
-    // El campo correo ha de ser una dirección de correo válida.
-    check("correo","Por favor, introduce un correo electrónico").isEmail(),
-    // El campo nombre ha de ser no vacío.
-    check("password", "Por favor, introduce una contraseña").notEmpty(),
-
-function(request, response){
-
-    const errors = validationResult(request);
-    if(!errors.isEmpty()) {
-        response.render("login", {errMsg : null, errores: errors.mapped(), campoEmail : request.body.correo });
-    }
-    else {
-        daoU.leerUsuarioPorCorreo(request.body.correo, request.body.password,function(err,res){
-            if (err){
-                response.render("login", {errMsg : err.message, errores : null, campoEmail : request.body.correo })
-            }
-            else{
-                request.session.user = res
-                response.redirect("/mis_avisos")
-            }
-        })
-
-    }
-
-    
-})
 
 app.get("/cerrarSesion", middleLogueado, function(req,res){
     req.session.user = null
     res.redirect("/login")
 });
 
-
-app.get("/crear_cuenta", middleNoLogueado, function(request, response) {
-    response.render("crear_cuenta", {errMsg : null, errores : null, camposC : camposVacios});
+app.get("/login", middleNoLogueado,function(request, response) {
+    response.render("login", {errMsg: null, errores : null, campoEmail : null});
 });
-
-app.get("/obtener_imagen", middleLogueado, function(request, response){
-    daoU.obtenerImagen(request.session.user.idUsuario, function(err,res){
-        if (res){
-            response.end(new Buffer.from(res))
-        }
-        else{
-            response.sendFile(__dirname + "/public/img/avatar.jpg")
-        }
-    })
-})
-
-app.get("/obtener_aviso/:idAviso", function(request, response){
-    let id = request.params.idAviso;
-    daoA.leerAvisoPorId(id, function(err,res){
-        if (err){
-            console.log(err.message);
-        }
-        else {
-            daoU.leerNombrePorId(res.idUsuario,function (err, res2){
-                if(err){
-                    console.log(err.message)
-                }
-                else{
-                    res.nombre = res2.nombre;
-                    res.tipo = utils.parseTipo(res.tipo);
-                    res.fecha = utils.parseFecha(res.fecha);
-                    res.categoria = utils.parseCategorias(res.categoria);
-                    res.subcategoria = utils.parseCategorias(res.subcategoria);
-                    res.perfil = utils.parsePerfil(res.perfil);
-                    res.sesionTecnico = request.session.user.tecnico;
-                    setTimeout(function(){ response.send(res);}, 50);
-                }
-            })
-                 
-        }
-    })
-})
-
-app.get("/obtener_info_usuario/:idUsuario", function(request, response){
-    let id = request.params.idUsuario;
-    daoU.leerNombrePorId(id,function (err, res){
-        if(err){
-            console.log(err.message)
-        }
-        else{
-            response.send(res);
-        }
-    })
-})
-
-app.get("/obtener_contador_avisos/:idUsuario&:tecnico", function(request, response){
-    let id = request.params.idUsuario;
-    let tecnico = request.params.tecnico;
-    
-    if(tecnico == '1'){
-        daoA.obtenerEstadisticasTecnico(id, function(err,res){
-            if (err){
-                console.log(err.message);
-            }
-            else {                
-                response.send(res);
-            }
-        })
-    }
-    else{
-        daoA.obtenerEstadisticasUsuario(id, function(err,res){
-            if (err){
-                console.log(err.message);
-            }
-            else {                
-                
-                response.send(res);
-            }
-        })
-    }
-    
-})
-
-app.post("/crear_cuenta", multerFactory.single("foto"),
-    // El campo correo ha de ser no vacío.
-    check("correo", "Por favor, introduce un correo electrónico").notEmpty(),
-    // El campo correo ha de ser una dirección de correo válida.
-    check("correo","Por favor, introduce un correo electrónico").isEmail(),
-    // El campo correo debe terminar en @ucm.es.
-    check("correo","El correo debe terminar en '@ucm.es')").custom((value) => (value.endsWith("@ucm.es"))),
-    // El campo nombre ha de ser no vacío.
-    check("nombre", "Por favor, introduce un nombre").notEmpty(),
-    // El campo password ha de ser no vacío.
-    check("password", "Por favor, introduce la contraseña").notEmpty(),
-    // El campo pass ha de tener entre 6 y 10 caracteres.
-    check("password","Contraseña no válida").matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.-¿=])[A-Za-z\d@$!%*?&.-¿=]{8,16}$/),
-    // El campo password2 ha de ser no vacío.
-    check("password2", "Por favor, confirma la contraseña").notEmpty(),
-    // El campo password2  tiene que coincidir.
-    check("password2", "Las contraseñas deben coincidir").custom((value, {req}) => (value === req.body.password)),
-    // El campo perfil hay que seleccionarlo.
-    check("perfil", "Por favor, selecciona un perfil universitario").custom(valorPerfil),
-    // El campo foto tiene que ser una foto.
-    check("foto", "Sólo se admiten archivos .jpeg o .png").custom((value, {req}) => {
-        if(req.file === undefined) return true
-        else {
-            switch(req.file.mimetype){
-                case "image/jpeg" : return ".jpeg"
-                case "image/png" : return ".png"
-                default : return false;
-            }
-        }
-    }),
-    check("foto", "La imagen debe ocupar menos de 10MB").custom((value, {req}) => {
-        if(req.file === undefined) return true
-        else {
-            if(req.file.size < 10485760) return true;
-            else return false;
-        }
-    }),
-    
-    // El campo empleado debe tener 4 dígitos y 3 letras
-    check("numEmpl", "El formato de nº de empleado no es correcto(E.g:1234-abc)").custom((value, {req}) => {
-        if(req.body.tecnico !== "si") return true
-        else {
-            var reg = new RegExp(/^[0-9]{4}-[a-z]{3}$/)
-            if(reg.test(value)) return true;
-            else return false;
-        }
-    }),
-    
-
-function(request, response){
-
-    
-
-    let campos = {
-    
-        correo:request.body.correo,
-        nombre:request.body.nombre,
-        password: request.body.password,
-        password2: request.body.password2,
-        perfil: request.body.perfil,
-        tecnico : request.body.tecnico,
-        foto : request.body.file,
-        numEmpl : request.body.numEmpl
-
-    }
-        
-    const errors = validationResult(request);
-    //console.log(errors);
-    if(!errors.isEmpty()) {          
-        response.render("crear_cuenta", {errMsg : "Por favor, completa todos los campos correctamente" , errores: errors.mapped(), camposC : campos});
-    }
-    else {
-        let usuario = {
-            correo:request.body.correo,
-            nombre:request.body.nombre,
-            contraseña: request.body.password,
-            perfil: request.body.perfil,
-            tecnico: request.body.tecnico === "si" ? true : false,
-            foto: null,
-            numEmpleado: null
-        }
-        if (request.file){
-            usuario.foto = request.file.buffer
-        }
-        if (usuario.tecnico){
-            usuario.numEmpleado = request.body.numEmpl
-        }
-        daoU.agregarUsuario(usuario, function(err,res){
-            if (err){
-                console.log(err.message)
-                response.render("crear_cuenta",{errMsg : err.message, errores : null, camposC : campos})
-            }
-            else{
-                daoU.leerUsuarioPorCorreo(usuario.correo, usuario.contraseña,function(err,res){
-                    if (err){
-                        response.render("login", {errMsg : err.message, errores : null, campoEmail : request.body.correo })
-                    }
-                    else{
-                        request.session.user = res
-                        response.redirect("/mis_avisos")
-                    }
-                })
-            }
-        })
-    }
-        
-})
-
-app.post("/mis_avisos", function(request, response){
-    
-   // const errors = validationResult(request);
-    //console.log(errors);
- //   if(!errors.isEmpty()) {          
- //       response.render("crear_cuenta", {errMsg : "Por favor, completa todos los campos correctamente" , errores: errors.mapped(), camposC : campos});
- //   }
- //   else {
-        let aviso = {
-            idUsuario: request.session.user.idUsuario,
-            texto: request.body.observacion,
-            perfil : request.session.user.perfil,
-            tipo: request.body.tipo,
-            categoria: request.body.categoria,
-            subcategoria : request.body.subcategoria
-        }
-        if(aviso.tipo == "felicitacion"){
-            aviso.subcategoria = '';
-        }
-
-       
-        daoA.crearAviso(aviso, function(err,res){
-            if (err){
-                response.redirect("/mis_avisos")
-            }
-            else{
-                response.redirect("/mis_avisos")
-            }
-        })
-//    }
-        
-})
-
-app.post("/asignarTecnico", function(request, response){
-    daoA.asignarTecnico(request.body.asigTec,request.body.idAviso, function(err,res){
-        if (err){
-            console.log(err.message);
-            response.redirect("/avisos_entrantes")
-        }
-        else{
-            response.redirect("/avisos_entrantes")
-        }
-    })
-
-})
-
-app.post("/terminarAviso", function(request, response){
-    daoA.terminarAviso(request.body.idAviso,request.body.comentario, function(err,res){
-        if (err){
-            console.log(err.message);
-            response.redirect("/mis_avisos")
-        }
-        else{
-            response.redirect("/mis_avisos")
-        }
-    })
-
-})
-app.post("/eliminarAviso", function(request, response){
-    let comentario = "Este aviso ha sido eliminado por el técnico " + request.session.user.nombre + " debido a:\n\n" + '"' + request.body.comentario + '"';
-    daoA.eliminarAviso(request.body.idAviso,comentario, function(err,res){
-        if (err){
-            console.log(err.message);
-            response.redirect("back")
-        }
-        else{
-            response.redirect("back")
-        }
-    })
-})
-
-app.post("/eliminarCuenta", function(request, response){
-    daoU.eliminarUsuario(request.body.idUsuario, function(err,res){
-        if (err){
-            console.log(err.message);
-            response.redirect("back")
-        }
-        else{
-            if (request.body.idUsuario == request.session.user.idUsuario){
-                response.redirect("/cerrarSesion")
-            }
-            else{
-                response.redirect("/gestion_de_usuarios")
-            }
-        }
-    })
-})
 
 app.get("/", middleNoLogueado, (request, response) => {
     response.redirect("/login");

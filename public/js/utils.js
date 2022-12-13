@@ -29,6 +29,15 @@ module.exports =  {
         countDone : function(tasks){
             return tasks.filter(task => task.done).length;
         },
+
+        acortarNombre : function(nombre){
+            let maxLength = 30 // maximum number of characters to extract
+
+            let acortado = nombre.substr(0, maxLength);
+
+            acortado = acortado.substr(0, Math.min(acortado.length, acortado.lastIndexOf(" ")))
+            return acortado;
+        },
     
         createTasks : function(text){
             let array = text.split(" ");
