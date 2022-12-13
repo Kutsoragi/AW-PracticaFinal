@@ -32,11 +32,14 @@ module.exports =  {
 
         acortarNombre : function(nombre){
             let maxLength = 30 // maximum number of characters to extract
-
-            let acortado = nombre.substr(0, maxLength);
-
-            acortado = acortado.substr(0, Math.min(acortado.length, acortado.lastIndexOf(" ")))
+            if(nombre.length<= maxLength) return nombre;
+            else { 
+                let acortado = nombre.substr(0, maxLength);
+                if(acortado.lastIndexOf(" ") != -1){
+                    acortado = acortado.substr(0, Math.min(acortado.length, acortado.lastIndexOf(" ")))
+                }         
             return acortado;
+            }          
         },
     
         createTasks : function(text){

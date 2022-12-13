@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Quattrocento:wght@400;700&display=swap');
 
+
 body{
     font-family: 'Quattrocento', serif;
 }
@@ -107,6 +108,23 @@ h4{
 }
 
 #error404{
+    
+    
+    margin-bottom: 3rem;
+}
+
+.titulo404{
     margin-top: 3rem;
-    font-size: calc(2px + 0.3vw);
+    font-weight: bold;
+    font-size: calc(100px + 5vw);
+}
+
+.subtitulo404{
+    margin-bottom: 3rem;
+    font-size: calc(20px + 1vw);
+}
+
+#gif404{
+    display: block;
+    margin: auto;
 }
