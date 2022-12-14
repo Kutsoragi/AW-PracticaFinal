@@ -274,7 +274,7 @@ app.post("/terminarAviso", function(request, response){
 })
 app.post("/eliminarAviso", function(request, response){
     let comentario = "Este aviso ha sido eliminado por el técnico " + request.session.user.nombre + " debido a:\n\n" + '"' + request.body.comentario + '"';
-    daoA.eliminarAviso(request.body.idAviso,comentario, function(err,res){
+    daoA.eliminarAviso(request.body.idAviso,request.session.user.idUsuario,comentario, function(err,res){
         if (err){
             console.log(err.message);
             response.redirect("back")

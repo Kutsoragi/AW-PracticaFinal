@@ -207,13 +207,13 @@ class DAOAvisos {
         });
     }
 
-    eliminarAviso(idAviso, comentario,callback){
+    eliminarAviso(idAviso, idTecnico, comentario,callback){
         this._pool.getConnection(function(err, connection) {
             if (err) {
                 callback(new Error("Error de conexion a la base de datos"));
             }
             else {
-                connection.query("UPDATE ucm_aw_cau_avi_avisos SET activo = false, comentario_tecnico = ? WHERE idAviso = ?;" , [comentario, idAviso] ,//Aquí va la query a la BD
+                connection.query("UPDATE ucm_aw_cau_avi_avisos SET activo = false, comentario_tecnico = ?, idTecnico=? WHERE idAviso = ?;" , [comentario, idTecnico, idAviso] ,//Aquí va la query a la BD
                     function(err, rows) {
                         connection.release();
                         if (err) {
