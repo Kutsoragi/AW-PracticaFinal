@@ -14,24 +14,26 @@
 
 
   function buscador() { 
-    let pag = window.location.href.substring(22,window.location.href.length);
-    let tab; let f;
-    if(pag == "avisos_entrantes") {tab = "t_entrantes"; f = 2;}
-    else if(pag == "mis_avisos") {
-      tab = "t_avisos";
-      if ("<%=sesion.tecnico%>" == "1") f = 2;
-      else f = 1;
-    }
-    else if(pag == "historico_de_avisos") {tab = "t_historico"; f = 2;}
-    else {tab = "t_usuarios"; f = 1;}
-    // Declare variables
-    var input, filter, table, tr, td, i, txtValue, buscadorUsuario;
-    input = document.getElementById("buscadorTabla");
-    filter = input.value.toUpperCase();
-    tr = document.getElementsByTagName("tr");
-    buscadorUsuario = document.getElementById("buscadorUsuario")
-    var z = 1;
-    var count = 1;
+    let pag = window.location.href.split(":3000/")[1];
+    console.log(pag)
+      let tab; let f;
+      if(pag == "avisos_entrantes") {tab = "t_entrantes"; f = 2;}
+      else if(pag == "mis_avisos") {
+        tab = "t_avisos";
+        if ("<%=sesion.tecnico%>" == "1") f = 2;
+        else f = 1;
+      }
+      else if(pag == "historico_de_avisos") {tab = "t_historico"; f = 2;}
+      else {tab = "t_usuarios"; f = 1;}
+      // Declare variables
+      var input, filter, table, tr, td, i, txtValue, buscadorUsuario;
+      input = document.getElementById("buscadorTabla");
+      filter = input.value.toUpperCase();
+      table = document.getElementById(tab);
+      tr = table.getElementsByTagName("tr");
+      buscadorUsuario = document.getElementById("buscadorUsuario")
+      var z = 1;
+      var count = 1;
     // Loop through all table rows, and hide those who don't match the search query 
     if(pag == "gestion_de_usuarios") {
         "<% avisos.forEach((aviso)=> { %>"

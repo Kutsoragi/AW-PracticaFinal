@@ -121,7 +121,7 @@ app.post("/crear_cuenta", multerFactory.single("foto"),
     // El campo correo ha de ser una dirección de correo válida.
     check("correo","Por favor, introduce un correo electrónico").isEmail(),
     // El campo correo debe terminar en @ucm.es.
-    check("correo","El correo debe terminar en '@ucm.es')").custom((value) => (value.endsWith("@ucm.es"))),
+    check("correo","El correo debe terminar en '@ucm.es'").custom((value) => (value.endsWith("@ucm.es"))),
     // El campo nombre ha de ser no vacío.
     check("nombre", "Por favor, introduce un nombre").notEmpty(),
     // El campo password ha de ser no vacío.
