@@ -126,7 +126,7 @@ ALTER TABLE `ucm_aw_cau_avi_avisos`
 -- AUTO_INCREMENT de la tabla `ucm_aw_cau_usu_usuarios`
 --
 ALTER TABLE `ucm_aw_cau_usu_usuarios`
-  MODIFY `idUsuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `idUsuario` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Restricciones para tablas volcadas
