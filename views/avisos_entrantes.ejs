@@ -159,9 +159,7 @@
 
                       <div class="form-outline mb-4 mr-4">
                         <label class="form-label labelBold" for="selectorTec">Asignar técnico:</label>
-                        <select class="form-control col-6" id="selectorTec" name="asigTec" 
-                        <% if (avisos[0].idTecnico) {%> disabled 
-                          <% } %>>
+                        <select class="form-control col-6" id="selectorTec" name="asigTec">
                             <% tecnicos.forEach((tec)=> { %>
                               <option value="<%=tec.idUsuario%>">
                                 <%=tec.nombre%>
@@ -292,18 +290,11 @@
                 $("#categoriasModal").html("<strong>" + nAviso.categoria + "</strong>" + sub);
                 $("#perfilModal").html("<strong>Perfil:</strong> " + nAviso.perfil);
                 $("#obs").val(nAviso.texto);
-                if (nAviso.idTecnico) {
-                  $("#botonAsignar").html("Tecnico asignado");
-                  $("#selectorTec").prop("disabled", true);
-                  $("#botonAsignar").prop("disabled", true);
-                  $("#selectorTec option[value='" + nAviso.idTecnico + "']").prop('selected', true)
-                  
-                } else {
-                  $("#botonAsignar").html("Asignar técnico");
-                  $("#selectorTec").prop("disabled", false);
-                  $("#botonAsignar").prop("disabled", false);
-                  $("#selectorTec option[value='<%=sesion.idUsuario%>']").prop('selected', true)
-                }
+
+                $("#botonAsignar").html("Asignar técnico");
+                $("#selectorTec").prop("disabled", false);
+                $("#botonAsignar").prop("disabled", false);
+                $("#selectorTec option[value='<%=sesion.idUsuario%>']").prop('selected', true)
                 $("#idAvisoModal").val(nAviso.idAviso);
                 
               });

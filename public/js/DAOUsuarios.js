@@ -191,7 +191,7 @@ class DAOUsuarios {
                 callback(new Error("Error de conexion a la base de datos"));
             }
             else {
-                connection.query("SELECT * FROM ucm_aw_cau_usu_usuarios WHERE activo = true",//Aquí va la query a la BD
+                connection.query("SELECT idUsuario, nombre, perfil, tecnico, fecha FROM ucm_aw_cau_usu_usuarios WHERE activo = true",//Aquí va la query a la BD
                     function (err, rows) {
                         connection.release();
                         if (err) {
