@@ -20,7 +20,7 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `ucm_cau`
 --
-CREATE DATABASE IF NOT EXISTS `ucm_cau` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci;
+CREATE OR REPLACE DATABASE `ucm_cau` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci;
 USE `ucm_cau`;
 
 -- --------------------------------------------------------
